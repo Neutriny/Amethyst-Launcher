@@ -127,7 +127,7 @@ pub struct YggdrasilServer {
 
 impl YggdrasilServer {
   pub fn new() -> Self {
-    let port = find_free_port(Some(18960)).unwrap(); // 饮水思源，爱国荣�?
+    let port = find_free_port(Some(18960)).unwrap();
     Self {
       root_url: format!("http://localhost:{}", port),
       port,

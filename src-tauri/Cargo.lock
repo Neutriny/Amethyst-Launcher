@@ -3,87 +3,6 @@
 version = 4
 
 [[package]]
-name = "SJMCL"
-version = "1.2.0"
-dependencies = [
- "async-speed-limit",
- "async-trait",
- "axum",
- "base64 0.22.1",
- "cafebabe",
- "chacha20poly1305",
- "chrono",
- "config",
- "csv",
- "dotenvy",
- "flume",
- "font-loader",
- "futures",
- "glob",
- "hex",
- "image",
- "java-properties",
- "jsonwebtoken",
- "lazy_static",
- "log",
- "mc-server-status",
- "murmur2",
- "native-dialog",
- "pin-project",
- "plist",
- "quartz_nbt",
- "rand 0.9.4",
- "regex",
- "reqwest-middleware",
- "reqwest-retry",
- "rmcp",
- "rsa",
- "sanitize-filename",
- "schemars 1.2.1",
- "semver",
- "serde",
- "serde_json",
- "serde_with",
- "sha1",
- "sha2",
- "shlex",
- "sjmcl-macros",
- "sjmcl-types",
- "smart-default",
- "structstruck",
- "strum",
- "strum_macros",
- "sysinfo",
- "systemstat",
- "tauri",
- "tauri-build",
- "tauri-plugin-clipboard-manager",
- "tauri-plugin-decorum",
- "tauri-plugin-deep-link",
- "tauri-plugin-dialog",
- "tauri-plugin-fs",
- "tauri-plugin-http",
- "tauri-plugin-log",
- "tauri-plugin-opener",
- "tauri-plugin-os",
- "tauri-plugin-process",
- "tauri-plugin-single-instance",
- "tauri-plugin-window-state",
- "time",
- "tokio",
- "tokio-util",
- "toml 0.8.2",
- "tower-http",
- "url",
- "urlencoding",
- "uuid",
- "walkdir",
- "winapi",
- "winreg",
- "zip",
-]
-
-[[package]]
 name = "adler2"
 version = "2.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -200,6 +119,106 @@ dependencies = [
  "windows-sys 0.60.2",
  "wl-clipboard-rs",
  "x11rb",
+]
+
+[[package]]
+name = "arcmc"
+version = "1.2.0"
+dependencies = [
+ "arcmc-macros",
+ "arcmc-types",
+ "async-speed-limit",
+ "async-trait",
+ "axum",
+ "base64 0.22.1",
+ "cafebabe",
+ "chacha20poly1305",
+ "chrono",
+ "config",
+ "csv",
+ "dotenvy",
+ "flume",
+ "font-loader",
+ "futures",
+ "glob",
+ "hex",
+ "image",
+ "java-properties",
+ "jsonwebtoken",
+ "lazy_static",
+ "log",
+ "mc-server-status",
+ "murmur2",
+ "native-dialog",
+ "pin-project",
+ "plist",
+ "quartz_nbt",
+ "rand 0.9.4",
+ "regex",
+ "reqwest-middleware",
+ "reqwest-retry",
+ "rmcp",
+ "rsa",
+ "sanitize-filename",
+ "schemars 1.2.1",
+ "semver",
+ "serde",
+ "serde_json",
+ "serde_with",
+ "sha1",
+ "sha2",
+ "shlex",
+ "smart-default",
+ "structstruck",
+ "strum",
+ "strum_macros",
+ "sysinfo",
+ "systemstat",
+ "tauri",
+ "tauri-build",
+ "tauri-plugin-clipboard-manager",
+ "tauri-plugin-decorum",
+ "tauri-plugin-deep-link",
+ "tauri-plugin-dialog",
+ "tauri-plugin-fs",
+ "tauri-plugin-http",
+ "tauri-plugin-log",
+ "tauri-plugin-opener",
+ "tauri-plugin-os",
+ "tauri-plugin-process",
+ "tauri-plugin-single-instance",
+ "tauri-plugin-window-state",
+ "time",
+ "tokio",
+ "tokio-util",
+ "toml 0.8.2",
+ "tower-http",
+ "url",
+ "urlencoding",
+ "uuid",
+ "walkdir",
+ "winapi",
+ "winreg",
+ "zip",
+]
+
+[[package]]
+name = "arcmc-macros"
+version = "1.2.0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.117",
+]
+
+[[package]]
+name = "arcmc-types"
+version = "1.2.0"
+dependencies = [
+ "serde",
+ "serde_json",
+ "strum_macros",
+ "tokio",
 ]
 
 [[package]]
@@ -1813,7 +1832,8 @@ dependencies = [
 [[package]]
 name = "expat-sys"
 version = "2.1.6"
-source = "git+https://github.com/SJMC-dev/libexpat.git#24b7dca23a08467491a15e1055d491a8a7dce5ee"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "658f19728920138342f68408b7cf7644d90d4784353d8ebc32e7e8663dbe45fa"
 dependencies = [
  "cmake",
  "pkg-config",
@@ -5605,25 +5625,6 @@ name = "siphasher"
 version = "1.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8ee5873ec9cce0195efcb7a4e9507a04cd49aec9c83d0389df45b1ef7ba2e649"
-
-[[package]]
-name = "sjmcl-macros"
-version = "1.2.0"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn 2.0.117",
-]
-
-[[package]]
-name = "sjmcl-types"
-version = "1.2.0"
-dependencies = [
- "serde",
- "serde_json",
- "strum_macros",
- "tokio",
-]
 
 [[package]]
 name = "slab"
