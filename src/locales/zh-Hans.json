@@ -62,7 +62,7 @@
       "settings": {
         "copyright": {
           "title": "版权",
-          "description": "版权所有 © 2024-2026 ArcMC 开发团队."
+          "description": "版权所有 © 2024-2026 SJMCL 团队 | ArcMC 修改版本 © 2025-2026 TannenWaddy"
         },
         "userAgreement": {
           "title": "用户协议",
@@ -1430,6 +1430,9 @@
         "modrinth": {
           "title": "Modrinth",
           "description": "开源、现代的 Minecraft 资源平台"
+        },
+        "mcisee": {
+          "description": "MCiSee - Minecraft 资源网站"
         }
       }
     },

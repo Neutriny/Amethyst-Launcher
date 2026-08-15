@@ -108,6 +108,23 @@ const AboutSettingsPage = () => {
           ),
         },
         {
+          title: "基于 SJMCL",
+          description: "本启动器基于上海交通大学 Minecraft 社开发的 SJMCL 启动器",
+          children: (
+            <CommonIconButton
+              label="https://github.com/UNIkeEN/SJMCL"
+              icon="external"
+              withTooltip
+              tooltipPlacement="bottom-end"
+              size="xs"
+              h={18}
+              onClick={() => {
+                openUrl("https://github.com/UNIkeEN/SJMCL");
+              }}
+            />
+          ),
+        },
+        {
           title: t("AboutSettingsPage.about.settings.contributors.title"),
           children: (
             <HStack spacing={2.5}>
@@ -121,7 +138,7 @@ const AboutSettingsPage = () => {
                 ))}
               </AvatarGroup>
               <CommonIconButton
-                label="https://github.com/UNIkeEN/SJMCL/graphs/contributors?all=1"
+                label="https://github.com/TannenWaddy/ArcMC-Launcher/graphs/contributors?all=1"
                 icon="external"
                 withTooltip
                 tooltipPlacement="bottom-end"
@@ -129,7 +146,7 @@ const AboutSettingsPage = () => {
                 h={18}
                 onClick={() => {
                   openUrl(
-                    "https://github.com/UNIkeEN/SJMCL/graphs/contributors?all=1"
+                    "https://github.com/TannenWaddy/ArcMC-Launcher/graphs/contributors?all=1"
                   );
                 }}
               />
@@ -140,14 +157,14 @@ const AboutSettingsPage = () => {
           title: t("AboutSettingsPage.about.settings.sourceCode.title"),
           children: (
             <CommonIconButton
-              label="https://github.com/UNIkeEN/SJMCL"
+              label="https://github.com/TannenWaddy/ArcMC-Launcher"
               icon="external"
               withTooltip
               tooltipPlacement="bottom-end"
               size="xs"
               h={18}
               onClick={() => {
-                openUrl("https://github.com/UNIkeEN/SJMCL");
+                openUrl("https://github.com/TannenWaddy/ArcMC-Launcher");
               }}
             />
           ),
@@ -230,14 +247,14 @@ const AboutSettingsPage = () => {
           ),
           children: (
             <CommonIconButton
-              label="https://github.com/UNIkeEN/SJMCL?tab=readme-ov-file#copyright"
+              label="https://github.com/TannenWaddy/ArcMC-Launcher?tab=readme-ov-file#版权声明"
               icon="external"
               withTooltip
               tooltipPlacement="bottom-end"
               size="xs"
               onClick={() => {
                 openUrl(
-                  "https://github.com/UNIkeEN/SJMCL?tab=readme-ov-file#copyright"
+                  "https://github.com/TannenWaddy/ArcMC-Launcher?tab=readme-ov-file#版权声明"
                 );
               }}
             />

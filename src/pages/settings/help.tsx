@@ -115,6 +115,20 @@ const HelpSettingsPage = () => {
             />
           ),
         },
+        {
+          title: "MCiSee",
+          description: t("HelpSettingsPage.minecraft.settings.mcisee.description"),
+          children: (
+            <CommonIconButton
+              label="https://mcisee.top"
+              icon="external"
+              withTooltip
+              tooltipPlacement="bottom-end"
+              size="xs"
+              onClick={() => openUrl("https://mcisee.top")}
+            />
+          ),
+        },
       ],
     },
     {
