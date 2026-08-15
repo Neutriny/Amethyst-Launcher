@@ -66,7 +66,7 @@
         },
         "userAgreement": {
           "title": "用户协议",
-          "url": "https://mc.sjtu.cn/sjmcl/docs/tos"
+          "url": "https://tannenwaddy.github.io/ArcMCL-docs/docs/tos"
         },
         "openSourceLicense": {
           "title": "开源协议",
@@ -854,7 +854,7 @@
         "extensionDocs": {
           "title": "扩展开发文档",
           "description": "阅读扩展系统的介绍与 API 文档，使用脚手架快速上手",
-          "url": "https://mc.sjtu.cn/sjmcl/dev/extension/"
+          "url": "https://tannenwaddy.github.io/ArcMCL-docs/dev/extension/"
         },
         "awesomeExtensions": {
           "title": "发现社区扩展",
@@ -1032,7 +1032,7 @@
       "help": "帮助"
     },
     "bottomAlert": "如需寻求他人帮助，请导出并发送崩溃报告，而非这个窗口的截图",
-    "helpUrl": "https://mc.sjtu.cn/sjmcl/docs/user-group.html",
+    "helpUrl": "https://tannenwaddy.github.io/ArcMCL-docs/docs/user-group.html",
     "crashDetails": {
       "title": "崩溃信息",
       "OPENJ9": "当前实例无法在 OpenJ9 JVM 上运行，请使用 HotSpot JVM。",
@@ -1440,12 +1440,12 @@
       "settings": {
         "LauncherDocs": {
           "title": "SJMC Launcher 文档",
-          "url": "https://mc.sjtu.cn/sjmcl/docs"
+          "url": "https://tannenwaddy.github.io/ArcMCL-docs/docs"
         },
         "UserGroup": {
           "title": "用户社群",
           "description": "欢迎加入 QQ 群或 GitHub Discussions，报告问题、请求功能或获取帮助",
-          "url": "https://mc.sjtu.cn/sjmcl/docs/user-group"
+          "url": "https://tannenwaddy.github.io/ArcMCL-docs/docs/user-group"
         }
       }
     }
@@ -1683,7 +1683,7 @@
         "docs": {
           "title": "使用指南",
           "description": "了解如何将启动器连接到外部 Agent 应用（如 Claude, Cherry Studio 等）",
-          "url": "https://mc.sjtu.cn/sjmcl/docs/intelligence/launcher-mcp"
+          "url": "https://tannenwaddy.github.io/ArcMCL-docs/docs/intelligence/launcher-mcp"
         },
         "port": {
           "title": "端口",
