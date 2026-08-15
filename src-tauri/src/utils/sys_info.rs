@@ -36,7 +36,7 @@ pub async fn send_statistics(version: String, os: String, sha256: String) {
 /// println!("Locale: {}", locale);
 /// ```
 pub fn get_mapped_locale() -> String {
-  // only apple can do 🌈🧑🏻‍🍳👐�?  // The return value of tauri_plugin_os::locale() on macOS(e.g. zh-Hans-CN) differs from that on Windows and Linux(e.g. zh-CN).
+  // only apple can do 🌈🧑🏻‍🍳👐�?  // The return value of tauri_plugin_os::locale() on macOS(e.g. zh-Hans-CN) differs from that on Windows and Linux(e.g. zh-CN).
   let locale = locale().unwrap();
   let matched_locale;
 

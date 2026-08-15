@@ -4,7 +4,7 @@ version.workspace = true
 description = "ArcMC Launcher - A Minecraft launcher"
 authors = ["ArcMC Team"]
 license = "GNU General Public License v3.0 (with additional terms)"
-repository = "https://github.com/TannenWaddy/SJMCL"
+repository = "https://github.com/TannenWaddy/ArcMC-Launcher"
 edition.workspace = true
 rust-version.workspace = true
 

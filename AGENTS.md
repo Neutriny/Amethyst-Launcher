@@ -54,8 +54,8 @@ ArcMC/
 │   │   └── utils/            # 后端工具函数
 │   ├── assets/               # 后端静态资源
 │   ├── crates/               # 计划分拆后端功能到对应crate，此为装载目录
-│   │   ├── sjmcl-types/      # 后端通用Types以及Traits
-│   │   └── sjmcl-macros/     # 后端所使用的过程宏包
+│   │   ├── arcmc-types/      # 后端通用Types以及Traits
+│   │   └── arcmc-macros/     # 后端所使用的过程宏包
 │   └── infoplist/            # macOS InfoPlist 资源
 ├── public/                   # 前端静态资源
 ├── docs/                     # 文档
@@ -70,8 +70,10 @@ ArcMC/
 
 ## 通用编码规范
 
+- 所有源代码文件统一使用 UTF-8 编码
 - 前端导入优先使用已配置别名和绝对路径、不使用相对路径；后端导入使用绝对路径（`use crate::...`），不使用相对路径（`use super::...`）。
 - 新增或修改 `src/locales` 下的国际化文本时，同时更新所有语言文件。注意语言文件的一级 key 使用字母序排序。
+- 目前仅支持 Windows 平台开发和测试
 
 ---
 

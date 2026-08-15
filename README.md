@@ -4,7 +4,7 @@
 
 > 当前图标为 SJMCL 原版图标，本人正在重新设计
 
-**简体中文**
+**简体中文** | [繁體中文](README.zh-Hant.md)
 
 ## 关于本项目
 
@@ -14,10 +14,10 @@ ArcMC Launcher 是基于上海交通大学 Minecraft 社（SJMC）开发的 [SJM
 - 移除了发现页的社区新闻功能
 - 保留了离线登录、微软登录、MUA 认证服务器、LittleSkin 及自定义服务器登录
 - 仅保留简体中文和繁体中文，不再维护其他语言
+- 目前仅支持 Windows 平台开发和测试
 
 ## 功能特性
 
-* **跨平台支持**：兼容 Windows 10/11、macOS 与 Linux。
 * **高效的实例管理**：支持多个游戏目录与实例，集中管理所有实例资源（如存档、模组、资源包、光影包、截图等）与设置。
 * **便捷的资源下载**：支持从 CurseForge 与 Modrinth 等源下载游戏客户端、模组加载器、各类游戏资源与整合包。
 * **多账户系统支持**：内置 Microsoft 登录与第三方认证服务器支持，兼容 Yggdrasil Connect 的 OAuth 登录流程规范提案。
@@ -34,22 +34,20 @@ ArcMC Launcher 是基于上海交通大学 Minecraft 社（SJMC）开发的 [SJM
 
 ## 开始使用
 
-前往 [GitHub Releases](https://github.com/TannenWaddy/ArcMC/releases) 下载最新版即可。
+前往 [GitHub Releases](https://github.com/TannenWaddy/ArcMC-Launcher/releases) 下载最新版即可。
 
-ArcMC Launcher 目前支持以下平台：
+目前仅支持 Windows 10/11：
 
-| 平台    | 系统版本            | 架构               | 提供的分发类型                              |
-|---------|---------------------|--------------------|--------------------------------------------|
-| Windows | 10 及以上         | `aarch64`, `i686`, `x86_64`  | 安装版 `.exe`，便携版 `.exe` |
-| macOS   | 10.15 及以上        | `aarch64`, `x86_64` | `.app`，`.dmg`                   |
-| Linux   | webkit2gtk 4.1 (如 Ubuntu 22.04) | `aarch64`, `x86_64` | `.deb`, `.rpm`, 便携版二进制文件 |
+| 平台    | 系统版本  | 架构     | 提供的分发类型 |
+|---------|-----------|----------|----------------|
+| Windows | 10 及以上 | `x86_64` | 安装版 `.exe`  |
 
 ## 开发与贡献
 
 首先克隆本项目并安装前端依赖：
 
 ```bash
-git clone https://github.com/TannenWaddy/ArcMC.git
+git clone https://github.com/TannenWaddy/ArcMC-Launcher.git
 cd ArcMC
 pnpm install
 ```
@@ -82,4 +80,4 @@ pnpm tauri dev
 
 ## 联系方式
 
-如有问题，请通过 [GitHub Issues](https://github.com/TannenWaddy/ArcMC/issues) 联系。
+如有问题，请通过 [GitHub Issues](https://github.com/TannenWaddy/ArcMC-Launcher/issues) 联系。

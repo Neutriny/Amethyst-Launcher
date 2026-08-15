@@ -1187,7 +1187,7 @@ pub async fn create_instance(
     .extend(get_invalid_assets(&app, &version_info, priority_list[0], assets_dir, false).await?);
 
   // When installing a modpack, skip auto-installing Fabric API / QFAPI to avoid
-  // duplicates â€?the modpack manifest already specifies the exact version needed.
+  // duplicates - the modpack manifest already specifies the exact version needed.
   if modpack_path.is_some() {
     is_install_fabric_api = Some(false);
     is_install_qf_api = Some(false);

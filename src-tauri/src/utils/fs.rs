@@ -1,4 +1,4 @@
-use regex::Regex;
+﻿use regex::Regex;
 use sha1::{Digest, Sha1};
 use sha2::Sha256;
 use arcmc_types::error::{ArcMCError, ArcMCResult};
@@ -21,7 +21,7 @@ use crate::IS_PORTABLE;
 /// ```rust
 /// copy_whole_dir(src_path, &dest_path).map_err(|_| InstanceError::FileCopyFailed)?;
 /// ```
-pub fn copy_whole_dir(src: &Path, dst: &Path) -> std::io::Result<()> {
+pub fn copy_whole_dir(src: &Path, dst: &Path) -> io::Result<()> {
   if !dst.exists() {
     fs::create_dir_all(dst)?;
   }
@@ -127,7 +127,7 @@ pub fn extract_filename(path_str: &str, with_ext: bool) -> String {
 /// Normalizes a relative path by removing `.` segments and rejecting invalid components.
 ///
 /// Rejects:
-/// - parent directory traversal (`..`)
+/// - parent directory traversal (`.`)
 /// - absolute path prefixes or roots
 /// - empty / current-directory-only paths
 ///
@@ -223,7 +223,7 @@ pub fn get_files_with_regex_recursive<P: AsRef<Path>>(
 
 /// Retrieves the full filesystem path to an application resource, choosing between
 /// the embedded `Resource` directory or the extracted `AppData` directory based on
-/// whether the app is running in “portable�?mode.
+/// whether the app is running in "portable mode.
 ///
 /// # Arguments
 ///
@@ -426,7 +426,7 @@ Terminal=false
 }
 
 pub fn validate_sha1(dest_path: PathBuf, truth: String) -> ArcMCResult<()> {
-  let mut f = std::fs::File::options()
+  let mut f = fs::File::options()
     .read(true)
     .create(false)
     .write(false)
@@ -463,7 +463,7 @@ pub fn validate_sha1(dest_path: PathBuf, truth: String) -> ArcMCResult<()> {
 /// # Returns
 /// - `ArcMCResult<String>`: The SHA256 hash as a hexadecimal string, or an error
 pub fn calculate_sha256(path: &Path) -> ArcMCResult<String> {
-  match std::fs::File::open(path) {
+  match fs::File::open(path) {
     Ok(mut file) => {
       let mut hasher = Sha256::new();
       // Use an 8 KiB buffer as a common compromise between memory usage and I/O throughput.
@@ -494,7 +494,7 @@ pub fn calculate_sha256(path: &Path) -> ArcMCResult<String> {
 }
 
 pub fn create_zip_from_dirs(paths: Vec<PathBuf>, zip_file_path: PathBuf) -> ArcMCResult<String> {
-  let zip_file = std::fs::File::create(&zip_file_path)
+  let zip_file = fs::File::create(&zip_file_path)
     .map_err(|e| ArcMCError(format!("Failed to create zip file: {}", e)))?;
   let mut zip = ZipWriter::new(zip_file);
   let options = FileOptions::<ExtendedFileOptions>::default()
@@ -505,7 +505,7 @@ pub fn create_zip_from_dirs(paths: Vec<PathBuf>, zip_file_path: PathBuf) -> ArcM
     if path.is_file() {
       let file_name = path.file_name().and_then(OsStr::to_str).unwrap_or_default();
       zip.start_file(file_name, options.clone())?;
-      let mut file = std::fs::File::open(&path)
+      let mut file = fs::File::open(&path)
         .map_err(|e| ArcMCError(format!("Failed to open file {}: {}", path.display(), e)))?;
       std::io::copy(&mut file, &mut zip)
         .map_err(|e| ArcMCError(format!("Failed to copy data to zip: {}", e)))?;
