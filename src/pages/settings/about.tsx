@@ -109,7 +109,8 @@ const AboutSettingsPage = () => {
         },
         {
           title: "基于 SJMCL",
-          description: "本启动器基于上海交通大学 Minecraft 社开发的 SJMCL 启动器",
+          description:
+            "本启动器基于上海交通大学 Minecraft 社开发的 SJMCL 启动器",
           children: (
             <CommonIconButton
               label="https://github.com/UNIkeEN/SJMCL"

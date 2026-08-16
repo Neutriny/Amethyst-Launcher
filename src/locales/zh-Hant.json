@@ -1695,6 +1695,35 @@
           "description": "啟動器 MCP 服務使用的固定本機連接埠。"
         }
       }
+    },
+    "logAnalysis": {
+      "title": "日誌分析",
+      "headExtra": "設定 LLM 以分析遊戲日誌",
+      "settings": {
+        "enabled": {
+          "title": "啟用日誌分析",
+          "description": "使用 LLM 分析遊戲當機日誌，快速定位問題"
+        },
+        "baseUrl": {
+          "title": "API 地址",
+          "description": "LLM API 的基礎 URL"
+        },
+        "apiKey": {
+          "title": "API Key",
+          "description": "LLM API 的金鑰"
+        },
+        "model": {
+          "title": "模型",
+          "description": "手動輸入模型 ID",
+          "placeholder": "輸入模型 ID"
+        },
+        "testConnection": {
+          "title": "測試連線",
+          "description": "驗證 LLM API 設定是否正確",
+          "success": "連線成功",
+          "error": "連線失敗"
+        }
+      }
     }
   },
   "JavaSettingsPage": {

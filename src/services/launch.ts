@@ -129,10 +129,14 @@ export class LaunchService {
   static onGameProcessOutput(callback: (payload: string) => void) {
     if (!isTauri) return () => {};
 
-    const unlisten = import("@tauri-apps/api/webview").then(({ getCurrentWebview }) =>
-      getCurrentWebview().listen<string>(GAME_PROCESS_OUTPUT_EVENT, (event) => {
-        callback(event.payload);
-      })
+    const unlisten = import("@tauri-apps/api/webview").then(
+      ({ getCurrentWebview }) =>
+        getCurrentWebview().listen<string>(
+          GAME_PROCESS_OUTPUT_EVENT,
+          (event) => {
+            callback(event.payload);
+          }
+        )
     );
 
     return () => {

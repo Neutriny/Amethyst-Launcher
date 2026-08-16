@@ -1676,7 +1676,7 @@
   },
   "IntelligenceSettingsPage": {
     "title": "ArcMC 智能",
-    "description": "将人工智能模型整合进您的启动器使用与 Minecraft 游玩体验",
+    "description": "将人工智能模型整合进您的启动器使用与 Minecraft 游戏体验",
     "mcpServer": {
       "title": "MCP 服务",
       "headExtra": "以下设置重启后生效",
@@ -1693,6 +1693,35 @@
         "port": {
           "title": "端口",
           "description": "启动器 MCP 服务使用的固定本地端口"
+        }
+      }
+    },
+    "logAnalysis": {
+      "title": "日志分析",
+      "headExtra": "配置 LLM 以分析游戏日志",
+      "settings": {
+        "enabled": {
+          "title": "启用日志分析",
+          "description": "使用 LLM 分析游戏崩溃日志，快速定位问题"
+        },
+        "baseUrl": {
+          "title": "API 地址",
+          "description": "LLM API 的基础 URL"
+        },
+        "apiKey": {
+          "title": "API Key",
+          "description": "LLM API 的密钥"
+        },
+        "model": {
+          "title": "模型",
+          "description": "手动输入模型 ID",
+          "placeholder": "输入模型 ID"
+        },
+        "testConnection": {
+          "title": "测试连接",
+          "description": "验证 LLM API 配置是否正确",
+          "success": "连接成功",
+          "error": "连接失败"
         }
       }
     }

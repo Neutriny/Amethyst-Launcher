@@ -160,6 +160,12 @@ export interface LauncherConfig {
         port: number;
       };
     };
+    logAnalysis: {
+      enabled: boolean;
+      baseUrl: string;
+      apiKey: string;
+      selectedModel: string;
+    };
   };
   extension: {
     enabled: string[];
@@ -352,6 +358,12 @@ export const defaultConfig: LauncherConfig = {
         enabled: true,
         port: 18970,
       },
+    },
+    logAnalysis: {
+      enabled: false,
+      baseUrl: "",
+      apiKey: "",
+      selectedModel: "",
     },
   },
   extension: {

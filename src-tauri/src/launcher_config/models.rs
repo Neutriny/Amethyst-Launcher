@@ -347,6 +347,12 @@ structstruck::strike! {
           #[default = 18970]
           pub port: u16,
         },
+      },
+      pub log_analysis: struct LogAnalysisConfig {
+        pub enabled: bool,
+        pub base_url: String,
+        pub api_key: String,
+        pub selected_model: String,
       }
     },
     pub extension: struct ExtensionConfig {

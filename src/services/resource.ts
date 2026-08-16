@@ -203,10 +203,14 @@ export class ResourceService {
   ): () => void {
     if (!isTauri) return () => {};
 
-    const unlisten = import("@tauri-apps/api/webview").then(({ getCurrentWebview }) =>
-      getCurrentWebview().listen<OtherResourceType>(RESOURCE_REFRESH_EVENT, (event) => {
-        callback(event.payload);
-      })
+    const unlisten = import("@tauri-apps/api/webview").then(
+      ({ getCurrentWebview }) =>
+        getCurrentWebview().listen<OtherResourceType>(
+          RESOURCE_REFRESH_EVENT,
+          (event) => {
+            callback(event.payload);
+          }
+        )
     );
 
     return () => {

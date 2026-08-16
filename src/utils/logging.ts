@@ -6,15 +6,24 @@ function formatArg(arg: any): string {
 
 const isTauri = typeof window !== "undefined" && "__TAURI__" in window;
 
-const fallbackLog = (level: string) => async (...args: any[]) => {
-  const message = args.map(formatArg).join(" ");
-  switch (level) {
-    case "error": console.error(message); break;
-    case "warn": console.warn(message); break;
-    case "debug": console.debug(message); break;
-    default: console.log(message);
-  }
-};
+const fallbackLog =
+  (level: string) =>
+  async (...args: any[]) => {
+    const message = args.map(formatArg).join(" ");
+    switch (level) {
+      case "error":
+        console.error(message);
+        break;
+      case "warn":
+        console.warn(message);
+        break;
+      case "debug":
+        console.debug(message);
+        break;
+      default:
+        console.log(message);
+    }
+  };
 
 let logFunctions: {
   info: (...args: any[]) => Promise<void>;

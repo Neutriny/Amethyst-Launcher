@@ -16,7 +16,6 @@ import {
   LuEarth,
   LuHaze,
   LuHouse,
-  LuMessagesSquare,
   LuNewspaper,
   LuPackage,
   LuPuzzle,

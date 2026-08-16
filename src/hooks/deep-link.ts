@@ -58,7 +58,8 @@ export const useDeepLink = ({ trigger, onCall }: UseDeepLinkOptions) => {
     };
 
     const setup = async () => {
-      const { getCurrent, onOpenUrl } = await import("@tauri-apps/plugin-deep-link");
+      const { getCurrent, onOpenUrl } =
+        await import("@tauri-apps/plugin-deep-link");
 
       if (!didInit.current) {
         didInit.current = true;

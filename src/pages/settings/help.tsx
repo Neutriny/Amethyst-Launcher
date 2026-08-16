@@ -117,7 +117,9 @@ const HelpSettingsPage = () => {
         },
         {
           title: "MCiSee",
-          description: t("HelpSettingsPage.minecraft.settings.mcisee.description"),
+          description: t(
+            "HelpSettingsPage.minecraft.settings.mcisee.description"
+          ),
           children: (
             <CommonIconButton
               label="https://mcisee.top"

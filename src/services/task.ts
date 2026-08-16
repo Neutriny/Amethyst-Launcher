@@ -145,10 +145,14 @@ export class TaskService {
   ): () => void {
     if (!isTauri) return () => {};
 
-    const unlisten = import("@tauri-apps/api/webview").then(({ getCurrentWebview }) =>
-      getCurrentWebview().listen<PTaskEventPayload>(TASK_PROGRESS_UPDATE_EVENT, (event) => {
-        callback(event.payload);
-      })
+    const unlisten = import("@tauri-apps/api/webview").then(
+      ({ getCurrentWebview }) =>
+        getCurrentWebview().listen<PTaskEventPayload>(
+          TASK_PROGRESS_UPDATE_EVENT,
+          (event) => {
+            callback(event.payload);
+          }
+        )
     );
 
     return () => {
@@ -166,10 +170,14 @@ export class TaskService {
   ): () => void {
     if (!isTauri) return () => {};
 
-    const unlisten = import("@tauri-apps/api/webview").then(({ getCurrentWebview }) =>
-      getCurrentWebview().listen<GTaskEventPayload>(TASK_GROUP_UPDATE_EVENT, (event) => {
-        callback(event.payload);
-      })
+    const unlisten = import("@tauri-apps/api/webview").then(
+      ({ getCurrentWebview }) =>
+        getCurrentWebview().listen<GTaskEventPayload>(
+          TASK_GROUP_UPDATE_EVENT,
+          (event) => {
+            callback(event.payload);
+          }
+        )
     );
     return () => {
       unlisten.then((f) => f());

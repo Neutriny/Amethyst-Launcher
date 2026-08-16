@@ -55,10 +55,11 @@ export class ExtensionService {
   static onExtensionRefresh(callback: () => void): () => void {
     if (!isTauri) return () => {};
 
-    const unlisten = import("@tauri-apps/api/webview").then(({ getCurrentWebview }) =>
-      getCurrentWebview().listen<void>(EXTENSION_REFRESH_EVENT, () => {
-        callback();
-      })
+    const unlisten = import("@tauri-apps/api/webview").then(
+      ({ getCurrentWebview }) =>
+        getCurrentWebview().listen<void>(EXTENSION_REFRESH_EVENT, () => {
+          callback();
+        })
     );
 
     return () => {
