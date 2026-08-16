@@ -1,10 +1,12 @@
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use std::task::{Context, Waker};
-use tokio::time::{Duration, Interval, interval};
+use tokio::time::{Duration, Instant, Interval, interval};
 
 use crate::tasks::streams::desc::{PDesc, PStatus};
 use crate::tasks::streams::reporter::{Reporter, Sink};
+
+const PROGRESS_TIMEOUT_SECS: u64 = 60;
 
 pub struct PHandle<S, P>
 where
@@ -16,6 +18,7 @@ where
   pub path: PathBuf,
   pub reporter: Reporter<S>,
   pub waker: Option<Waker>,
+  pub last_progress_time: Instant,
 }
 
 impl<S, P> PHandle<S, P>
@@ -30,6 +33,7 @@ where
       path,
       reporter,
       waker: None,
+      last_progress_time: Instant::now(),
     }
   }
 
@@ -74,6 +78,7 @@ where
 
   pub fn mark_started(&mut self) {
     self.desc.start();
+    self.last_progress_time = Instant::now();
     self.desc.save(&self.path).unwrap();
     self.reporter.report_started(
       self.desc.task_id,
@@ -108,6 +113,7 @@ where
 
   pub fn report_progress(&mut self, cx: &mut Context<'_>, incr: i64) {
     self.desc.increment_progress(incr);
+    self.last_progress_time = Instant::now();
     if self.interval.poll_tick(cx).is_ready() {
       self.desc.save(&self.path).unwrap();
       self.reporter.report_progress(
@@ -116,5 +122,15 @@ where
         self.desc.current,
       );
     }
+  }
+
+  pub fn check_progress_timeout(&mut self) -> bool {
+    if self.desc.status.is_in_progress()
+      && self.last_progress_time.elapsed() > Duration::from_secs(PROGRESS_TIMEOUT_SECS)
+    {
+      self.mark_failed("Download timeout: no progress for 60 seconds".to_string());
+      return true;
+    }
+    false
   }
 }

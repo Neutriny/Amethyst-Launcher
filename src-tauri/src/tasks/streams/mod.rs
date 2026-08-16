@@ -63,6 +63,11 @@ where
       if !state.is_in_progress() {
         return Poll::Ready(None);
       }
+
+      // Check for progress timeout
+      if h.check_progress_timeout() {
+        return Poll::Ready(None);
+      }
     }
 
     let p = self.project();

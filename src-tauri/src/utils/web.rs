@@ -36,7 +36,7 @@ use crate::launcher_config::models::{LauncherConfig, ProxyType};
 /// ```
 pub fn build_sjmcl_client(app: &AppHandle, use_proxy: bool) -> Client {
   let mut builder = ClientBuilder::new()
-    .timeout(Duration::from_secs(10))
+    .timeout(Duration::from_secs(30))
     .tcp_keepalive(Duration::from_secs(10));
 
   if let Ok(config) = app.state::<Mutex<LauncherConfig>>().lock() {
@@ -90,7 +90,9 @@ impl RetryableStrategy for SJMCLRetryableStrategy {
 pub fn with_retry(client: Client) -> ClientWithMiddleware {
   ClientWithMiddlewareBuilder::new(client)
     .with(RetryTransientMiddleware::new_with_policy_and_strategy(
-      ExponentialBackoff::builder().build_with_total_retry_duration(Duration::from_secs(3600)),
+      ExponentialBackoff::builder()
+        .retry_bounds(Duration::from_millis(500), Duration::from_secs(30))
+        .build_with_max_retries(5),
       SJMCLRetryableStrategy {},
     ))
     .build()

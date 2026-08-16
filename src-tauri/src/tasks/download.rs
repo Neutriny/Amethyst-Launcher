@@ -171,9 +171,8 @@ impl DownloadTask {
       -1
     };
     Ok((
-      resp.bytes_stream().map(|res| match res {
-        Ok(bytes) => Ok(bytes),
-        Err(_) => Ok(bytes::Bytes::new()),
+      resp.bytes_stream().map(|res| {
+        res.map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e.to_string()))
       }),
       total_progress,
     ))
