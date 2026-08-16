@@ -1,5 +1,5 @@
 use serde::Deserialize;
-use arcmc_types::error::{ArcMCError, ArcMCResult};
+use aml_types::error::{AMLError, AMLResult};
 use std::collections::HashMap;
 use tauri::{AppHandle, Manager};
 use tauri_plugin_http::reqwest::{self, Response, StatusCode};
@@ -97,7 +97,7 @@ fn build_friend_action_request(
   tgt_player_name: Option<String>,
   tgt_player_uuid: Option<Uuid>,
   action: MicrosoftFriendAction,
-) -> ArcMCResult<MicrosoftFriendActionRequest> {
+) -> AMLResult<MicrosoftFriendActionRequest> {
   let tgt_player_name = tgt_player_name
     .map(|name| name.trim().to_string())
     .filter(|name| !name.is_empty());
@@ -143,7 +143,7 @@ fn build_friend_action_request(
   }
 }
 
-async fn parse_friends_service_error(response: Response) -> ArcMCError {
+async fn parse_friends_service_error(response: Response) -> AMLError {
   if response.status() == StatusCode::BAD_REQUEST {
     let error = response
       .json::<MicrosoftFriendsErrorResponse>()
@@ -172,7 +172,7 @@ async fn attach_presence(
   app: &AppHandle,
   player: &PlayerInfo,
   friends_response: MicrosoftFriendsResponse,
-) -> ArcMCResult<MicrosoftFriendList> {
+) -> AMLResult<MicrosoftFriendList> {
   let access_token = microsoft::oauth::get_access_token(app, player).await?;
   let client = app.state::<reqwest::Client>();
 
@@ -260,7 +260,7 @@ async fn attach_presence(
 async fn retrieve_friend_avatar(
   app: &AppHandle,
   friend: &MicrosoftFriendProfile,
-) -> ArcMCResult<Vec<ImageWrapper>> {
+) -> AMLResult<Vec<ImageWrapper>> {
   let client = app.state::<reqwest::Client>();
   let profile = client
     .get(format!(
@@ -287,7 +287,7 @@ async fn retrieve_friend_avatar(
 pub async fn retrieve_friend_list(
   app: &AppHandle,
   player: &PlayerInfo,
-) -> ArcMCResult<MicrosoftFriendList> {
+) -> AMLResult<MicrosoftFriendList> {
   let access_token = microsoft::oauth::get_access_token(app, player).await?;
   let client = app.state::<reqwest::Client>();
 
@@ -316,7 +316,7 @@ pub async fn update_friend(
   tgt_player_name: Option<String>,
   tgt_player_uuid: Option<Uuid>,
   action: MicrosoftFriendAction,
-) -> ArcMCResult<MicrosoftFriendList> {
+) -> AMLResult<MicrosoftFriendList> {
   let access_token = microsoft::oauth::get_access_token(app, player).await?;
   let client = app.state::<reqwest::Client>();
   let request = build_friend_action_request(tgt_player_name, tgt_player_uuid, action)?;

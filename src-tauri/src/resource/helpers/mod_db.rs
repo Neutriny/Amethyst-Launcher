@@ -1,4 +1,4 @@
-use arcmc_types::error::ArcMCResult;
+use aml_types::error::AMLResult;
 use std::collections::{HashMap, HashSet};
 use std::sync::Mutex;
 use tauri::{AppHandle, Manager};
@@ -296,7 +296,7 @@ impl ModDataBase {
   }
 }
 
-pub async fn initialize_mod_db(app: &AppHandle) -> ArcMCResult<()> {
+pub async fn initialize_mod_db(app: &AppHandle) -> AMLResult<()> {
   let csv_path = get_app_resource_filepath(app, "assets/db/mod_data.csv")
     .ok()
     .unwrap_or_default();
@@ -371,7 +371,7 @@ pub async fn initialize_mod_db(app: &AppHandle) -> ArcMCResult<()> {
 pub async fn handle_localized_search_query(
   app: &AppHandle,
   query: &str,
-) -> ArcMCResult<HandledSearchQuery> {
+) -> AMLResult<HandledSearchQuery> {
   let query = query.split_whitespace().collect::<Vec<_>>().join(" ");
 
   if !contains_chinese(&query) {

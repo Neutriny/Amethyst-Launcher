@@ -1,6 +1,6 @@
 use rand::Rng;
-use arcmc_types::error::ArcMCResult;
-use arcmc_types::partial::{PartialAccess, PartialUpdate};
+use aml_types::error::AMLResult;
+use aml_types::partial::{PartialAccess, PartialUpdate};
 use std::fs;
 use std::path::{MAIN_SEPARATOR, PathBuf};
 use std::sync::Mutex;
@@ -16,7 +16,7 @@ use crate::utils::portable::extract_assets;
 use crate::{APP_DATA_DIR, EXE_PATH, IS_PORTABLE};
 
 impl LauncherConfig {
-  pub fn setup_with_app(&mut self, app: &AppHandle) -> ArcMCResult<()> {
+  pub fn setup_with_app(&mut self, app: &AppHandle) -> AMLResult<()> {
     // Resolve build_type and displayed version string.
     let is_dev = cfg!(debug_assertions);
     let pkg_version = app.package_info().version.to_string();

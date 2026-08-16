@@ -1,7 +1,7 @@
 import micromatch from "micromatch";
 import { useEffect, useRef } from "react";
 
-const ARCMC_LINK_PREFIX = "arcmc://";
+const ARCMC_LINK_PREFIX = "aml://";
 const EMIT_DEEPLINK_EVENT = "deeplink:emit";
 
 const isTauri = typeof window !== "undefined" && "__TAURI__" in window;

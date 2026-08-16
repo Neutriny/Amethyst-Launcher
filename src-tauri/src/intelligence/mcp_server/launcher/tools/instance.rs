@@ -15,7 +15,7 @@ use crate::resource::models::{ModLoaderResourceInfo, OptiFineResourceInfo, Resou
 
 fn parse_mod_loader_type(
   loader_type: Option<String>,
-) -> Result<ModLoaderType, arcmc_types::error::ArcMCError> {
+) -> Result<ModLoaderType, aml_types::error::AMLError> {
   match loader_type {
     Some(loader_type) if !loader_type.trim().is_empty() => {
       ModLoaderType::from_str(&loader_type).map_err(|_| ResourceError::NoDownloadApi.into())
@@ -29,7 +29,7 @@ async fn resolve_mod_loader(
   game_version: String,
   loader_type: ModLoaderType,
   loader_version: Option<String>,
-) -> Result<ModLoaderResourceInfo, arcmc_types::error::ArcMCError> {
+) -> Result<ModLoaderResourceInfo, aml_types::error::AMLError> {
   if loader_type == ModLoaderType::Unknown {
     return Ok(ModLoaderResourceInfo {
       loader_type: ModLoaderType::Unknown,
@@ -60,7 +60,7 @@ async fn resolve_optifine(
   app: tauri::AppHandle,
   game_version: String,
   optifine_version: Option<String>,
-) -> Result<Option<OptiFineResourceInfo>, arcmc_types::error::ArcMCError> {
+) -> Result<Option<OptiFineResourceInfo>, aml_types::error::AMLError> {
   let Some(optifine_version) = optifine_version.filter(|version| !version.trim().is_empty()) else {
     return Ok(None);
   };

@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 use serde_json::json;
-use arcmc_types::error::ArcMCResult;
+use aml_types::error::AMLResult;
 use tauri::{AppHandle, Manager};
 use tauri_plugin_http::reqwest;
 
@@ -27,7 +27,7 @@ pub async fn login(
   auth_server_url: String,
   username: String,
   password: String,
-) -> ArcMCResult<(Vec<PlayerInfo>, bool)> {
+) -> AMLResult<(Vec<PlayerInfo>, bool)> {
   let client = app.state::<reqwest::Client>();
 
   let response = client
@@ -104,7 +104,7 @@ pub async fn refresh(
   app: &AppHandle,
   player: &PlayerInfo,
   is_new_bind: bool,
-) -> ArcMCResult<PlayerInfo> {
+) -> AMLResult<PlayerInfo> {
   let client = app.state::<reqwest::Client>();
 
   let response = client

@@ -17,10 +17,10 @@ const DEFAULT_PORT: u16 = 18970;
 const DEFAULT_CONNECT_TIMEOUT_MS: u64 = 5000;
 const RETRY_INTERVAL_MS: u64 = 250;
 
-const EXPECTED_SERVER_NAME: &str = "arcmc-mcp";
+const EXPECTED_SERVER_NAME: &str = "amethyst-mcp";
 const MCP_SERVER_HOST: &str = "127.0.0.1";
 const MCP_SERVER_PATH: &str = "/mcp";
-const RUN_ARCMC_DEEPLINK: &str = "arcmc://run-silently";
+const RUN_AML_DEEPLINK: &str = "aml://run-silently";
 const ENABLE_MCP_HINT: &str =
   "Please enable Launcher MCP Server in Amethyst - Intelligence to use the CLI.\nIf your MCP server uses a port other than the default 18970, run the CLI with `-p <port>`.";
 
@@ -166,7 +166,7 @@ async fn connect_launcher(options: &CliOptions) -> Result<LauncherClient, String
   match try_connect(options.port).await {
     Ok(client) => Ok(client),
     Err(initial_err) => {
-      run_arcmc_deeplink()?;
+      run_aml_deeplink()?;
 
       let deadline = Instant::now() + std::time::Duration::from_millis(DEFAULT_CONNECT_TIMEOUT_MS);
       let mut last_error = initial_err;
@@ -212,8 +212,8 @@ fn print_help(tools: Option<&[Tool]>, hint: Option<&str>) {
   println!("Amethyst CLI {}", env!("CARGO_PKG_VERSION"));
   println!();
   println!("Usage:");
-  println!("  arcmc-cli -h | --help");
-  println!("  arcmc-cli [-p | --port <port>] <tool> [json-object]");
+  println!("  aml-cli -h | --help");
+  println!("  aml-cli [-p | --port <port>] <tool> [json-object]");
 
   if let Some(hint) = hint {
     println!();
@@ -320,37 +320,37 @@ fn parse_tool_arguments(args: &[String]) -> Result<Map<String, Value>, String> {
     .ok_or_else(|| "tool arguments must be a JSON object".to_string())
 }
 
-fn run_arcmc_deeplink() -> Result<(), String> {
+fn run_aml_deeplink() -> Result<(), String> {
   #[cfg(target_os = "macos")]
   let mut command = {
     let mut command = Command::new("open");
-    command.arg(RUN_ARCMC_DEEPLINK);
+    command.arg(RUN_AML_DEEPLINK);
     command
   };
 
   #[cfg(target_os = "linux")]
   let mut command = {
     let mut command = Command::new("xdg-open");
-    command.arg(RUN_ARCMC_DEEPLINK);
+    command.arg(RUN_AML_DEEPLINK);
     command
   };
 
   #[cfg(target_os = "windows")]
   let mut command = {
     let mut command = Command::new("cmd");
-    command.args(["/C", "start", "", RUN_ARCMC_DEEPLINK]);
+    command.args(["/C", "start", "", RUN_AML_DEEPLINK]);
     command
   };
 
   command
     .status()
-    .map_err(|err| format!("failed to open deeplink `{RUN_ARCMC_DEEPLINK}`: {err}"))
+    .map_err(|err| format!("failed to open deeplink `{RUN_AML_DEEPLINK}`: {err}"))
     .and_then(|status| {
       if status.success() {
         Ok(())
       } else {
         Err(format!(
-          "deeplink launcher exited with status {} for `{RUN_ARCMC_DEEPLINK}`",
+          "deeplink launcher exited with status {} for `{RUN_AML_DEEPLINK}`",
           status
         ))
       }

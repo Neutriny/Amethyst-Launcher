@@ -2,7 +2,7 @@ use async_speed_limit::Limiter;
 use futures::StreamExt;
 use futures::stream::TryStreamExt;
 use serde::{Deserialize, Serialize};
-use arcmc_types::error::{ArcMCError, ArcMCResult};
+use aml_types::error::{AMLError, AMLResult};
 use std::error::Error;
 use std::future::Future;
 use std::path::PathBuf;
@@ -127,7 +127,7 @@ impl DownloadTask {
     app_handle: &AppHandle,
     current: i64,
     param: &DownloadParam,
-  ) -> ArcMCResult<reqwest::Response> {
+  ) -> AMLResult<reqwest::Response> {
     let state = app_handle.state::<reqwest::Client>();
     let client = with_retry(state.inner().clone());
     let mut request = if current == 0 {
@@ -147,11 +147,11 @@ impl DownloadTask {
     let response = request
       .send()
       .await
-      .map_err(|e| ArcMCError(format!("{:?}", e.source())))?;
+      .map_err(|e| AMLError(format!("{:?}", e.source())))?;
 
     let response = response
       .error_for_status()
-      .map_err(|e| ArcMCError(format!("{:?}", e.source())))?;
+      .map_err(|e| AMLError(format!("{:?}", e.source())))?;
 
     Ok(response)
   }
@@ -160,7 +160,7 @@ impl DownloadTask {
     app_handle: &AppHandle,
     current: i64,
     param: &DownloadParam,
-  ) -> ArcMCResult<(
+  ) -> AMLResult<(
     impl Stream<Item = Result<bytes::Bytes, std::io::Error>> + Send + use<>,
     i64,
   )> {
@@ -182,8 +182,8 @@ impl DownloadTask {
     self,
     app_handle: AppHandle,
     limiter: Option<Limiter>,
-  ) -> ArcMCResult<(
-    impl Future<Output = ArcMCResult<()>> + Send,
+  ) -> AMLResult<(
+    impl Future<Output = AMLResult<()>> + Send,
     Arc<RwLock<PTaskHandle>>,
   )> {
     let current = self.p_handle.desc.current;
@@ -231,8 +231,8 @@ impl DownloadTask {
     self,
     app_handle: AppHandle,
     limiter: Option<Limiter>,
-  ) -> ArcMCResult<(
-    impl Future<Output = ArcMCResult<()>> + Send,
+  ) -> AMLResult<(
+    impl Future<Output = AMLResult<()>> + Send,
     Arc<RwLock<PTaskHandle>>,
   )> {
     Self::future_impl(self, app_handle, limiter).await

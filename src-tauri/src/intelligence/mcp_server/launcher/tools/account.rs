@@ -52,7 +52,7 @@ pub fn tool_routes() -> Vec<ToolRoute<McpContext>> {
       } => async move {
         let id = params.id.trim();
         let value =
-          serde_json::to_string(&id).map_err(|e| arcmc_types::error::ArcMCError(e.to_string()))?;
+          serde_json::to_string(&id).map_err(|e| aml_types::error::AMLError(e.to_string()))?;
         crate::launcher_config::commands::update_launcher_config(
           app,
           "states.shared.selectedPlayerId".to_string(),

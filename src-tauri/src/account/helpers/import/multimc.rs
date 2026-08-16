@@ -1,5 +1,5 @@
 use serde::Deserialize;
-use arcmc_types::error::ArcMCResult;
+use aml_types::error::AMLResult;
 use std::collections::HashSet;
 use std::fs;
 use std::str::FromStr;
@@ -55,7 +55,7 @@ pub struct MultiMCAccountEntry {
 async fn microsoft_to_player(
   app: &AppHandle,
   acc: &MultiMCOfficialAccount,
-) -> ArcMCResult<PlayerInfo> {
+) -> AMLResult<PlayerInfo> {
   let profile_result = fetch_minecraft_profile(app, acc.ygg.token.clone()).await;
   let profile = match profile_result {
     Ok(p) => p,
@@ -130,7 +130,7 @@ async fn microsoft_to_player(
 
 pub async fn retrieve_multimc_account_info(
   app: &AppHandle,
-) -> ArcMCResult<(Vec<PlayerInfo>, Vec<Url>)> {
+) -> AMLResult<(Vec<PlayerInfo>, Vec<Url>)> {
   let candidate_dirs = list_launcher_candidate_dirs(app);
   let multimc_json_paths: Vec<_> = candidate_dirs
     .into_iter()

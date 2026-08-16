@@ -1,5 +1,5 @@
 use serde_json::Value;
-use arcmc_types::error::{ArcMCError, ArcMCResult};
+use aml_types::error::{AMLError, AMLResult};
 use std::fs;
 use std::path::PathBuf;
 use std::process::Command;
@@ -67,7 +67,7 @@ fn build_local_new_filename(old_name: &str, old_version: &str, new_version: &str
 
 pub async fn fetch_latest_version(
   app: &AppHandle,
-) -> ArcMCResult<Option<(String, String, String, String)>> {
+) -> AMLResult<Option<(String, String, String, String)>> {
   let config_binding = app.state::<Mutex<LauncherConfig>>();
   let (os, arch, is_portable, is_china_mainland_ip) = {
     let config_state = config_binding.lock()?;
@@ -118,7 +118,7 @@ pub async fn download_target_version(
   app: &AppHandle,
   version: String,
   fname: String,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   let config_binding = app.state::<Mutex<LauncherConfig>>();
   let (download_cache_dir, is_china_mainland_ip) = {
     let config_state = config_binding.lock()?;
@@ -166,7 +166,7 @@ pub async fn install_update_windows(
   app: &AppHandle,
   downloaded_filename: String,
   restart: bool,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   use std::os::windows::process::CommandExt;
 
   let config_binding = app.state::<Mutex<LauncherConfig>>();
@@ -193,11 +193,11 @@ pub async fn install_update_windows(
     // Portable: replace current exe with the newly downloaded one via a temp cmd script.
     let cur_dir = cur_exe
       .parent()
-      .ok_or_else(|| ArcMCError("No parent dir for exe".to_string()))?;
+      .ok_or_else(|| AMLError("No parent dir for exe".to_string()))?;
     let old_name = cur_exe
       .file_name()
       .and_then(|s| s.to_str())
-      .ok_or_else(|| ArcMCError("Invalid exe name".to_string()))?
+      .ok_or_else(|| AMLError("Invalid exe name".to_string()))?
       .to_string();
 
     let target_name = build_local_new_filename(&old_name, &old_version, &new_version);
@@ -273,7 +273,7 @@ pub async fn install_update_macos(
   app: &AppHandle,
   downloaded_filename: String,
   restart: bool,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   use std::ffi::OsStr;
 
   let config_binding = app.state::<Mutex<LauncherConfig>>();
@@ -300,16 +300,16 @@ pub async fn install_update_macos(
   let app_bundle = cur_exe
     .ancestors()
     .find(|p| p.extension().and_then(OsStr::to_str) == Some("app"))
-    .ok_or_else(|| ArcMCError("Not inside .app bundle".to_string()))?
+    .ok_or_else(|| AMLError("Not inside .app bundle".to_string()))?
     .to_path_buf();
   let app_dir = app_bundle
     .parent()
-    .ok_or_else(|| ArcMCError("No parent dir for .app".to_string()))?
+    .ok_or_else(|| AMLError("No parent dir for .app".to_string()))?
     .to_path_buf();
   let old_name = app_bundle
     .file_name()
     .and_then(|s| s.to_str())
-    .ok_or_else(|| ArcMCError("Invalid .app name".to_string()))?
+    .ok_or_else(|| AMLError("Invalid .app name".to_string()))?
     .to_string();
 
   let target_name = build_local_new_filename(&old_name, &old_version, &new_version);

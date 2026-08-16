@@ -1,7 +1,7 @@
 use async_trait::async_trait;
 use config::Config;
 use serde::{Deserialize, Serialize};
-use arcmc_types::error::ArcMCResult;
+use aml_types::error::AMLResult;
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::Read;
@@ -52,7 +52,7 @@ structstruck::strike! {
 
 #[async_trait]
 impl ModpackManifest for MultiMcManifest {
-  fn from_archive(file: &File) -> ArcMCResult<Self> {
+  fn from_archive(file: &File) -> AMLResult<Self> {
     let mut archive = ZipArchive::new(file)?;
 
     let base_path = if archive.by_name("mmc-pack.json").is_ok() {
@@ -101,7 +101,7 @@ impl ModpackManifest for MultiMcManifest {
     Ok(manifest)
   }
 
-  async fn get_meta_info(&self, app: &AppHandle) -> ArcMCResult<ModpackMetaInfo> {
+  async fn get_meta_info(&self, app: &AppHandle) -> AMLResult<ModpackMetaInfo> {
     let client_version = self.get_client_version()?;
     let mod_loader = if let Ok((loader_type, version)) = self.get_mod_loader_type_version() {
       Some(
@@ -127,7 +127,7 @@ impl ModpackManifest for MultiMcManifest {
     })
   }
 
-  fn get_client_version(&self) -> ArcMCResult<String> {
+  fn get_client_version(&self) -> AMLResult<String> {
     let component = self
       .components
       .iter()
@@ -137,7 +137,7 @@ impl ModpackManifest for MultiMcManifest {
     get_version(component)
   }
 
-  fn get_mod_loader_type_version(&self) -> ArcMCResult<(ModLoaderType, String)> {
+  fn get_mod_loader_type_version(&self) -> AMLResult<(ModLoaderType, String)> {
     for component in &self.components {
       match component.uid.as_str() {
         "net.minecraft" => continue,
@@ -156,7 +156,7 @@ impl ModpackManifest for MultiMcManifest {
     &self,
     _app: &AppHandle,
     _instance_path: &Path,
-  ) -> ArcMCResult<Vec<PTaskParam>> {
+  ) -> AMLResult<Vec<PTaskParam>> {
     // MultiMC Manifests do not include download parameters
     Ok(Vec::new())
   }
@@ -166,7 +166,7 @@ impl ModpackManifest for MultiMcManifest {
   }
 }
 
-fn get_version(component: &MultiMcComponent) -> ArcMCResult<String> {
+fn get_version(component: &MultiMcComponent) -> AMLResult<String> {
   component
     .version
     .as_ref()
@@ -179,7 +179,7 @@ pub fn build_multimc_export_bundle(
   instance: &Instance,
   options: &ExportModpackOptions,
   selected_files: &[(String, PathBuf)],
-) -> ArcMCResult<ModpackExportBundle> {
+) -> AMLResult<ModpackExportBundle> {
   let manifest = generate_multimc_manifest(instance);
   let json = serde_json::to_string_pretty(&manifest)
     .map_err(|_| InstanceError::ModpackManifestParseError)?;

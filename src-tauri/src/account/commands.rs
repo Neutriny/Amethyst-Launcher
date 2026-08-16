@@ -1,5 +1,5 @@
-use arcmc_types::error::ArcMCResult;
-use arcmc_types::storage::Storage;
+use aml_types::error::AMLResult;
+use aml_types::storage::Storage;
 use std::path::Path;
 use std::sync::Mutex;
 use tauri::{AppHandle, Manager};
@@ -25,7 +25,7 @@ use crate::utils::fs::get_app_resource_filepath;
 use crate::utils::web::normalize_url;
 
 #[tauri::command]
-pub fn retrieve_player_list(app: AppHandle) -> ArcMCResult<Vec<Player>> {
+pub fn retrieve_player_list(app: AppHandle) -> AMLResult<Vec<Player>> {
   let account_binding = app.state::<Mutex<AccountInfo>>();
   let account_state = account_binding.lock()?;
 
@@ -57,7 +57,7 @@ pub fn retrieve_player_list(app: AppHandle) -> ArcMCResult<Vec<Player>> {
 }
 
 #[tauri::command]
-pub async fn add_player_offline(app: AppHandle, username: String, uuid: String) -> ArcMCResult<()> {
+pub async fn add_player_offline(app: AppHandle, username: String, uuid: String) -> AMLResult<()> {
   let new_player = offline::login(&app, username, uuid).await?;
 
   misc::add_player(&app, new_player)
@@ -68,7 +68,7 @@ pub async fn fetch_oauth_code(
   app: AppHandle,
   server_type: PlayerType,
   auth_server_url: String,
-) -> ArcMCResult<DeviceAuthResponseInfo> {
+) -> AMLResult<DeviceAuthResponseInfo> {
   if server_type == PlayerType::ThirdParty {
     let auth_server = AuthServer::from(get_auth_server_info_by_url(&app, auth_server_url)?);
 
@@ -91,7 +91,7 @@ pub async fn add_player_oauth(
   server_type: PlayerType,
   auth_info: DeviceAuthResponseInfo,
   auth_server_url: String,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   let new_player = match server_type {
     PlayerType::ThirdParty => {
       let _ = check_authlib_jar(&app).await; // ignore the error when logging in
@@ -130,7 +130,7 @@ pub async fn relogin_player_oauth(
   app: AppHandle,
   player_id: String,
   auth_info: DeviceAuthResponseInfo,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   let account_binding = app.state::<Mutex<AccountInfo>>();
 
   let cloned_account_state = account_binding.lock()?.clone();
@@ -182,7 +182,7 @@ pub async fn relogin_player_oauth(
 }
 
 #[tauri::command]
-pub fn cancel_oauth(app: AppHandle) -> ArcMCResult<()> {
+pub fn cancel_oauth(app: AppHandle) -> AMLResult<()> {
   let account_binding = app.state::<Mutex<AccountInfo>>();
   let mut account_state = account_binding.lock()?;
   account_state.is_oauth_processing = false;
@@ -196,7 +196,7 @@ pub async fn add_player_3rdparty_password(
   auth_server_url: String,
   username: String,
   password: String,
-) -> ArcMCResult<Vec<Player>> {
+) -> AMLResult<Vec<Player>> {
   let _ = check_authlib_jar(&app).await; // ignore the error when logging in
 
   let (mut new_players, is_token_binded) =
@@ -244,7 +244,7 @@ pub async fn relogin_player_3rdparty_password(
   app: AppHandle,
   player_id: String,
   password: String,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   let account_binding = app.state::<Mutex<AccountInfo>>();
 
   let cloned_account_state = account_binding.lock()?.clone();
@@ -293,7 +293,7 @@ pub async fn relogin_player_3rdparty_password(
 }
 
 #[tauri::command]
-pub async fn add_player_from_selection(app: AppHandle, player: Player) -> ArcMCResult<()> {
+pub async fn add_player_from_selection(app: AppHandle, player: Player) -> AMLResult<()> {
   let player_info: PlayerInfo = player.into();
   let refreshed_player = authlib_injector::password::refresh(&app, &player_info, true).await?;
 
@@ -305,7 +305,7 @@ pub fn update_player_skin_offline_preset(
   app: AppHandle,
   player_id: String,
   preset_role: PresetRole,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   let account_binding = app.state::<Mutex<AccountInfo>>();
   let mut account_state = account_binding.lock()?;
 
@@ -329,7 +329,7 @@ pub fn update_player_skin_offline_local(
   image_path: String,
   texture_type: TextureType,
   skin_model: SkinModel,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   let image_path = if image_path == "dummy" {
     // this is an Easter Egg :)
     get_app_resource_filepath(&app, "assets/skins/dummy.png")
@@ -369,7 +369,7 @@ pub fn update_player_skin_offline_local(
 }
 
 #[tauri::command]
-pub async fn delete_player(app: AppHandle, player_id: String) -> ArcMCResult<()> {
+pub async fn delete_player(app: AppHandle, player_id: String) -> AMLResult<()> {
   {
     let account_binding = app.state::<Mutex<AccountInfo>>();
     let mut account_state = account_binding.lock()?;
@@ -405,7 +405,7 @@ pub async fn delete_player(app: AppHandle, player_id: String) -> ArcMCResult<()>
 }
 
 #[tauri::command]
-pub async fn refresh_player(app: AppHandle, player_id: String) -> ArcMCResult<()> {
+pub async fn refresh_player(app: AppHandle, player_id: String) -> AMLResult<()> {
   let player = misc::get_player_by_id(&app, &player_id)?.ok_or(AccountError::NotFound)?;
 
   let refreshed_player = match player.player_type {
@@ -434,7 +434,7 @@ pub async fn refresh_player(app: AppHandle, player_id: String) -> ArcMCResult<()
 pub async fn retrieve_microsoft_friend_list(
   app: AppHandle,
   cur_player_id: String,
-) -> ArcMCResult<MicrosoftFriendList> {
+) -> AMLResult<MicrosoftFriendList> {
   let player = misc::get_player_by_id(&app, &cur_player_id)?.ok_or(AccountError::NotFound)?;
 
   if player.player_type != PlayerType::Microsoft {
@@ -451,7 +451,7 @@ pub async fn update_microsoft_friend(
   tgt_player_name: Option<String>,
   tgt_player_uuid: Option<String>,
   action: MicrosoftFriendAction,
-) -> ArcMCResult<MicrosoftFriendList> {
+) -> AMLResult<MicrosoftFriendList> {
   let player = misc::get_player_by_id(&app, &cur_player_id)?.ok_or(AccountError::NotFound)?;
 
   if player.player_type != PlayerType::Microsoft {
@@ -472,7 +472,7 @@ pub async fn update_microsoft_friend(
 }
 
 #[tauri::command]
-pub fn retrieve_auth_server_list(app: AppHandle) -> ArcMCResult<Vec<AuthServer>> {
+pub fn retrieve_auth_server_list(app: AppHandle) -> AMLResult<Vec<AuthServer>> {
   let binding = app.state::<Mutex<AccountInfo>>();
   let state = binding.lock()?;
   let auth_servers = state
@@ -484,7 +484,7 @@ pub fn retrieve_auth_server_list(app: AppHandle) -> ArcMCResult<Vec<AuthServer>>
 }
 
 #[tauri::command]
-pub async fn fetch_auth_server(app: AppHandle, url: String) -> ArcMCResult<AuthServer> {
+pub async fn fetch_auth_server(app: AppHandle, url: String) -> AMLResult<AuthServer> {
   // check the url integrity following the standard
   // https://github.com/yushijinhun/authlib-injector/wiki/%E5%90%AF%E5%8A%A8%E5%99%A8%E6%8A%80%E6%9C%AF%E8%A7%84%E8%8C%83#%E5%9C%A8%E5%90%AF%E5%8A%A8%E5%99%A8%E4%B8%AD%E8%BE%93%E5%85%A5%E5%9C%B0%E5%9D%80
   let parsed_url = Url::parse(&url)
@@ -503,7 +503,7 @@ pub async fn fetch_auth_server(app: AppHandle, url: String) -> ArcMCResult<AuthS
 }
 
 #[tauri::command]
-pub async fn add_auth_server(app: AppHandle, auth_url: String) -> ArcMCResult<()> {
+pub async fn add_auth_server(app: AppHandle, auth_url: String) -> AMLResult<()> {
   if get_auth_server_info_by_url(&app, auth_url.clone()).is_ok() {
     return Err(AccountError::Duplicate.into());
   }
@@ -518,7 +518,7 @@ pub async fn add_auth_server(app: AppHandle, auth_url: String) -> ArcMCResult<()
 }
 
 #[tauri::command]
-pub fn delete_auth_server(app: AppHandle, url: String) -> ArcMCResult<()> {
+pub fn delete_auth_server(app: AppHandle, url: String) -> AMLResult<()> {
   let account_binding = app.state::<Mutex<AccountInfo>>();
   let mut account_state = account_binding.lock()?;
 
@@ -572,7 +572,7 @@ pub fn delete_auth_server(app: AppHandle, url: String) -> ArcMCResult<()> {
 pub async fn retrieve_other_launcher_account_info(
   app: AppHandle,
   launcher_type: ImportLauncherType,
-) -> ArcMCResult<(Vec<Player>, Vec<AuthServer>)> {
+) -> AMLResult<(Vec<Player>, Vec<AuthServer>)> {
   let (mut player_infos, urls) = match launcher_type {
     ImportLauncherType::HMCL => retrieve_hmcl_account_info(&app).await?,
     ImportLauncherType::LegacyHMCL => retrieve_legacy_hmcl_account_info(&app).await?,
@@ -615,7 +615,7 @@ pub async fn import_external_account_info(
   app: AppHandle,
   players: Vec<Player>,
   auth_servers: Vec<AuthServer>,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   // fetch auth servers
   let fetch_tasks = auth_servers.into_iter().map(|server| {
     let app = app.clone();

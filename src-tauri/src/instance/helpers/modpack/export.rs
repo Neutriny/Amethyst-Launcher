@@ -1,6 +1,6 @@
 use regex::{Regex, RegexSet};
 use serde::{Deserialize, Serialize};
-use arcmc_types::error::{ArcMCError, ArcMCResult};
+use aml_types::error::{AMLError, AMLResult};
 use std::collections::HashSet;
 use std::io::{self, Write};
 use std::path::PathBuf;
@@ -39,7 +39,7 @@ pub struct ExportModpackOptions {
 pub fn validate_export_options(
   instance: &Instance,
   options: &ExportModpackOptions,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   // Check required fields
   if options.name.trim().is_empty() {
     return Err(InstanceError::InvalidNameError.into());
@@ -199,7 +199,7 @@ static SUGGESTED_REGEX_BLACKLIST: LazyLock<RegexSet> = LazyLock::new(|| {
 });
 
 /// List all files that can be offered to the user in the modpack export tree UI.
-pub fn list_files(instance: &Instance) -> ArcMCResult<ModpackFileList> {
+pub fn list_files(instance: &Instance) -> AMLResult<ModpackFileList> {
   let root = &instance.version_path;
   if !root.exists() {
     return Err(InstanceError::FileNotFoundError.into());
@@ -308,7 +308,7 @@ pub async fn build_export_bundle(
   instance: &Instance,
   options: &ExportModpackOptions,
   selected_files: &[(String, PathBuf)],
-) -> ArcMCResult<ModpackExportBundle> {
+) -> AMLResult<ModpackExportBundle> {
   match options.format {
     ExportFormat::Modrinth => {
       build_modrinth_export_bundle(app, instance, options, selected_files).await
@@ -341,7 +341,7 @@ fn should_store(path: &str) -> bool {
 pub async fn create_modpack_zip(
   save_path: &str,
   export_bundle: ModpackExportBundle,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   let save_path = save_path.to_string();
   let ModpackExportBundle {
     overrides_prefix,
@@ -349,9 +349,9 @@ pub async fn create_modpack_zip(
     extra_files,
   } = export_bundle;
 
-  tokio::task::spawn_blocking(move || -> ArcMCResult<()> {
+  tokio::task::spawn_blocking(move || -> AMLResult<()> {
     let output = std::fs::File::create(&save_path)
-      .map_err(|e| ArcMCError(format!("Failed to create zip file: {}", e)))?;
+      .map_err(|e| AMLError(format!("Failed to create zip file: {}", e)))?;
     let output = io::BufWriter::with_capacity(1024 * 1024, output);
     let mut writer = ZipWriter::new(output);
     let deflate_options = FileOptions::<ExtendedFileOptions>::default()
@@ -363,10 +363,10 @@ pub async fn create_modpack_zip(
     for (name, content) in extra_files {
       writer
         .start_file(name, deflate_options.clone())
-        .map_err(|e| ArcMCError(format!("Failed to create zip entry: {}", e)))?;
+        .map_err(|e| AMLError(format!("Failed to create zip entry: {}", e)))?;
       writer
         .write_all(content.as_bytes())
-        .map_err(|e| ArcMCError(format!("Failed to write extra file to zip: {}", e)))?;
+        .map_err(|e| AMLError(format!("Failed to write extra file to zip: {}", e)))?;
     }
 
     for (rel, full) in overrides_files {
@@ -378,14 +378,14 @@ pub async fn create_modpack_zip(
       };
       writer
         .start_file(entry_path, options)
-        .map_err(|e| ArcMCError(format!("Failed to create zip entry: {}", e)))?;
+        .map_err(|e| AMLError(format!("Failed to create zip entry: {}", e)))?;
 
       let file = std::fs::File::open(&full)
-        .map_err(|e| ArcMCError(format!("Failed to open file {}: {}", full.display(), e)))?;
+        .map_err(|e| AMLError(format!("Failed to open file {}: {}", full.display(), e)))?;
       let mut file = io::BufReader::with_capacity(1024 * 1024, file);
 
       io::copy(&mut file, &mut writer).map_err(|e| {
-        ArcMCError(format!(
+        AMLError(format!(
           "Failed to copy file {} to zip: {}",
           full.display(),
           e
@@ -395,10 +395,10 @@ pub async fn create_modpack_zip(
 
     writer
       .finish()
-      .map_err(|e| ArcMCError(format!("Failed to finalize zip file: {}", e)))?;
+      .map_err(|e| AMLError(format!("Failed to finalize zip file: {}", e)))?;
 
     Ok(())
   })
   .await
-  .map_err(|e| ArcMCError(format!("Failed to join zip creation task: {}", e)))?
+  .map_err(|e| AMLError(format!("Failed to join zip creation task: {}", e)))?
 }

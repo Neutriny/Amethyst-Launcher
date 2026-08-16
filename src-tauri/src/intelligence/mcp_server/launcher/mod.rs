@@ -8,7 +8,7 @@ use rmcp::transport::streamable_http_server::{
 };
 use rmcp::{ErrorData as McpError, ServerHandler};
 use serde::Serialize;
-use arcmc_types::error::{ArcMCError, ArcMCResult};
+use aml_types::error::{AMLError, AMLResult};
 use tauri::AppHandle;
 
 use crate::launcher_config::models::LauncherMcpServerConfig;
@@ -43,7 +43,7 @@ impl ServerHandler for McpContext {
 }
 
 pub fn command_result_to_tool_result<T>(
-  command_result: ArcMCResult<T>,
+  command_result: AMLResult<T>,
 ) -> Result<CallToolResult, McpError>
 where
   T: Serialize,
@@ -120,7 +120,7 @@ async fn serve(
   app_handle: AppHandle,
   listener: tokio::net::TcpListener,
   port: u16,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   let service_app_handle = app_handle.clone();
   let service: StreamableHttpService<Router<McpContext>, LocalSessionManager> =
     StreamableHttpService::new(
@@ -144,7 +144,7 @@ async fn serve(
 
   axum::serve(listener, axum_router)
     .await
-    .map_err(|e| ArcMCError(e.to_string()))?;
+    .map_err(|e| AMLError(e.to_string()))?;
 
   Ok(())
 }

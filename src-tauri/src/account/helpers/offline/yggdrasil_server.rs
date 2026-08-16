@@ -17,7 +17,7 @@ use rsa::{
 use serde_json::{Map, Value, json};
 use sha1::Sha1;
 use sha2::{Digest, Sha256};
-use arcmc_types::error::ArcMCResult;
+use aml_types::error::AMLResult;
 use std::{
   collections::HashMap,
   io::Cursor,
@@ -148,7 +148,7 @@ impl YggdrasilServer {
     })
   }
 
-  pub async fn run(self) -> ArcMCResult<()> {
+  pub async fn run(self) -> AMLResult<()> {
     let app = self.clone().create_router();
     let addr = SocketAddr::from_str(&format!("127.0.0.1:{}", self.port))?;
 

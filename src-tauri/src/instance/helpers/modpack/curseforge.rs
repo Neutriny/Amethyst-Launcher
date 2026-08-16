@@ -1,6 +1,6 @@
 use async_trait::async_trait;
 use serde::{Deserialize, Serialize};
-use arcmc_types::error::{ArcMCError, ArcMCResult};
+use aml_types::error::{AMLError, AMLResult};
 use std::fs::File;
 use std::io::Read;
 use std::path::Path;
@@ -72,7 +72,7 @@ pub struct CurseForgeProjectRes {
 
 #[async_trait]
 impl ModpackManifest for CurseForgeManifest {
-  fn from_archive(file: &File) -> ArcMCResult<Self> {
+  fn from_archive(file: &File) -> AMLResult<Self> {
     let mut archive = ZipArchive::new(file)?;
     let mut manifest_file = archive.by_name("manifest.json")?;
     let mut manifest_content = String::new();
@@ -84,7 +84,7 @@ impl ModpackManifest for CurseForgeManifest {
     Ok(manifest)
   }
 
-  async fn get_meta_info(&self, app: &AppHandle) -> ArcMCResult<ModpackMetaInfo> {
+  async fn get_meta_info(&self, app: &AppHandle) -> AMLResult<ModpackMetaInfo> {
     let client_version = self.get_client_version()?;
     let mod_loader = if let Ok((loader_type, version)) = self.get_mod_loader_type_version() {
       Some(
@@ -110,11 +110,11 @@ impl ModpackManifest for CurseForgeManifest {
     })
   }
 
-  fn get_client_version(&self) -> ArcMCResult<String> {
+  fn get_client_version(&self) -> AMLResult<String> {
     Ok(self.minecraft.version.clone())
   }
 
-  fn get_mod_loader_type_version(&self) -> ArcMCResult<(ModLoaderType, String)> {
+  fn get_mod_loader_type_version(&self) -> AMLResult<(ModLoaderType, String)> {
     let loader = self
       .minecraft
       .mod_loaders
@@ -137,7 +137,7 @@ impl ModpackManifest for CurseForgeManifest {
     &self,
     app: &AppHandle,
     instance_path: &Path,
-  ) -> ArcMCResult<Vec<PTaskParam>> {
+  ) -> AMLResult<Vec<PTaskParam>> {
     let client = app.state::<reqwest::Client>();
     let instance_path = instance_path.to_path_buf();
 
@@ -207,7 +207,7 @@ impl ModpackManifest for CurseForgeManifest {
           filename: Some(file_manifest.data.file_name.clone()),
         });
 
-        Ok::<PTaskParam, ArcMCError>(task_param)
+        Ok::<PTaskParam, AMLError>(task_param)
       }
     });
 

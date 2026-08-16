@@ -1,7 +1,7 @@
 use lazy_static::lazy_static;
 use regex::{Regex, RegexBuilder};
 use serde::{Deserialize, Serialize};
-use arcmc_types::error::ArcMCResult;
+use aml_types::error::AMLResult;
 use tauri::{AppHandle, Manager};
 use tauri_plugin_http::reqwest;
 
@@ -29,7 +29,7 @@ struct NeoforgeVersions {
 async fn get_neoforge_meta_by_game_version_official(
   app: &AppHandle,
   game_version: &str,
-) -> ArcMCResult<Vec<ModLoaderResourceInfo>> {
+) -> AMLResult<Vec<ModLoaderResourceInfo>> {
   lazy_static! {
     static ref OLD_VERSION_REGEX: Regex =
       RegexBuilder::new(r"^(?:1\.20\.1\-)?(\d+)\.(\d+)\.(\d+)$")
@@ -204,7 +204,7 @@ async fn get_neoforge_meta_by_game_version_official(
 async fn get_neoforge_meta_by_game_version_bmcl(
   app: &AppHandle,
   game_version: &str,
-) -> ArcMCResult<Vec<ModLoaderResourceInfo>> {
+) -> AMLResult<Vec<ModLoaderResourceInfo>> {
   let client = app.state::<reqwest::Client>();
   let url = get_download_api(
     SourceType::BMCLAPIMirror,
@@ -263,7 +263,7 @@ pub async fn get_neoforge_meta_by_game_version(
   app: &AppHandle,
   priority_list: &[SourceType],
   game_version: &str,
-) -> ArcMCResult<Vec<ModLoaderResourceInfo>> {
+) -> AMLResult<Vec<ModLoaderResourceInfo>> {
   for source_type in priority_list.iter() {
     match *source_type {
       SourceType::Official => {

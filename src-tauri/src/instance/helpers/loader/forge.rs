@@ -1,7 +1,7 @@
 use reqwest::redirect::Policy;
 use reqwest::{Client, Error};
 use serde::{Deserialize, Serialize};
-use arcmc_types::error::{ArcMCError, ArcMCResult};
+use aml_types::error::{AMLError, AMLResult};
 use std::collections::HashMap;
 use std::fs::{self, File};
 use std::io::Read;
@@ -54,13 +54,13 @@ pub async fn install_forge_loader(
   loader: &ModLoader,
   lib_dir: PathBuf,
   task_params: &mut Vec<PTaskParam>,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   let loader_ver = &loader.version;
 
   let mut installer_url_opt: Option<Url> = None;
   for source_type in priority.iter() {
     if let Ok(root) = get_download_api(*source_type, ResourceType::ForgeInstall) {
-      let url_res: ArcMCResult<Url> = match source_type {
+      let url_res: AMLResult<Url> = match source_type {
         SourceType::Official => {
           let full_ver = vec![
             game_version,
@@ -91,7 +91,7 @@ pub async fn install_forge_loader(
     }
   }
 
-  let installer_url = installer_url_opt.ok_or(ArcMCError(
+  let installer_url = installer_url_opt.ok_or(AMLError(
     "failed to resolve Forge installer URL".to_string(),
   ))?;
 
@@ -114,7 +114,7 @@ pub async fn download_forge_libraries(
   priority: &[SourceType],
   instance: &Instance,
   client_info: &mut McClientInfo,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   let subdirs = get_instance_subdir_paths(
     app,
     instance,

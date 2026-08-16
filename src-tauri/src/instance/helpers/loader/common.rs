@@ -1,4 +1,4 @@
-use arcmc_types::error::ArcMCResult;
+use aml_types::error::AMLResult;
 use std::fs::File;
 use std::io::Read;
 use std::path::PathBuf;
@@ -22,7 +22,7 @@ pub fn add_library_entry(
   libraries: &mut Vec<LibrariesValue>,
   lib_path: &str,
   params: Option<LibrariesValue>,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   let new_library = LibrariesValue {
     name: lib_path.to_string(),
     ..params.unwrap_or_default()
@@ -42,7 +42,7 @@ pub async fn install_mod_loader(
   task_params: &mut Vec<PTaskParam>,
   is_install_fabric_api: Option<bool>,
   is_install_qf_api: Option<bool>,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   match loader.loader_type {
     ModLoaderType::Fabric => {
       install_fabric_loader(
@@ -87,7 +87,7 @@ pub async fn execute_processors(
   instance: &Instance,
   client_info: &McClientInfo,
   install_profile: &InstallProfile,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   let game_config = get_instance_game_config(app, instance);
 
   let selected_java = select_java_runtime(

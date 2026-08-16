@@ -1,5 +1,5 @@
-use arcmc_types::error::ArcMCResult;
-use arcmc_types::storage::load_json_async;
+use aml_types::error::AMLResult;
+use aml_types::storage::load_json_async;
 use std::collections::HashMap;
 use std::fs;
 use std::io::BufReader;
@@ -56,7 +56,7 @@ pub async fn select_suitable_jre(
   instance_id: String,
   instances_state: State<'_, Mutex<HashMap<String, Instance>>>,
   launching_queue_state: State<'_, Mutex<Vec<LaunchingState>>>,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   let instance = instances_state
     .lock()?
     .get(&instance_id)
@@ -102,7 +102,7 @@ pub async fn validate_game_files(
   app: AppHandle,
   launcher_config_state: State<'_, Mutex<LauncherConfig>>,
   launching_queue_state: State<'_, Mutex<Vec<LaunchingState>>>,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   let (instance, mut client_info, game_config) = {
     let mut launching_queue = launching_queue_state.lock()?;
     let launching = launching_queue
@@ -220,7 +220,7 @@ pub async fn validate_selected_player(
   app: AppHandle,
   launching_queue_state: State<'_, Mutex<Vec<LaunchingState>>>,
   local_ygg_server_state: State<'_, Mutex<YggdrasilServer>>,
-) -> ArcMCResult<bool> {
+) -> AMLResult<bool> {
   let mut player = get_selected_player_info(&app)?;
 
   if player.player_type == PlayerType::Microsoft {
@@ -278,7 +278,7 @@ pub async fn launch_game(
   launching_queue_state: State<'_, Mutex<Vec<LaunchingState>>>,
   quick_play_singleplayer: Option<String>,
   quick_play_multiplayer: Option<String>,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   let (id, selected_java, game_config, instance) = {
     let mut launching_queue = launching_queue_state.lock()?;
     let launching = launching_queue
@@ -406,7 +406,7 @@ pub async fn launch_game(
 #[tauri::command]
 pub fn cancel_launch_process(
   launching_queue_state: State<'_, Mutex<Vec<LaunchingState>>>,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   let mut launching_queue = launching_queue_state.lock()?;
 
   // kill process if pid exists
@@ -421,7 +421,7 @@ pub fn cancel_launch_process(
 }
 
 #[tauri::command]
-pub async fn open_game_log_window(app: AppHandle, launching_id: u64) -> ArcMCResult<()> {
+pub async fn open_game_log_window(app: AppHandle, launching_id: u64) -> AMLResult<()> {
   create_webview_window(
     &app,
     &format!("game_log_{launching_id}"),
@@ -435,7 +435,7 @@ pub async fn open_game_log_window(app: AppHandle, launching_id: u64) -> ArcMCRes
 }
 
 #[tauri::command]
-pub fn retrieve_game_log(app: AppHandle, launching_id: u64) -> ArcMCResult<Vec<String>> {
+pub fn retrieve_game_log(app: AppHandle, launching_id: u64) -> AMLResult<Vec<String>> {
   let log_file_dir = app.path().resolve::<PathBuf>(
     format!("game/game_log_{launching_id}.log").into(),
     BaseDirectory::AppLog,
@@ -452,7 +452,7 @@ pub fn retrieve_game_log(app: AppHandle, launching_id: u64) -> ArcMCResult<Vec<S
 pub fn retrieve_game_launching_state(
   launching_queue_state: State<'_, Mutex<Vec<LaunchingState>>>,
   launching_id: u64,
-) -> ArcMCResult<LaunchingState> {
+) -> AMLResult<LaunchingState> {
   let launching_queue = launching_queue_state.lock()?;
   if let Some(launching) = launching_queue.iter().find(|l| l.id == launching_id) {
     Ok(launching.clone())
@@ -467,7 +467,7 @@ pub fn export_game_crash_info(
   launching_queue_state: State<'_, Mutex<Vec<LaunchingState>>>,
   launching_id: u64,
   save_path: String,
-) -> ArcMCResult<String> {
+) -> AMLResult<String> {
   // game log
   let game_log_path = app.path().resolve::<PathBuf>(
     format!("game/game_log_{launching_id}.log").into(),

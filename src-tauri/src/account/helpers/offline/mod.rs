@@ -1,7 +1,7 @@
 pub mod yggdrasil_server;
 
 use rand::seq::IteratorRandom;
-use arcmc_types::error::ArcMCResult;
+use aml_types::error::AMLResult;
 use strum::IntoEnumIterator;
 use tauri::AppHandle;
 use uuid::Uuid;
@@ -12,7 +12,7 @@ use crate::account::models::{
 use crate::utils::fs::get_app_resource_filepath;
 use crate::utils::image::load_image_from_dir;
 
-pub fn load_preset_skin(app: &AppHandle, preset_role: PresetRole) -> ArcMCResult<Vec<Texture>> {
+pub fn load_preset_skin(app: &AppHandle, preset_role: PresetRole) -> AMLResult<Vec<Texture>> {
   let texture_path = get_app_resource_filepath(app, &format!("assets/skins/{}.png", preset_role))
     .map_err(|_| AccountError::TextureError)?;
 
@@ -30,7 +30,7 @@ pub fn load_preset_skin(app: &AppHandle, preset_role: PresetRole) -> ArcMCResult
   }])
 }
 
-pub async fn login(app: &AppHandle, username: String, raw_uuid: String) -> ArcMCResult<PlayerInfo> {
+pub async fn login(app: &AppHandle, username: String, raw_uuid: String) -> AMLResult<PlayerInfo> {
   let name_with_prefix = format!("OfflinePlayer:{}", username);
   let uuid = if let Ok(id) = Uuid::parse_str(&raw_uuid) {
     id

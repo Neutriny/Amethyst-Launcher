@@ -1,4 +1,4 @@
-use arcmc_types::error::ArcMCResult;
+use aml_types::error::AMLResult;
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::prelude::*;
@@ -93,7 +93,7 @@ pub async fn monitor_process(
   launcher_visibility: LauncherVisiablity,
   ready_tx: Sender<()>,
   post_exit_command: Option<String>,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   // create unique log window
   let label = format!("game_log_{id}");
   let log_file_path = app
@@ -269,7 +269,7 @@ pub async fn monitor_process(
   Ok(())
 }
 
-pub fn kill_process(pid: u32) -> ArcMCResult<()> {
+pub fn kill_process(pid: u32) -> AMLResult<()> {
   // KNOWN ISSUE: kill process means exit abnormally, which will not close the game-log window automatically.
   #[cfg(any(target_os = "linux", target_os = "macos"))]
   {
@@ -293,7 +293,7 @@ pub fn kill_process(pid: u32) -> ArcMCResult<()> {
   Ok(())
 }
 
-pub fn set_process_priority(pid: u32, priority: &ProcessPriority) -> ArcMCResult<()> {
+pub fn set_process_priority(pid: u32, priority: &ProcessPriority) -> AMLResult<()> {
   #[cfg(any(target_os = "macos", target_os = "linux"))]
   {
     let nice_value = match *priority {
@@ -348,7 +348,7 @@ pub fn set_process_priority(pid: u32, priority: &ProcessPriority) -> ArcMCResult
   Ok(())
 }
 
-pub fn change_process_window_title(pid: u32, new_title: &str) -> ArcMCResult<()> {
+pub fn change_process_window_title(pid: u32, new_title: &str) -> AMLResult<()> {
   if new_title.trim().is_empty() {
     return Ok(());
   }

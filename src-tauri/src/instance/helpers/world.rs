@@ -1,6 +1,6 @@
 use quartz_nbt::io::Flavor;
 use quartz_nbt::serde::deserialize;
-use arcmc_types::error::{ArcMCError, ArcMCResult};
+use aml_types::error::{AMLError, AMLResult};
 use std::path::{Path, PathBuf};
 
 use crate::instance::models::world::base::WorldInfo;
@@ -9,7 +9,7 @@ use crate::instance::models::world::level::{Level, LevelData};
 pub async fn load_world_info_from_dir(
   path: &Path,
   has_difficulty_support: bool,
-) -> ArcMCResult<WorldInfo> {
+) -> AMLResult<WorldInfo> {
   let name = path.file_name().and_then(|n| n.to_str()).unwrap_or("");
 
   let icon_path = path.join("icon.png");
@@ -28,13 +28,13 @@ pub async fn load_world_info_from_dir(
   })
 }
 
-pub async fn load_level_data_from_nbt(path: &PathBuf) -> ArcMCResult<LevelData> {
+pub async fn load_level_data_from_nbt(path: &PathBuf) -> AMLResult<LevelData> {
   let nbt_bytes = tokio::fs::read(path).await?;
   let (level, _) = deserialize::<Level>(&nbt_bytes, Flavor::GzCompressed)?;
   Ok(level.data)
 }
 
-fn level_data_to_world_info(data: &LevelData) -> ArcMCResult<(i64, String, String)> {
+fn level_data_to_world_info(data: &LevelData) -> AMLResult<(i64, String, String)> {
   // return (last_played, difficulty, gamemode)
   let last_played = data.last_played / 1000;
   let mut difficulty: u8;
@@ -48,7 +48,7 @@ fn level_data_to_world_info(data: &LevelData) -> ArcMCResult<(i64, String, Strin
   }
   const DIFFICULTY_STR: [&str; 5] = ["peaceful", "easy", "normal", "hard", "hardcore"];
   if difficulty >= DIFFICULTY_STR.len() as u8 {
-    return Err(ArcMCError(format!(
+    return Err(AMLError(format!(
       "difficulty = {}, which is greater than 5",
       difficulty
     )));
@@ -56,7 +56,7 @@ fn level_data_to_world_info(data: &LevelData) -> ArcMCResult<(i64, String, Strin
   let gametype = data.game_type;
   const GAMEMODE_STR: [&str; 4] = ["survival", "creative", "adventure", "spectator"];
   if gametype < 0 || gametype >= GAMEMODE_STR.len() as i64 {
-    return Err(ArcMCError(format!(
+    return Err(AMLError(format!(
       "gametype = {}, which < 0 or >= 4",
       gametype
     )));

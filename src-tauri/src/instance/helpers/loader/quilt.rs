@@ -1,4 +1,4 @@
-use arcmc_types::error::{ArcMCError, ArcMCResult};
+use aml_types::error::{AMLError, AMLResult};
 use std::path::PathBuf;
 use tauri::{AppHandle, Manager};
 use tauri_plugin_http::reqwest;
@@ -34,7 +34,7 @@ pub async fn install_quilt_loader(
   client_info: &mut McClientInfo,
   task_params: &mut Vec<PTaskParam>,
   is_install_qf_api: Option<bool>,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   let client = app.state::<reqwest::Client>();
   let loader_ver = &loader.version;
 
@@ -60,22 +60,22 @@ pub async fn install_quilt_loader(
     }
   }
 
-  let meta = meta.ok_or(ArcMCError("failed to fetch Quilt loader meta".to_string()))?;
-  let quilt_maven = quilt_maven.ok_or(ArcMCError("failed to get Quilt Maven URL".to_string()))?;
+  let meta = meta.ok_or(AMLError("failed to fetch Quilt loader meta".to_string()))?;
+  let quilt_maven = quilt_maven.ok_or(AMLError("failed to get Quilt Maven URL".to_string()))?;
 
   let loader_path = meta["loader"]["maven"]
     .as_str()
-    .ok_or(ArcMCError("meta missing loader maven".to_string()))?;
+    .ok_or(AMLError("meta missing loader maven".to_string()))?;
   let int_path = meta["intermediary"]["maven"]
     .as_str()
-    .ok_or(ArcMCError("meta missing intermediary maven".to_string()))?;
+    .ok_or(AMLError("meta missing intermediary maven".to_string()))?;
   let hashed_path = meta["hashed"]["maven"]
     .as_str()
-    .ok_or(ArcMCError("meta missing hashed maven".to_string()))?;
+    .ok_or(AMLError("meta missing hashed maven".to_string()))?;
 
   let main_class = meta["launcherMeta"]["mainClass"]["client"]
     .as_str()
-    .ok_or(ArcMCError("missing mainClass.client".to_string()))?;
+    .ok_or(AMLError("missing mainClass.client".to_string()))?;
   client_info.main_class = Some(main_class.to_string());
 
   let mut new_patch = McClientInfo {
@@ -123,7 +123,7 @@ pub async fn install_quilt_loader(
               break;
             }
           }
-          let src = src_opt.ok_or(ArcMCError(format!(
+          let src = src_opt.ok_or(AMLError(format!(
             "failed to create download source for {}",
             name
           )))?;
@@ -160,7 +160,7 @@ pub async fn install_quilt_loader(
         break;
       }
     }
-    let src = src_opt.ok_or(ArcMCError(format!(
+    let src = src_opt.ok_or(AMLError(format!(
       "failed to create download source for {}",
       path
     )))?;

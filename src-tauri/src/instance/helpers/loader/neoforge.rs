@@ -1,4 +1,4 @@
-use arcmc_types::error::ArcMCResult;
+use aml_types::error::AMLResult;
 use std::collections::HashMap;
 use std::fs::{self, File};
 use std::io::Read;
@@ -24,7 +24,7 @@ pub async fn install_neoforge_loader(
   loader: &ModLoader,
   lib_dir: PathBuf,
   task_params: &mut Vec<PTaskParam>,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   let loader_ver = &loader.version;
 
   let mut installer_url_opt: Option<Url> = None;
@@ -82,7 +82,7 @@ pub async fn download_neoforge_libraries(
   priority: &[SourceType],
   instance: &Instance,
   client_info: &mut McClientInfo,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   let subdirs = get_instance_subdir_paths(
     app,
     instance,

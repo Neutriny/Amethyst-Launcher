@@ -1,5 +1,5 @@
 use serde_json::Value;
-use arcmc_types::error::{ArcMCError, ArcMCResult};
+use aml_types::error::{AMLError, AMLResult};
 use std::collections::{HashMap, HashSet};
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -185,7 +185,7 @@ pub fn get_java_paths(app: &AppHandle) -> Vec<String> {
   }
 }
 
-fn resolve_java_home(path: PathBuf) -> ArcMCResult<String> {
+fn resolve_java_home(path: PathBuf) -> AMLResult<String> {
   #[cfg(target_os = "windows")]
   let java_bin = path.join(r"bin\java.exe");
   #[cfg(not(target_os = "windows"))]
@@ -482,7 +482,7 @@ pub fn parse_java_major_version(full_version: &str) -> (i32, bool) {
 pub async fn build_mojang_java_download_params(
   app: &AppHandle,
   version: &str,
-) -> ArcMCResult<Vec<PTaskParam>> {
+) -> AMLResult<Vec<PTaskParam>> {
   let config = app.state::<Mutex<LauncherConfig>>().lock()?.clone();
   let client = app.state::<reqwest::Client>();
 
@@ -516,10 +516,10 @@ pub async fn build_mojang_java_download_params(
   }
 
   let json =
-    json.ok_or_else(|| ArcMCError("Failed to fetch Mojang Java runtime manifest".into()))?;
+    json.ok_or_else(|| AMLError("Failed to fetch Mojang Java runtime manifest".into()))?;
   let manifest_url = json[platform][runtime_type][0]["manifest"]["url"]
     .as_str()
-    .ok_or_else(|| ArcMCError("Failed to parse manifest URL".into()))?;
+    .ok_or_else(|| AMLError("Failed to parse manifest URL".into()))?;
 
   let manifest: Value = client.get(manifest_url).send().await?.json().await?;
   let runtime_dir = app.path().resolve(
@@ -529,7 +529,7 @@ pub async fn build_mojang_java_download_params(
 
   let download_params: Vec<_> = manifest["files"]
     .as_object()
-    .ok_or_else(|| ArcMCError("Invalid files data".into()))?
+    .ok_or_else(|| AMLError("Invalid files data".into()))?
     .iter()
     .filter_map(|(path, info)| {
       let raw = info["downloads"]["raw"].as_object()?;

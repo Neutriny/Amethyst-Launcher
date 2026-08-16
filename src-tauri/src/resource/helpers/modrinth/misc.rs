@@ -1,5 +1,5 @@
 use serde::Deserialize;
-use arcmc_types::error::{ArcMCError, ArcMCResult};
+use aml_types::error::{AMLError, AMLResult};
 use tauri::{AppHandle, Manager};
 use tauri_plugin_http::reqwest;
 
@@ -14,7 +14,7 @@ pub async fn make_modrinth_request<T, P>(
   client: &reqwest::Client,
   url: &str,
   request_type: OtherResourceRequestType<'_, P>,
-) -> ArcMCResult<T>
+) -> AMLResult<T>
 where
   T: serde::de::DeserializeOwned,
   P: serde::Serialize,
@@ -43,7 +43,7 @@ where
 pub fn get_modrinth_api(
   endpoint: OtherResourceApiEndpoint,
   param: Option<&str>,
-) -> ArcMCResult<String> {
+) -> AMLResult<String> {
   let base_url = "https://api.modrinth.com/v2";
 
   let url_str = match endpoint {
@@ -297,7 +297,7 @@ impl From<ModrinthSearchRes> for OtherResourceSearchRes {
 pub async fn translate_description_modrinth(
   app: &AppHandle,
   resource_id: &str,
-) -> ArcMCResult<Option<String>> {
+) -> AMLResult<Option<String>> {
   let result = async {
     let url = get_modrinth_api(OtherResourceApiEndpoint::TranslateDesc, Some(resource_id))?;
     let client = app.state::<reqwest::Client>();
@@ -309,7 +309,7 @@ pub async fn translate_description_modrinth(
       .json::<ModrinthTranslationRes>()
       .await?;
 
-    Ok::<_, ArcMCError>(translation_res.translated)
+    Ok::<_, AMLError>(translation_res.translated)
   }
   .await;
 

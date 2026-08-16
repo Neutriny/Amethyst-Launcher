@@ -3,7 +3,7 @@
 use async_trait::async_trait;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
-use arcmc_types::error::{ArcMCError, ArcMCResult};
+use aml_types::error::{AMLError, AMLResult};
 use std::io::{Read, Seek};
 use std::path::Path;
 use tokio;
@@ -49,18 +49,18 @@ impl LocalModMetadataParser for LiteLoaderModMetadataParser {
 
   fn get_mod_metadata_from_jar<R: Read + Seek>(
     jar: &mut ZipArchive<R>,
-  ) -> ArcMCResult<Self::Metadata> {
+  ) -> AMLResult<Self::Metadata> {
     let meta: LiteloaderModMetadata = match jar.by_name("litemod.json") {
       Ok(val) => match serde_json::from_reader(val) {
         Ok(val) => val,
-        Err(e) => return Err(ArcMCError::from(e)),
+        Err(e) => return Err(AMLError::from(e)),
       },
-      Err(e) => return Err(ArcMCError::from(e)),
+      Err(e) => return Err(AMLError::from(e)),
     };
     Ok(meta)
   }
 
-  async fn get_mod_metadata_from_dir(dir_path: &Path) -> ArcMCResult<Self::Metadata> {
+  async fn get_mod_metadata_from_dir(dir_path: &Path) -> AMLResult<Self::Metadata> {
     let liteloader_file_path = dir_path.join("litemod.json");
     let meta: LiteloaderModMetadata = serde_json::from_str(
       tokio::fs::read_to_string(liteloader_file_path)

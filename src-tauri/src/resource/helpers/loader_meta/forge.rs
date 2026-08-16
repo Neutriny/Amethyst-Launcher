@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
-use arcmc_types::error::ArcMCResult;
+use aml_types::error::AMLResult;
 use tauri::{AppHandle, Manager};
 use tauri_plugin_http::reqwest;
 
@@ -21,7 +21,7 @@ struct ForgeMetaItem {
 async fn get_forge_meta_by_game_version_bmcl(
   app: &AppHandle,
   game_version: &str,
-) -> ArcMCResult<Vec<ModLoaderResourceInfo>> {
+) -> AMLResult<Vec<ModLoaderResourceInfo>> {
   let client = app.state::<reqwest::Client>();
   let url = get_download_api(SourceType::BMCLAPIMirror, ResourceType::ForgeMeta)?
     .join("minecraft/")?
@@ -58,7 +58,7 @@ async fn get_forge_meta_by_game_version_bmcl(
 async fn get_forge_meta_by_game_version_official(
   app: &AppHandle,
   game_version: &str,
-) -> ArcMCResult<Vec<ModLoaderResourceInfo>> {
+) -> AMLResult<Vec<ModLoaderResourceInfo>> {
   let _ = (app, game_version);
   Err(ResourceError::NoDownloadApi.into()) // TODO
 }
@@ -67,7 +67,7 @@ pub async fn get_forge_meta_by_game_version(
   app: &AppHandle,
   priority_list: &[SourceType],
   game_version: &str,
-) -> ArcMCResult<Vec<ModLoaderResourceInfo>> {
+) -> AMLResult<Vec<ModLoaderResourceInfo>> {
   for source_type in priority_list.iter() {
     match *source_type {
       SourceType::BMCLAPIMirror => {

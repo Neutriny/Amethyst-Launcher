@@ -34,7 +34,7 @@ Amethyst Launcher 是基于上海交通大学 Minecraft 社（SJMC）开发的 [
 
 ## 开始使用
 
-前往 [GitHub Releases](https://github.com/TannenWaddy/ArcMC-Launcher/releases) 下载最新版即可。
+前往 [GitHub Releases](https://github.com/TannenWaddy/Amethyst-Launcher/releases) 下载最新版即可。
 
 目前仅支持 Windows 10/11：
 
@@ -47,8 +47,8 @@ Amethyst Launcher 是基于上海交通大学 Minecraft 社（SJMC）开发的 [
 首先克隆本项目并安装前端依赖：
 
 ```bash
-git clone https://github.com/TannenWaddy/ArcMC-Launcher.git
-cd ArcMCL
+git clone https://github.com/TannenWaddy/Amethyst-Launcher.git AML
+cd AML
 pnpm install
 ```
 
@@ -80,4 +80,4 @@ pnpm tauri dev
 
 ## 联系方式
 
-如有问题，请通过 [GitHub Issues](https://github.com/TannenWaddy/ArcMC-Launcher/issues) 联系。
+如有问题，请通过 [GitHub Issues](https://github.com/TannenWaddy/Amethyst-Launcher/issues) 联系。

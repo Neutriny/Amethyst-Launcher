@@ -1,7 +1,7 @@
 use serde_json::{Value, json};
-use arcmc_types::error::ArcMCError;
-use arcmc_types::error::ArcMCResult;
-use arcmc_types::storage::Storage;
+use aml_types::error::AMLError;
+use aml_types::error::AMLResult;
+use aml_types::storage::Storage;
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::pin::Pin;
@@ -29,14 +29,14 @@ use crate::utils::fs::{generate_unique_filename, get_subdirectories};
 use crate::utils::string::camel_to_snake_case;
 
 #[tauri::command]
-pub fn retrieve_launcher_config(app: AppHandle) -> ArcMCResult<LauncherConfig> {
+pub fn retrieve_launcher_config(app: AppHandle) -> AMLResult<LauncherConfig> {
   let binding = app.state::<Mutex<LauncherConfig>>();
   let state = binding.lock()?;
   Ok(state.clone())
 }
 
 #[tauri::command]
-pub fn update_launcher_config(app: AppHandle, key_path: String, value: String) -> ArcMCResult<()> {
+pub fn update_launcher_config(app: AppHandle, key_path: String, value: String) -> AMLResult<()> {
   let config_binding = app.state::<Mutex<LauncherConfig>>();
   let mut config_state = config_binding.lock()?;
   let key_path = camel_to_snake_case(key_path.as_str());
@@ -46,7 +46,7 @@ pub fn update_launcher_config(app: AppHandle, key_path: String, value: String) -
 }
 
 #[tauri::command]
-pub fn reset_launcher_config(app: AppHandle) -> ArcMCResult<LauncherConfig> {
+pub fn reset_launcher_config(app: AppHandle) -> AMLResult<LauncherConfig> {
   let mut default_config = LauncherConfig::default();
   default_config.setup_with_app(&app)?;
 
@@ -63,7 +63,7 @@ pub fn reset_launcher_config(app: AppHandle) -> ArcMCResult<LauncherConfig> {
 pub async fn export_launcher_config(
   app: AppHandle,
   client: tauri::State<'_, reqwest::Client>,
-) -> ArcMCResult<String> {
+) -> AMLResult<String> {
   let binding = app.state::<Mutex<LauncherConfig>>();
   let state = { binding.lock()?.clone() };
   match client
@@ -101,7 +101,7 @@ pub async fn import_launcher_config(
   app: AppHandle,
   client: tauri::State<'_, reqwest::Client>,
   code: String,
-) -> ArcMCResult<LauncherConfig> {
+) -> AMLResult<LauncherConfig> {
   match client
     .post("https://mc.sjtu.cn/api-sjmcl/validate")
     .json(&json!({
@@ -145,13 +145,13 @@ pub async fn import_launcher_config(
 }
 
 #[tauri::command]
-pub fn reveal_launcher_config() -> ArcMCResult<()> {
+pub fn reveal_launcher_config() -> AMLResult<()> {
   let file_path = LauncherConfig::file_path();
-  reveal_item_in_dir(file_path).map_err(ArcMCError::from)
+  reveal_item_in_dir(file_path).map_err(AMLError::from)
 }
 
 #[tauri::command]
-pub fn retrieve_custom_background_list(app: AppHandle) -> ArcMCResult<Vec<String>> {
+pub fn retrieve_custom_background_list(app: AppHandle) -> AMLResult<Vec<String>> {
   let custom_bg_dir = app
     .path()
     .resolve::<PathBuf>("UserContent/Backgrounds".into(), BaseDirectory::AppData)?;
@@ -183,7 +183,7 @@ pub fn retrieve_custom_background_list(app: AppHandle) -> ArcMCResult<Vec<String
 }
 
 #[tauri::command]
-pub fn add_custom_background(app: AppHandle, source_src: String) -> ArcMCResult<String> {
+pub fn add_custom_background(app: AppHandle, source_src: String) -> AMLResult<String> {
   let source_path = Path::new(&source_src);
   if !source_path.exists() || !source_path.is_file() {
     return Ok(String::new());
@@ -206,7 +206,7 @@ pub fn add_custom_background(app: AppHandle, source_src: String) -> ArcMCResult<
 }
 
 #[tauri::command]
-pub fn delete_custom_background(app: AppHandle, file_name: String) -> ArcMCResult<()> {
+pub fn delete_custom_background(app: AppHandle, file_name: String) -> AMLResult<()> {
   let custom_bg_dir = app
     .path()
     .resolve::<PathBuf>("UserContent/Backgrounds".into(), BaseDirectory::AppData)?;
@@ -219,7 +219,7 @@ pub fn delete_custom_background(app: AppHandle, file_name: String) -> ArcMCResul
 }
 
 #[tauri::command]
-pub async fn retrieve_java_list(app: AppHandle) -> ArcMCResult<Vec<JavaInfo>> {
+pub async fn retrieve_java_list(app: AppHandle) -> AMLResult<Vec<JavaInfo>> {
   refresh_and_update_javas(&app).await; // firstly refresh and update
   let binding = app.state::<Mutex<Vec<JavaInfo>>>();
   let state = binding.lock()?;
@@ -227,7 +227,7 @@ pub async fn retrieve_java_list(app: AppHandle) -> ArcMCResult<Vec<JavaInfo>> {
 }
 
 #[tauri::command]
-pub async fn validate_java(java_path: String) -> ArcMCResult<()> {
+pub async fn validate_java(java_path: String) -> AMLResult<()> {
   if get_java_info_from_release_file(&java_path)
     .1
     .or_else(|| get_java_info_from_command(&java_path).1)
@@ -240,7 +240,7 @@ pub async fn validate_java(java_path: String) -> ArcMCResult<()> {
 }
 
 #[tauri::command]
-pub async fn download_mojang_java(app: AppHandle, version: String) -> ArcMCResult<()> {
+pub async fn download_mojang_java(app: AppHandle, version: String) -> AMLResult<()> {
   let download_params = build_mojang_java_download_params(&app, &version).await?;
 
   schedule_progressive_task_group(
@@ -255,7 +255,7 @@ pub async fn download_mojang_java(app: AppHandle, version: String) -> ArcMCResul
 }
 
 #[tauri::command]
-pub async fn check_game_directory(app: AppHandle, dir: String) -> ArcMCResult<String> {
+pub async fn check_game_directory(app: AppHandle, dir: String) -> AMLResult<String> {
   let local_game_directories: Vec<_>;
   {
     let binding = app.state::<Mutex<LauncherConfig>>();
@@ -313,7 +313,7 @@ pub async fn check_game_directory(app: AppHandle, dir: String) -> ArcMCResult<St
 }
 
 #[tauri::command]
-pub async fn clear_download_cache(app: AppHandle) -> ArcMCResult<()> {
+pub async fn clear_download_cache(app: AppHandle) -> AMLResult<()> {
   let launcher_config = app.state::<Mutex<LauncherConfig>>();
   let monitor = app.state::<Pin<Box<TaskMonitor>>>();
 
@@ -334,7 +334,7 @@ pub async fn clear_download_cache(app: AppHandle) -> ArcMCResult<()> {
 }
 
 #[tauri::command]
-pub async fn check_launcher_update(app: AppHandle) -> ArcMCResult<VersionMetaInfo> {
+pub async fn check_launcher_update(app: AppHandle) -> AMLResult<VersionMetaInfo> {
   let config_binding = app.state::<Mutex<LauncherConfig>>();
   let (current_version, build_type) = {
     let config_state = config_binding.lock()?;
@@ -375,7 +375,7 @@ pub async fn check_launcher_update(app: AppHandle) -> ArcMCResult<VersionMetaInf
 }
 
 #[tauri::command]
-pub async fn download_launcher_update(app: AppHandle, version: VersionMetaInfo) -> ArcMCResult<()> {
+pub async fn download_launcher_update(app: AppHandle, version: VersionMetaInfo) -> AMLResult<()> {
   if version.version.is_empty() || version.version == "up2date" {
     Ok(())
   } else {
@@ -389,7 +389,7 @@ pub async fn install_launcher_update(
   app: AppHandle,
   downloaded_filename: String,
   restart: bool,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   #[cfg(target_os = "windows")]
   {
     updater::install_update_windows(&app, downloaded_filename, restart).await
@@ -405,7 +405,7 @@ pub async fn install_launcher_update(
 }
 
 #[tauri::command]
-pub fn retrieve_supported_graphics_renderers(api: String) -> ArcMCResult<Vec<String>> {
+pub fn retrieve_supported_graphics_renderers(api: String) -> AMLResult<Vec<String>> {
   let api = match api.trim().to_ascii_lowercase().as_str() {
     "opengl" => GraphicsApi::Opengl,
     "vulkan" => GraphicsApi::Vulkan,

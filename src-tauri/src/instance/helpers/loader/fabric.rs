@@ -1,5 +1,5 @@
 use regex::Regex;
-use arcmc_types::error::{ArcMCError, ArcMCResult};
+use aml_types::error::{AMLError, AMLResult};
 use std::fs;
 use std::path::Path;
 use std::path::PathBuf;
@@ -30,7 +30,7 @@ pub async fn install_fabric_loader(
   client_info: &mut McClientInfo,
   task_params: &mut Vec<PTaskParam>,
   is_install_fabric_api: Option<bool>,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   let client = app.state::<reqwest::Client>();
   let loader_ver = &loader.version;
 
@@ -54,20 +54,20 @@ pub async fn install_fabric_loader(
     }
   }
 
-  let meta = meta.ok_or(ArcMCError("failed to fetch Fabric meta".to_string()))?;
-  let maven_root = maven_root.ok_or(ArcMCError("failed to get Fabric Maven URL".to_string()))?;
+  let meta = meta.ok_or(AMLError("failed to fetch Fabric meta".to_string()))?;
+  let maven_root = maven_root.ok_or(AMLError("failed to get Fabric Maven URL".to_string()))?;
 
   let loader_path = meta["loader"]["maven"]
     .as_str()
-    .ok_or(ArcMCError("meta missing loader maven".to_string()))?;
+    .ok_or(AMLError("meta missing loader maven".to_string()))?;
 
   let int_path = meta["intermediary"]["maven"]
     .as_str()
-    .ok_or(ArcMCError("meta missing intermediary maven".to_string()))?;
+    .ok_or(AMLError("meta missing intermediary maven".to_string()))?;
 
   let main_class = meta["launcherMeta"]["mainClass"]["client"]
     .as_str()
-    .ok_or(ArcMCError("missing mainClass.client".to_string()))?;
+    .ok_or(AMLError("missing mainClass.client".to_string()))?;
 
   client_info.main_class = Some(main_class.to_string());
 
@@ -97,7 +97,7 @@ pub async fn install_fabric_loader(
 
   client_info.patches.push(new_patch);
 
-  let mut push_task = |coord: &str, url_root: &Url| -> ArcMCResult<()> {
+  let mut push_task = |coord: &str, url_root: &Url| -> AMLResult<()> {
     let rel: String = convert_library_name_to_path(coord, None)?;
     let mut src_opt = None;
     for source_type in priority.iter() {
@@ -155,13 +155,13 @@ pub async fn install_fabric_loader(
   Ok(())
 }
 
-pub async fn remove_fabric_api_mods<P: AsRef<Path>>(mods_dir: P) -> ArcMCResult<()> {
+pub async fn remove_fabric_api_mods<P: AsRef<Path>>(mods_dir: P) -> AMLResult<()> {
   let mods_dir = mods_dir.as_ref();
   if !mods_dir.exists() {
     return Ok(());
   }
   let re = Regex::new(r"(?i)^(fabric-api|quilted-fabric-api)-.*\.jar$")
-    .map_err(|e| ArcMCError(format!("Invalid regex: {}", e)))?;
+    .map_err(|e| AMLError(format!("Invalid regex: {}", e)))?;
   let targets: Vec<PathBuf> = get_files_with_regex(mods_dir, &re).unwrap_or_default();
   for p in targets {
     let name = p
@@ -169,7 +169,7 @@ pub async fn remove_fabric_api_mods<P: AsRef<Path>>(mods_dir: P) -> ArcMCResult<
       .and_then(|s| s.to_str())
       .unwrap_or_default()
       .to_string();
-    fs::remove_file(&p).map_err(|e| ArcMCError(format!("Failed to remove {}: {}", name, e)))?;
+    fs::remove_file(&p).map_err(|e| AMLError(format!("Failed to remove {}: {}", name, e)))?;
   }
 
   Ok(())

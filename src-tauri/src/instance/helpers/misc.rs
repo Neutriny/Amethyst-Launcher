@@ -1,7 +1,7 @@
 use sanitize_filename;
 use serde_json::Value;
-use arcmc_types::error::ArcMCResult;
-use arcmc_types::storage::load_json_async;
+use aml_types::error::AMLResult;
+use aml_types::storage::load_json_async;
 use std::collections::HashMap;
 use std::fs;
 use std::io::Cursor;
@@ -92,7 +92,7 @@ pub fn get_instance_subdir_path_by_id(
   get_instance_subdir_paths(app, instance, &[directory_type]).and_then(|mut paths| paths.pop())
 }
 
-pub fn unify_instance_name(src_version_path: &PathBuf, tgt_name: &String) -> ArcMCResult<PathBuf> {
+pub fn unify_instance_name(src_version_path: &PathBuf, tgt_name: &String) -> AMLResult<PathBuf> {
   if !sanitize_filename::is_sanitized(tgt_name) {
     return Err(InstanceError::InvalidNameError.into());
   }
@@ -137,7 +137,7 @@ async fn refresh_instance(
   jar_path: PathBuf,
   json_path: PathBuf,
   is_first_run: bool,
-) -> ArcMCResult<Option<Instance>> {
+) -> AMLResult<Option<Instance>> {
   let mut client_data = match load_json_async::<McClientInfo>(&json_path).await {
     Ok(v) => v,
     Err(e) => {
@@ -326,7 +326,7 @@ pub async fn refresh_instances(
   app: &AppHandle,
   game_directory: &GameDirectory,
   is_first_run: bool,
-) -> ArcMCResult<Vec<Instance>> {
+) -> AMLResult<Vec<Instance>> {
   let mut instances = vec![];
   // traverse the "versions" directory
   let versions_dir = game_directory.dir.join("versions");
@@ -423,7 +423,7 @@ pub fn create_instance_shortcut_icon(
   app: &AppHandle,
   instance: &Instance,
   icon_src: &str,
-) -> ArcMCResult<PathBuf> {
+) -> AMLResult<PathBuf> {
   use crate::utils::fs::get_app_resource_filepath;
 
   let mut img = if icon_src == "custom" {
@@ -435,7 +435,7 @@ pub fn create_instance_shortcut_icon(
       .asset_resolver()
       .get(icon_src.to_string())
       .ok_or_else(|| {
-        arcmc_types::error::ArcMCError(format!("Icon asset not found: {}", icon_src))
+        aml_types::error::AMLError(format!("Icon asset not found: {}", icon_src))
       })?;
     image::load_from_memory(asset.bytes())?
   };

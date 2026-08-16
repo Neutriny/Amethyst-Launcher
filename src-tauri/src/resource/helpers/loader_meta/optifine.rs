@@ -1,4 +1,4 @@
-use arcmc_types::error::ArcMCResult;
+use aml_types::error::AMLResult;
 use std::ffi::OsStr;
 use tauri::Manager;
 use tauri_plugin_http::reqwest;
@@ -27,7 +27,7 @@ fn get_optifine_sort_key(info: &OptiFineResourceInfo) -> (u32, u32, u32) {
 async fn get_optifine_meta_by_game_version_bmcl(
   app: &tauri::AppHandle,
   game_version: &str,
-) -> ArcMCResult<Vec<OptiFineResourceInfo>> {
+) -> AMLResult<Vec<OptiFineResourceInfo>> {
   let client = app.state::<reqwest::Client>();
   let url =
     get_download_api(SourceType::BMCLAPIMirror, ResourceType::OptiFine)?.join(game_version)?;
@@ -61,7 +61,7 @@ pub async fn get_optifine_meta_by_game_version(
   app: &tauri::AppHandle,
   priority_list: &[SourceType],
   game_version: &str,
-) -> ArcMCResult<Vec<OptiFineResourceInfo>> {
+) -> AMLResult<Vec<OptiFineResourceInfo>> {
   for source_type in priority_list.iter() {
     match source_type {
       SourceType::BMCLAPIMirror => {

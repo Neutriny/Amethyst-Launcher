@@ -1,4 +1,4 @@
-use arcmc_types::error::{ArcMCError, ArcMCResult};
+use aml_types::error::{AMLError, AMLResult};
 use tauri::utils::config::WindowConfig;
 use tauri::{AppHandle, WebviewUrl, WebviewWindow, WebviewWindowBuilder};
 use url::Url;
@@ -29,14 +29,14 @@ use tauri_plugin_decorum::WebviewWindowExt;
 /// # Errors
 ///
 /// Returns an error if no configuration with the given label exists.
-pub fn get_webview_window_config(app: &AppHandle, label: &str) -> ArcMCResult<WindowConfig> {
+pub fn get_webview_window_config(app: &AppHandle, label: &str) -> AMLResult<WindowConfig> {
   let window_config = app
     .config()
     .app
     .windows
     .iter()
     .find(|cfg| cfg.label == label)
-    .ok_or_else(|| ArcMCError(format!("Config label '{}' not found", label)))?;
+    .ok_or_else(|| AMLError(format!("Config label '{}' not found", label)))?;
 
   Ok(window_config.clone())
 }
@@ -76,7 +76,7 @@ pub async fn create_webview_window(
   config_label: &str,
   url: Option<Url>,
   custom_overlaid: bool,
-) -> ArcMCResult<WebviewWindow> {
+) -> AMLResult<WebviewWindow> {
   let mut config = get_webview_window_config(app, config_label)?;
   config.label = label.to_string();
   if let Some(url) = url {
@@ -114,7 +114,7 @@ pub async fn create_webview_window_with_config(
   app: &AppHandle,
   mut config: WindowConfig,
   custom_overlaid: bool,
-) -> ArcMCResult<WebviewWindow> {
+) -> AMLResult<WebviewWindow> {
   if custom_overlaid {
     config.min_width.get_or_insert(800.0);
     config.min_height.get_or_insert(550.0);
@@ -140,9 +140,9 @@ pub async fn create_webview_window_with_config(
 
   #[allow(unused_variables)]
   let window = WebviewWindowBuilder::from_config(app, &config)
-    .map_err(ArcMCError::from)?
+    .map_err(AMLError::from)?
     .build()
-    .map_err(ArcMCError::from)?;
+    .map_err(AMLError::from)?;
 
   #[cfg(target_os = "windows")]
   if custom_overlaid && let Err(e) = window.create_overlay_titlebar() {

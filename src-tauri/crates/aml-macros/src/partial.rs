@@ -26,32 +26,32 @@ pub(crate) fn derive_partial_impl(input: &DeriveInput) -> TokenStream {
   });
 
   let expanded = quote! {
-      impl ::arcmc_types::partial::PartialAccess<'_> for #ident {
-          fn access(&self, path: &str) -> ::arcmc_types::partial::PartialResult<String> {
+      impl ::aml_types::partial::PartialAccess<'_> for #ident {
+          fn access(&self, path: &str) -> ::aml_types::partial::PartialResult<String> {
               if path.is_empty() {
                   Ok(serde_json::to_string(self).unwrap())
               } else {
                   let (field, rest) = path.split_once('.').unwrap_or((path, ""));
                   match field {
                       #(#access_match_arms)*
-                      _ => Err(::arcmc_types::partial::PartialError::NotFound),
+                      _ => Err(::aml_types::partial::PartialError::NotFound),
                   }
               }
           }
       }
 
-      impl ::arcmc_types::partial::PartialUpdate<'_> for #ident {
-          fn update (&mut self, path: &str, value: &str) -> ::arcmc_types::partial::PartialResult<()> {
+      impl ::aml_types::partial::PartialUpdate<'_> for #ident {
+          fn update (&mut self, path: &str, value: &str) -> ::aml_types::partial::PartialResult<()> {
               if path.is_empty() {
                   match serde_json::from_str::<Self>(value) {
                       Ok(value) => {*self = value; Ok(())},
-                      Err(_) => Err(::arcmc_types::partial::PartialError::InvalidType),
+                      Err(_) => Err(::aml_types::partial::PartialError::InvalidType),
                   }
               } else {
                   let (field, rest) = path.split_once('.').unwrap_or((path, ""));
                   match field {
                       #(#update_match_arms)*
-                      _ => Err(::arcmc_types::partial::PartialError::NotFound),
+                      _ => Err(::aml_types::partial::PartialError::NotFound),
                   }
               }
           }

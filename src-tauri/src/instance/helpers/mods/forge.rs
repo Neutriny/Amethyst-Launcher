@@ -5,7 +5,7 @@
 use async_trait::async_trait;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
-use arcmc_types::error::{ArcMCError, ArcMCResult};
+use aml_types::error::{AMLError, AMLResult};
 use std::io::{Cursor, Read, Seek};
 use std::path::Path;
 use zip::ZipArchive;
@@ -66,7 +66,7 @@ impl LocalModMetadataParser for ForgeModMetadataParser {
 
   fn get_mod_metadata_from_jar<R: Read + Seek>(
     jar: &mut ZipArchive<R>,
-  ) -> ArcMCResult<Self::Metadata> {
+  ) -> AMLResult<Self::Metadata> {
     let mut meta_result = None;
     if let Ok(mut file) = jar.by_name("META-INF/mods.toml") {
       let mut buf = String::new();
@@ -87,13 +87,13 @@ impl LocalModMetadataParser for ForgeModMetadataParser {
     let mut meta = match meta_result {
       Some(val) => val,
       None => {
-        return Err(ArcMCError(
+        return Err(AMLError(
           "no mods.toml or neoforge.mods.toml found".to_string(),
         ));
       }
     };
     if meta.mods.is_empty() {
-      return Err(ArcMCError("forge mod len(mods) == 0".to_string()));
+      return Err(AMLError("forge mod len(mods) == 0".to_string()));
     }
     // seek logo
     let mut logo_candidates = vec![];
@@ -126,7 +126,7 @@ impl LocalModMetadataParser for ForgeModMetadataParser {
     Ok(meta)
   }
 
-  async fn get_mod_metadata_from_dir(dir_path: &Path) -> ArcMCResult<Self::Metadata> {
+  async fn get_mod_metadata_from_dir(dir_path: &Path) -> AMLResult<Self::Metadata> {
     let mut meta_result = None;
     if let Ok(val) = tokio::fs::read_to_string(dir_path.join("META-INF/mods.toml")).await {
       let mut meta = toml::from_str::<ForgeModMetadata>(val.as_str())?;
@@ -143,13 +143,13 @@ impl LocalModMetadataParser for ForgeModMetadataParser {
     let mut meta = match meta_result {
       Some(val) => val,
       None => {
-        return Err(ArcMCError(
+        return Err(AMLError(
           "no mods.toml or neoforge.mods.toml found".to_string(),
         ));
       }
     };
     if meta.mods.is_empty() {
-      return Err(ArcMCError("forge mod len(mods) == 0".to_string()));
+      return Err(AMLError("forge mod len(mods) == 0".to_string()));
     }
     // seek logo
     let mut logo_candidates = vec![];

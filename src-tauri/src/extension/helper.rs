@@ -1,5 +1,5 @@
 use image::imageops::FilterType;
-use arcmc_types::error::ArcMCResult;
+use aml_types::error::AMLResult;
 use std::fs::{self, File};
 use std::io;
 use std::path::{Path, PathBuf};
@@ -16,7 +16,7 @@ const METADATA_FILE_NAME: &str = "sjmcl.ext.json";
 const LOGO_FILE_NAME: &str = "icon.png";
 const ICON_MAX_SIZE: u32 = 64;
 
-pub fn get_extensions_dir(app: &AppHandle) -> ArcMCResult<PathBuf> {
+pub fn get_extensions_dir(app: &AppHandle) -> AMLResult<PathBuf> {
   Ok(
     app
       .path()
@@ -24,7 +24,7 @@ pub fn get_extensions_dir(app: &AppHandle) -> ArcMCResult<PathBuf> {
   )
 }
 
-pub fn read_extension_metadata(extension_dir: &Path) -> ArcMCResult<ExtensionMetadata> {
+pub fn read_extension_metadata(extension_dir: &Path) -> AMLResult<ExtensionMetadata> {
   let metadata_path = extension_dir.join(METADATA_FILE_NAME);
   if !metadata_path.exists() || !metadata_path.is_file() {
     return Err(ExtensionError::InvalidPackageFormat.into());
@@ -37,7 +37,7 @@ pub fn read_extension_metadata(extension_dir: &Path) -> ArcMCResult<ExtensionMet
   Ok(metadata)
 }
 
-pub fn read_extension_info(extension_dir: &Path) -> ArcMCResult<ExtensionInfo> {
+pub fn read_extension_info(extension_dir: &Path) -> AMLResult<ExtensionInfo> {
   let metadata = read_extension_metadata(extension_dir)?;
   let path = extension_dir.to_string_lossy().to_string();
   let icon_src = read_extension_icon(extension_dir);
@@ -45,7 +45,7 @@ pub fn read_extension_info(extension_dir: &Path) -> ArcMCResult<ExtensionInfo> {
 }
 
 // support both single-level and nested structure
-pub fn resolve_extension_root(extracted_dir: &Path) -> ArcMCResult<PathBuf> {
+pub fn resolve_extension_root(extracted_dir: &Path) -> AMLResult<PathBuf> {
   if extracted_dir.join(METADATA_FILE_NAME).is_file() {
     return Ok(extracted_dir.to_path_buf());
   }
@@ -68,7 +68,7 @@ pub fn resolve_extension_root(extracted_dir: &Path) -> ArcMCResult<PathBuf> {
   }
 }
 
-pub fn extract_extension_package(package_path: &Path, target_dir: &Path) -> ArcMCResult<()> {
+pub fn extract_extension_package(package_path: &Path, target_dir: &Path) -> AMLResult<()> {
   let package_file = File::open(package_path)?;
   let mut zip = ZipArchive::new(package_file)
     .map_err(|_| io::Error::other(ExtensionError::InvalidPackageFormat))?;

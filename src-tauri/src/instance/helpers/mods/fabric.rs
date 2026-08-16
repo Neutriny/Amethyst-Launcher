@@ -3,7 +3,7 @@
 use async_trait::async_trait;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
-use arcmc_types::error::ArcMCResult;
+use aml_types::error::AMLResult;
 use std::collections::HashMap;
 use std::io::{Read, Seek};
 use std::path::Path;
@@ -49,7 +49,7 @@ impl LocalModMetadataParser for FabricModMetadataParser {
 
   fn get_mod_metadata_from_jar<R: Read + Seek>(
     jar: &mut ZipArchive<R>,
-  ) -> ArcMCResult<Self::Metadata> {
+  ) -> AMLResult<Self::Metadata> {
     let mut content = String::new();
     jar
       .by_name("fabric.mod.json")?
@@ -57,7 +57,7 @@ impl LocalModMetadataParser for FabricModMetadataParser {
     Ok(deserialize_lenient_json(&content)?)
   }
 
-  async fn get_mod_metadata_from_dir(dir_path: &Path) -> ArcMCResult<Self::Metadata> {
+  async fn get_mod_metadata_from_dir(dir_path: &Path) -> AMLResult<Self::Metadata> {
     let fabric_file_path = dir_path.join("fabric.mod.json");
     let content = tokio::fs::read_to_string(fabric_file_path).await?;
     Ok(deserialize_lenient_json(&content)?)

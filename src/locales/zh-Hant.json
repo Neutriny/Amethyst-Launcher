@@ -66,7 +66,7 @@
         },
         "userAgreement": {
           "title": "使用者協議",
-          "url": "https://tannenwaddy.github.io/ArcMCL-docs/docs/tos"
+          "url": "https://tannenwaddy.github.io/Amethyst-docs/docs/tos"
         },
         "openSourceLicense": {
           "title": "開源協議",
@@ -859,7 +859,7 @@
         "extensionDocs": {
           "title": "擴充套件開發文件",
           "description": "閱讀擴充套件系統介紹與 API 文件，使用腳手架快速上手",
-          "url": "https://tannenwaddy.github.io/ArcMCL-docs/dev/extension/"
+          "url": "https://tannenwaddy.github.io/Amethyst-docs/dev/extension/"
         },
         "awesomeExtensions": {
           "title": "探索社群擴充套件",

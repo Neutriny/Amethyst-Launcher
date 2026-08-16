@@ -1,4 +1,4 @@
-use arcmc_types::error::ArcMCResult;
+use aml_types::error::AMLResult;
 use std::sync::Mutex;
 use tauri::{AppHandle, Manager, State};
 use tauri_plugin_http::reqwest;
@@ -32,7 +32,7 @@ use crate::tasks::commands::schedule_progressive_task_group;
 use crate::tasks::download::DownloadParam;
 
 #[tauri::command]
-pub async fn fetch_game_version_list(app: AppHandle) -> ArcMCResult<Vec<GameClientResourceInfo>> {
+pub async fn fetch_game_version_list(app: AppHandle) -> AMLResult<Vec<GameClientResourceInfo>> {
   let priority_list = {
     let launcher_config_state = app.state::<Mutex<LauncherConfig>>();
     let launcher_config = launcher_config_state.lock()?;
@@ -45,7 +45,7 @@ pub async fn fetch_game_version_list(app: AppHandle) -> ArcMCResult<Vec<GameClie
 pub async fn fetch_game_version_specific(
   app: AppHandle,
   game_version: String,
-) -> ArcMCResult<GameClientResourceInfo> {
+) -> AMLResult<GameClientResourceInfo> {
   let all_versions = fetch_game_version_list(app.clone()).await?;
 
   all_versions
@@ -59,7 +59,7 @@ pub async fn fetch_mod_loader_version_list(
   app: AppHandle,
   game_version: String,
   mod_loader_type: ModLoaderType,
-) -> ArcMCResult<Vec<ModLoaderResourceInfo>> {
+) -> AMLResult<Vec<ModLoaderResourceInfo>> {
   let priority_list = {
     let launcher_config_state = app.state::<Mutex<LauncherConfig>>();
     let launcher_config = launcher_config_state.lock()?;
@@ -87,7 +87,7 @@ pub async fn fetch_mod_loader_version_list(
 pub async fn fetch_optifine_version_list(
   app: AppHandle,
   game_version: String,
-) -> ArcMCResult<Vec<OptiFineResourceInfo>> {
+) -> AMLResult<Vec<OptiFineResourceInfo>> {
   let priority_list = {
     let launcher_config_state = app.state::<Mutex<LauncherConfig>>();
     let launcher_config = launcher_config_state.lock()?;
@@ -101,7 +101,7 @@ pub async fn fetch_resource_list_by_name(
   app: AppHandle,
   download_source: OtherResourceSource,
   query: OtherResourceSearchQuery,
-) -> ArcMCResult<OtherResourceSearchRes> {
+) -> AMLResult<OtherResourceSearchRes> {
   match download_source {
     OtherResourceSource::CurseForge => {
       Ok(fetch_resource_list_by_name_curseforge(&app, &query).await?)
@@ -116,7 +116,7 @@ pub async fn fetch_resource_version_packs(
   app: AppHandle,
   download_source: OtherResourceSource,
   query: OtherResourceVersionPackQuery,
-) -> ArcMCResult<Vec<OtherResourceVersionPack>> {
+) -> AMLResult<Vec<OtherResourceVersionPack>> {
   match download_source {
     OtherResourceSource::CurseForge => {
       Ok(fetch_resource_version_packs_curseforge(&app, &query).await?)
@@ -132,7 +132,7 @@ pub async fn download_game_server(
   client: State<'_, reqwest::Client>,
   resource_info: GameClientResourceInfo,
   dest: String,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   let version_details = client
     .get(&resource_info.url)
     .send()
@@ -168,7 +168,7 @@ pub async fn fetch_remote_resource_by_local(
   app: AppHandle,
   download_source: OtherResourceSource,
   file_path: String,
-) -> ArcMCResult<OtherResourceFileInfo> {
+) -> AMLResult<OtherResourceFileInfo> {
   match download_source {
     OtherResourceSource::CurseForge => {
       Ok(fetch_remote_resource_by_local_curseforge(&app, &file_path).await?)
@@ -185,7 +185,7 @@ pub async fn update_mods(
   app: AppHandle,
   instance_id: String,
   queries: Vec<ModUpdateQuery>,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   if queries.is_empty() {
     return Ok(());
   }
@@ -231,7 +231,7 @@ pub async fn fetch_remote_resource_by_id(
   app: AppHandle,
   download_source: OtherResourceSource,
   resource_id: String,
-) -> ArcMCResult<OtherResourceInfo> {
+) -> AMLResult<OtherResourceInfo> {
   match download_source {
     OtherResourceSource::CurseForge => {
       Ok(fetch_remote_resource_by_id_curseforge(&app, &resource_id).await?)

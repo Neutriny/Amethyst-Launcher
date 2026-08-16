@@ -1,5 +1,5 @@
 use serde_json::json;
-use arcmc_types::error::{ArcMCError, ArcMCResult};
+use aml_types::error::{AMLError, AMLResult};
 use std::net::{SocketAddr, TcpListener};
 use systemstat::{Platform, saturating_sub_bytes};
 use tauri_plugin_http::reqwest;
@@ -133,7 +133,7 @@ pub fn get_all_drive_mount_points() -> Vec<std::path::PathBuf> {
 /// Finds an available port starting from the specified port (or 0 if not provided).
 ///
 /// # Parameters
-/// - `start_port`: The port to begin searching from. If `None`, it will start from 0.
+/// - `start_port`: The port to begin sehing from. If `None`, it will start from 0.
 ///
 /// # Examples
 ///
@@ -141,7 +141,7 @@ pub fn get_all_drive_mount_points() -> Vec<std::path::PathBuf> {
 /// let available_port = find_free_port(None).unwrap();
 /// println!("Found free port: {}", available_port);
 /// ```
-pub fn find_free_port(start_port: Option<u16>) -> ArcMCResult<u16> {
+pub fn find_free_port(start_port: Option<u16>) -> AMLResult<u16> {
   let start = start_port.unwrap_or(0); // Default to 0 if no start_port is provided
 
   for port in start..=u16::MAX {
@@ -152,5 +152,5 @@ pub fn find_free_port(start_port: Option<u16>) -> ArcMCResult<u16> {
   }
 
   log::error!("No free port found.");
-  Err(ArcMCError("No free port found".to_string()))
+  Err(AMLError("No free port found".to_string()))
 }

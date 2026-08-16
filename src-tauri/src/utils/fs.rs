@@ -1,7 +1,7 @@
-﻿use regex::Regex;
+use regex::Regex;
 use sha1::{Digest, Sha1};
 use sha2::Sha256;
-use arcmc_types::error::{ArcMCError, ArcMCResult};
+use aml_types::error::{AMLError, AMLResult};
 use std::ffi::OsStr;
 use std::io::Read;
 use std::path::{Component, Path, PathBuf};
@@ -137,19 +137,19 @@ pub fn extract_filename(path_str: &str, with_ext: bool) -> String {
 /// let path = normalize_relative_path(Path::new("./config/options.txt"))?;
 /// assert_eq!(path, PathBuf::from("config/options.txt"));
 /// ```
-pub fn normalize_relative_path(path: &Path) -> ArcMCResult<PathBuf> {
+pub fn normalize_relative_path(path: &Path) -> AMLResult<PathBuf> {
   let mut normalized = PathBuf::new();
 
   for component in path.components() {
     match component {
       Component::Normal(part) => normalized.push(part),
       Component::CurDir => {}
-      _ => return Err(ArcMCError("Invalid relative path".into())),
+      _ => return Err(AMLError("Invalid relative path".into())),
     }
   }
 
   if normalized.as_os_str().is_empty() {
-    return Err(ArcMCError("Invalid relative path".into()));
+    return Err(AMLError("Invalid relative path".into()));
   }
 
   Ok(normalized)
@@ -162,7 +162,7 @@ pub fn normalize_relative_path(path: &Path) -> ArcMCResult<PathBuf> {
 /// ```rust
 /// let sub_dirs = get_subdirectories(&directory).unwrap_or_default();
 /// ```
-pub fn get_subdirectories<P: AsRef<Path>>(path: P) -> ArcMCResult<Vec<PathBuf>> {
+pub fn get_subdirectories<P: AsRef<Path>>(path: P) -> AMLResult<Vec<PathBuf>> {
   fs::read_dir(path)?
     .filter_map(|entry| match entry {
       Ok(entry) => {
@@ -173,7 +173,7 @@ pub fn get_subdirectories<P: AsRef<Path>>(path: P) -> ArcMCResult<Vec<PathBuf>> 
         }
         None
       }
-      Err(e) => Some(Err(ArcMCError(format!("Entry Error: {}", e)))),
+      Err(e) => Some(Err(AMLError(format!("Entry Error: {}", e)))),
     })
     .collect()
 }
@@ -185,7 +185,7 @@ pub fn get_subdirectories<P: AsRef<Path>>(path: P) -> ArcMCResult<Vec<PathBuf>> 
 /// ```rust
 /// let mod_paths = get_files_with_regex(&mods_dir, &valid_extensions).unwrap_or_default();
 /// ```
-pub fn get_files_with_regex<P: AsRef<Path>>(path: P, pattern: &Regex) -> ArcMCResult<Vec<PathBuf>> {
+pub fn get_files_with_regex<P: AsRef<Path>>(path: P, pattern: &Regex) -> AMLResult<Vec<PathBuf>> {
   get_files_with_regex_recursive(path, pattern, Some(0))
 }
 
@@ -196,7 +196,7 @@ pub fn get_files_with_regex_recursive<P: AsRef<Path>>(
   path: P,
   pattern: &Regex,
   max_depth: Option<usize>,
-) -> ArcMCResult<Vec<PathBuf>> {
+) -> AMLResult<Vec<PathBuf>> {
   let mut walker = WalkDir::new(path).min_depth(1);
   if let Some(max_depth) = max_depth {
     walker = walker.max_depth(max_depth + 1);
@@ -216,7 +216,7 @@ pub fn get_files_with_regex_recursive<P: AsRef<Path>>(
         Some(Ok(entry.into_path()))
       }
       Ok(_) => None,
-      Err(e) => Some(Err(ArcMCError(format!("Walk Directory Error: {}", e)))),
+      Err(e) => Some(Err(AMLError(format!("Walk Directory Error: {}", e)))),
     })
     .collect()
 }
@@ -301,11 +301,11 @@ pub fn create_url_shortcut(
   name: String,
   url: String,
   icon_path: Option<PathBuf>,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   let desktop = app
     .path()
     .desktop_dir()
-    .map_err(|e| ArcMCError(format!("Failed to get desktop path: {}", e)))?;
+    .map_err(|e| AMLError(format!("Failed to get desktop path: {}", e)))?;
 
   #[cfg(target_os = "windows")]
   let shortcut_ext = "url";
@@ -333,15 +333,15 @@ pub fn create_url_shortcut(
       let icon_name = "icon.png";
 
       let resource_icon = get_app_resource_filepath(app, &format!("assets/icons/{}", icon_name))
-        .map_err(|e| ArcMCError(format!("Failed to resolve resource icon: {}", e)))?;
+        .map_err(|e| AMLError(format!("Failed to resolve resource icon: {}", e)))?;
 
       let appdata_icon = app
         .path()
         .resolve(icon_name, BaseDirectory::AppData)
-        .map_err(|e| ArcMCError(format!("Failed to resolve appdata icon path: {}", e)))?;
+        .map_err(|e| AMLError(format!("Failed to resolve appdata icon path: {}", e)))?;
 
       fs::copy(&resource_icon, &appdata_icon)
-        .map_err(|e| ArcMCError(format!("Failed to copy default icon: {}", e)))?;
+        .map_err(|e| AMLError(format!("Failed to copy default icon: {}", e)))?;
 
       appdata_icon
     }
@@ -356,7 +356,7 @@ pub fn create_url_shortcut(
       url, icon_line
     );
 
-    fs::write(&path, content).map_err(|e| ArcMCError(e.to_string()))?;
+    fs::write(&path, content).map_err(|e| AMLError(e.to_string()))?;
   }
 
   // #[cfg(target_os = "macos")]
@@ -367,8 +367,8 @@ pub fn create_url_shortcut(
   //   dict.insert("URL".to_string(), Value::String(url.to_string()));
   //   let plist_value = Value::Dictionary(dict);
 
-  //   let file = fs::File::create(&path).map_err(|e| ArcMCError(e.to_string()))?;
-  //   plist_value.to_writer_xml(file).map_err(|e| ArcMCError(e.to_string()))?;
+  //   let file = fs::File::create(&path).map_err(|e| AMLError(e.to_string()))?;
+  //   plist_value.to_writer_xml(file).map_err(|e| AMLError(e.to_string()))?;
   // }
 
   #[cfg(target_os = "macos")]
@@ -378,17 +378,17 @@ pub fn create_url_shortcut(
 
     let content = format!("#!/bin/bash\nopen \"{}\"\n", url);
 
-    let mut file = fs::File::create(&path).map_err(|e| ArcMCError(e.to_string()))?;
+    let mut file = fs::File::create(&path).map_err(|e| AMLError(e.to_string()))?;
     file
       .write_all(content.as_bytes())
-      .map_err(|e| ArcMCError(e.to_string()))?;
+      .map_err(|e| AMLError(e.to_string()))?;
 
     let mut perms = file
       .metadata()
-      .map_err(|e| ArcMCError(e.to_string()))?
+      .map_err(|e| AMLError(e.to_string()))?
       .permissions();
     perms.set_mode(0o755);
-    fs::set_permissions(&path, perms).map_err(|e| ArcMCError(e.to_string()))?;
+    fs::set_permissions(&path, perms).map_err(|e| AMLError(e.to_string()))?;
   }
 
   #[cfg(target_os = "linux")]
@@ -409,30 +409,30 @@ Terminal=false
       name, url, icon_line
     );
 
-    let mut file = fs::File::create(&path).map_err(|e| ArcMCError(e.to_string()))?;
+    let mut file = fs::File::create(&path).map_err(|e| AMLError(e.to_string()))?;
     file
       .write_all(content.as_bytes())
-      .map_err(|e| ArcMCError(e.to_string()))?;
+      .map_err(|e| AMLError(e.to_string()))?;
 
     let mut perms = file
       .metadata()
-      .map_err(|e| ArcMCError(e.to_string()))?
+      .map_err(|e| AMLError(e.to_string()))?
       .permissions();
     perms.set_mode(0o755);
-    fs::set_permissions(&path, perms).map_err(|e| ArcMCError(e.to_string()))?;
+    fs::set_permissions(&path, perms).map_err(|e| AMLError(e.to_string()))?;
   }
 
   Ok(())
 }
 
-pub fn validate_sha1(dest_path: PathBuf, truth: String) -> ArcMCResult<()> {
+pub fn validate_sha1(dest_path: PathBuf, truth: String) -> AMLResult<()> {
   let mut f = fs::File::options()
     .read(true)
     .create(false)
     .write(false)
     .open(&dest_path)
     .map_err(|e| {
-      ArcMCError(format!(
+      AMLError(format!(
         "Failed to open file {}: {}",
         dest_path.display(),
         e
@@ -440,11 +440,11 @@ pub fn validate_sha1(dest_path: PathBuf, truth: String) -> ArcMCResult<()> {
     })?;
   let mut hasher = Sha1::new();
   std::io::copy(&mut f, &mut hasher)
-    .map_err(|e| ArcMCError(format!("Failed to copy data for SHA1 validation: {}", e)))?;
+    .map_err(|e| AMLError(format!("Failed to copy data for SHA1 validation: {}", e)))?;
 
   let sha1 = hex::encode(hasher.finalize());
   if sha1 != truth {
-    Err(ArcMCError(format!(
+    Err(AMLError(format!(
       "SHA1 mismatch for {}: expected {}, got {}",
       dest_path.display(),
       truth,
@@ -461,8 +461,8 @@ pub fn validate_sha1(dest_path: PathBuf, truth: String) -> ArcMCResult<()> {
 /// - `path`: The file path to hash
 ///
 /// # Returns
-/// - `ArcMCResult<String>`: The SHA256 hash as a hexadecimal string, or an error
-pub fn calculate_sha256(path: &Path) -> ArcMCResult<String> {
+/// - `AMLResult<String>`: The SHA256 hash as a hexadecimal string, or an error
+pub fn calculate_sha256(path: &Path) -> AMLResult<String> {
   match fs::File::open(path) {
     Ok(mut file) => {
       let mut hasher = Sha256::new();
@@ -474,7 +474,7 @@ pub fn calculate_sha256(path: &Path) -> ArcMCResult<String> {
           Ok(0) => break,
           Ok(n) => hasher.update(&buffer[..n]),
           Err(e) => {
-            return Err(ArcMCError(format!(
+            return Err(AMLError(format!(
               "Error reading file {} for hashing: {}",
               path.display(),
               e
@@ -485,7 +485,7 @@ pub fn calculate_sha256(path: &Path) -> ArcMCResult<String> {
 
       Ok(format!("{:x}", hasher.finalize()))
     }
-    Err(e) => Err(ArcMCError(format!(
+    Err(e) => Err(AMLError(format!(
       "Failed to open file {} for hashing: {}",
       path.display(),
       e
@@ -493,9 +493,9 @@ pub fn calculate_sha256(path: &Path) -> ArcMCResult<String> {
   }
 }
 
-pub fn create_zip_from_dirs(paths: Vec<PathBuf>, zip_file_path: PathBuf) -> ArcMCResult<String> {
+pub fn create_zip_from_dirs(paths: Vec<PathBuf>, zip_file_path: PathBuf) -> AMLResult<String> {
   let zip_file = fs::File::create(&zip_file_path)
-    .map_err(|e| ArcMCError(format!("Failed to create zip file: {}", e)))?;
+    .map_err(|e| AMLError(format!("Failed to create zip file: {}", e)))?;
   let mut zip = ZipWriter::new(zip_file);
   let options = FileOptions::<ExtendedFileOptions>::default()
     .compression_method(CompressionMethod::Deflated)
@@ -506,15 +506,15 @@ pub fn create_zip_from_dirs(paths: Vec<PathBuf>, zip_file_path: PathBuf) -> ArcM
       let file_name = path.file_name().and_then(OsStr::to_str).unwrap_or_default();
       zip.start_file(file_name, options.clone())?;
       let mut file = fs::File::open(&path)
-        .map_err(|e| ArcMCError(format!("Failed to open file {}: {}", path.display(), e)))?;
+        .map_err(|e| AMLError(format!("Failed to open file {}: {}", path.display(), e)))?;
       std::io::copy(&mut file, &mut zip)
-        .map_err(|e| ArcMCError(format!("Failed to copy data to zip: {}", e)))?;
+        .map_err(|e| AMLError(format!("Failed to copy data to zip: {}", e)))?;
     }
   }
 
   zip
     .finish()
-    .map_err(|e| ArcMCError(format!("Failed to finalize zip file: {}", e)))?;
+    .map_err(|e| AMLError(format!("Failed to finalize zip file: {}", e)))?;
 
   Ok(zip_file_path.to_string_lossy().to_string())
 }
@@ -547,7 +547,7 @@ pub fn manage_permissions_unix<P>(
   path: P,
   perm_mask: u32,
   operation: PermissionOperation,
-) -> ArcMCResult<()>
+) -> AMLResult<()>
 where
   P: AsRef<Path>,
 {

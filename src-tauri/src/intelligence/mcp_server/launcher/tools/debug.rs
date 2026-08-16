@@ -12,6 +12,6 @@ pub fn tool_routes() -> Vec<ToolRoute<McpContext>> {
     {
       #[schemars(description = "Text returned verbatim in the tool result.")]
       text: String,
-    } => async move { Ok::<_, arcmc_types::error::ArcMCError>(params.text) }
+    } => async move { Ok::<_, aml_types::error::AMLError>(params.text) }
   )]
 }

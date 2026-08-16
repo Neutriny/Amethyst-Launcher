@@ -1,4 +1,4 @@
-use arcmc_types::error::ArcMCResult;
+use aml_types::error::AMLResult;
 use std::fs;
 use std::io::{self, Read};
 use std::path::{Path, PathBuf};
@@ -24,7 +24,7 @@ pub async fn download_optifine_installer(
   optifine: &OptiFineResourceInfo,
   lib_dir: PathBuf,
   task_params: &mut Vec<PTaskParam>,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   // only have BMCLAPI source
   let root = get_download_api(SourceType::BMCLAPIMirror, ResourceType::OptiFine)?;
   let installer_url = root.join(&format!(
@@ -54,7 +54,7 @@ pub async fn download_optifine_libraries(
   priority: &[SourceType],
   instance: &Instance,
   client_info: &mut McClientInfo,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   let optifine = instance
     .optifine
     .as_ref()
@@ -279,7 +279,7 @@ async fn run_optifine_patcher(
   installer_jar: &Path,
   base_client_jar: &Path,
   out_optifine_jar: &Path,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   let game_config = get_instance_game_config(app, instance);
 
   let selected_java = select_java_runtime(
@@ -322,7 +322,7 @@ pub async fn finish_optifine_install(
   app: &AppHandle,
   instance: &Instance,
   client_info: &McClientInfo,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   let subdirs = get_instance_subdir_paths(app, instance, &[&InstanceSubdirType::Libraries])
     .ok_or(InstanceError::InstanceNotFoundByID)?;
   let libraries_dir = subdirs.first().ok_or(InstanceError::InstanceNotFoundByID)?;
@@ -373,7 +373,7 @@ pub async fn finish_optifine_install(
   Ok(())
 }
 
-fn remove_entry_from_zip(zip_path: &Path, entry_name: &str) -> ArcMCResult<()> {
+fn remove_entry_from_zip(zip_path: &Path, entry_name: &str) -> AMLResult<()> {
   if !zip_path.exists() {
     return Ok(());
   }

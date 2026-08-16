@@ -1,4 +1,4 @@
-use arcmc_types::error::ArcMCResult;
+use aml_types::error::AMLResult;
 use std::sync::Mutex;
 use tauri::{AppHandle, Manager};
 use tauri_plugin_http::reqwest;
@@ -11,7 +11,7 @@ use crate::utils::web::normalize_url;
 pub async fn fetch_auth_server_info(
   app: &AppHandle,
   auth_url: String,
-) -> ArcMCResult<AuthServerInfo> {
+) -> AMLResult<AuthServerInfo> {
   let client = app.state::<reqwest::Client>();
   match client.get(&auth_url).send().await {
     Ok(response) => {
@@ -56,7 +56,7 @@ pub fn get_client_id(domain: String) -> Option<String> {
     .map(|(_, id)| id.to_string())
 }
 
-pub async fn fetch_auth_url(app: &AppHandle, root: Url) -> ArcMCResult<String> {
+pub async fn fetch_auth_url(app: &AppHandle, root: Url) -> AMLResult<String> {
   let client = app.state::<reqwest::Client>();
   let response = client
     .get(root.clone())
@@ -78,7 +78,7 @@ pub async fn fetch_auth_url(app: &AppHandle, root: Url) -> ArcMCResult<String> {
   }
 }
 
-pub async fn refresh_and_update_auth_servers(app: &AppHandle) -> ArcMCResult<()> {
+pub async fn refresh_and_update_auth_servers(app: &AppHandle) -> AMLResult<()> {
   let account_binding = app.state::<Mutex<AccountInfo>>();
   let cloned_account_state = account_binding.lock()?.clone();
 
@@ -103,7 +103,7 @@ pub async fn refresh_and_update_auth_servers(app: &AppHandle) -> ArcMCResult<()>
 pub fn get_auth_server_info_by_url(
   app: &AppHandle,
   auth_url: String,
-) -> ArcMCResult<AuthServerInfo> {
+) -> AMLResult<AuthServerInfo> {
   let target = normalize_url(&auth_url);
 
   let account_binding = app.state::<Mutex<AccountInfo>>();

@@ -1,9 +1,9 @@
 use futures::{StreamExt, TryStreamExt};
 use lazy_static::lazy_static;
 use regex::{Regex, RegexBuilder};
-use arcmc_types::error::ArcMCResult;
-use arcmc_types::partial::{PartialError, PartialUpdate};
-use arcmc_types::storage::{Storage, load_json_async, save_json_async};
+use aml_types::error::AMLResult;
+use aml_types::partial::{PartialError, PartialUpdate};
+use aml_types::storage::{Storage, load_json_async, save_json_async};
 use std::collections::HashMap;
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -82,7 +82,7 @@ use crate::utils::fs::{
 use crate::utils::image::ImageWrapper;
 
 #[tauri::command]
-pub async fn retrieve_instance_list(app: AppHandle) -> ArcMCResult<Vec<InstanceSummary>> {
+pub async fn retrieve_instance_list(app: AppHandle) -> AMLResult<Vec<InstanceSummary>> {
   refresh_and_update_instances(&app, false).await; // firstly refresh and update
   let global_version_isolation = get_global_game_config(&app).version_isolation;
   let mut summary_list = Vec::new();
@@ -148,7 +148,7 @@ pub async fn update_instance_config(
   instance_id: String,
   key_path: String,
   value: String,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   let instance = {
     let binding = app.state::<Mutex<HashMap<String, Instance>>>();
     let mut state = binding.lock().unwrap();
@@ -201,7 +201,7 @@ pub async fn update_instance_config(
 pub fn retrieve_instance_game_config(
   app: AppHandle,
   instance_id: String,
-) -> ArcMCResult<GameConfig> {
+) -> AMLResult<GameConfig> {
   let binding = app.state::<Mutex<HashMap<String, Instance>>>();
   let state = binding.lock().unwrap();
   let instance = state
@@ -212,7 +212,7 @@ pub fn retrieve_instance_game_config(
 }
 
 #[tauri::command]
-pub async fn reset_instance_game_config(app: AppHandle, instance_id: String) -> ArcMCResult<()> {
+pub async fn reset_instance_game_config(app: AppHandle, instance_id: String) -> AMLResult<()> {
   let instance = {
     let binding = app.state::<Mutex<HashMap<String, Instance>>>();
     let mut state = binding.lock().unwrap();
@@ -231,7 +231,7 @@ pub fn retrieve_instance_subdir_path(
   app: AppHandle,
   instance_id: String,
   dir_type: InstanceSubdirType,
-) -> ArcMCResult<PathBuf> {
+) -> AMLResult<PathBuf> {
   match get_instance_subdir_path_by_id(&app, &instance_id, &dir_type) {
     Some(path) => Ok(path),
     None => Err(InstanceError::InstanceNotFoundByID.into()),
@@ -246,7 +246,7 @@ pub fn read_instance_file(
   dir_type: InstanceSubdirType,
   path: String,
   mode: Option<String>,
-) -> ArcMCResult<String> {
+) -> AMLResult<String> {
   let subdir = retrieve_instance_subdir_path(app, instance_id, dir_type)?;
   let relative_path =
     normalize_relative_path(Path::new(&path)).map_err(|_| InstanceError::InvalidSourcePath)?;
@@ -261,7 +261,7 @@ pub fn read_instance_file(
 }
 
 #[tauri::command]
-pub fn delete_instance(app: AppHandle, instance_id: String) -> ArcMCResult<()> {
+pub fn delete_instance(app: AppHandle, instance_id: String) -> AMLResult<()> {
   let instance_binding = app.state::<Mutex<HashMap<String, Instance>>>();
   let instance_state = instance_binding.lock().unwrap();
 
@@ -303,7 +303,7 @@ pub async fn rename_instance(
   app: AppHandle,
   instance_id: String,
   new_name: String,
-) -> ArcMCResult<PathBuf> {
+) -> AMLResult<PathBuf> {
   let new_path = {
     let binding = app.state::<Mutex<HashMap<String, Instance>>>();
     let mut state = binding.lock().unwrap();
@@ -328,7 +328,7 @@ pub async fn copy_resources_to_instances(
   tgt_inst_ids: Vec<String>,
   tgt_dir_type: InstanceSubdirType,
   decompress: bool,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   if src_file_paths.is_empty() {
     return Err(InstanceError::InvalidSourcePath.into());
   }
@@ -343,7 +343,7 @@ pub async fn copy_resources_to_instances(
         Err(InstanceError::InvalidSourcePath.into())
       }
     })
-    .collect::<ArcMCResult<Vec<_>>>()?;
+    .collect::<AMLResult<Vec<_>>>()?;
 
   let tgt_paths = tgt_inst_ids
     .into_iter()
@@ -351,7 +351,7 @@ pub async fn copy_resources_to_instances(
       get_instance_subdir_path_by_id(&app, &tgt_inst_id, &tgt_dir_type)
         .ok_or(InstanceError::InstanceNotFoundByID.into())
     })
-    .collect::<ArcMCResult<Vec<_>>>()?;
+    .collect::<AMLResult<Vec<_>>>()?;
 
   for tgt_path in &tgt_paths {
     if !tgt_path.exists() {
@@ -374,7 +374,7 @@ pub async fn copy_resources_to_instances(
   ));
 
   let copy_resource_entry_to_instance =
-    |src_path: &Path, tgt_path: &Path, decompress: bool| -> ArcMCResult<()> {
+    |src_path: &Path, tgt_path: &Path, decompress: bool| -> AMLResult<()> {
       if src_path.is_file() {
         let file_name = src_path
           .file_name()
@@ -415,7 +415,7 @@ pub async fn copy_resources_to_instances(
     };
 
   futures::stream::iter(entries)
-    .map(Ok::<_, arcmc_types::error::ArcMCError>)
+    .map(Ok::<_, aml_types::error::AMLError>)
     .try_for_each_concurrent(None, move |(src_path, tgt_path)| {
       let semaphore = semaphore.clone();
 
@@ -425,14 +425,14 @@ pub async fn copy_resources_to_instances(
           .await
           .map_err(|_| InstanceError::SemaphoreAcquireFailed)?;
 
-        tokio::task::spawn_blocking(move || -> ArcMCResult<()> {
+        tokio::task::spawn_blocking(move || -> AMLResult<()> {
           let _permit = permit;
           copy_resource_entry_to_instance(&src_path, &tgt_path, decompress)
         })
         .await
         .map_err(|_| InstanceError::FileCopyFailed)??;
 
-        Ok::<(), arcmc_types::error::ArcMCError>(())
+        Ok::<(), aml_types::error::AMLError>(())
       }
     })
     .await?;
@@ -446,7 +446,7 @@ pub fn move_resource_to_instance(
   src_file_path: String,
   tgt_inst_id: String,
   tgt_dir_type: InstanceSubdirType,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   let tgt_path = match get_instance_subdir_path_by_id(&app, &tgt_inst_id, &tgt_dir_type) {
     Some(path) => path,
     None => return Err(InstanceError::InstanceNotFoundByID.into()),
@@ -474,7 +474,7 @@ pub fn move_resource_to_instance(
 pub async fn retrieve_world_list(
   app: AppHandle,
   instance_id: String,
-) -> ArcMCResult<Vec<WorldInfo>> {
+) -> AMLResult<Vec<WorldInfo>> {
   let game_version = {
     let binding = app.state::<Mutex<HashMap<String, Instance>>>();
     let state = binding.lock()?;
@@ -512,7 +512,7 @@ pub async fn retrieve_game_server_list(
   app: AppHandle,
   instance_id: String,
   query_online: bool,
-) -> ArcMCResult<Vec<GameServerInfo>> {
+) -> AMLResult<Vec<GameServerInfo>> {
   // query_online is false, return local data from nbt (servers.dat)
   let nbt_path = match get_servers_nbt_path_by_instance_id(&app, &instance_id) {
     Some(path) => path,
@@ -539,7 +539,7 @@ pub async fn delete_game_server(
   app: AppHandle,
   instance_id: String,
   server_addr: String,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   let nbt_path = match get_servers_nbt_path_by_instance_id(&app, &instance_id) {
     Some(path) => path,
     None => return Err(InstanceError::InstanceNotFoundByID.into()),
@@ -560,7 +560,7 @@ pub async fn add_game_server(
   instance_id: String,
   server_addr: String,
   server_name: String,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   let nbt_path = match get_servers_nbt_path_by_instance_id(&app, &instance_id) {
     Some(path) => path,
     None => return Err(InstanceError::InstanceNotFoundByID.into()),
@@ -590,7 +590,7 @@ pub async fn add_game_server(
 pub async fn retrieve_local_mod_list(
   app: AppHandle,
   instance_id: String,
-) -> ArcMCResult<Vec<LocalModInfo>> {
+) -> AMLResult<Vec<LocalModInfo>> {
   let (installed_loader_type, game_version) = {
     let binding = app.state::<Mutex<HashMap<String, Instance>>>();
     let state = binding.lock().unwrap();
@@ -718,7 +718,7 @@ pub async fn retrieve_local_mod_list(
 pub async fn retrieve_resource_pack_list(
   app: AppHandle,
   instance_id: String,
-) -> ArcMCResult<Vec<ResourcePackInfo>> {
+) -> AMLResult<Vec<ResourcePackInfo>> {
   // Get the resource packs list based on the instance
   let resource_packs_dir =
     match get_instance_subdir_path_by_id(&app, &instance_id, &InstanceSubdirType::ResourcePacks) {
@@ -768,7 +768,7 @@ pub async fn retrieve_resource_pack_list(
 pub async fn retrieve_server_resource_pack_list(
   app: AppHandle,
   instance_id: String,
-) -> ArcMCResult<Vec<ResourcePackInfo>> {
+) -> AMLResult<Vec<ResourcePackInfo>> {
   let resource_packs_dir = match get_instance_subdir_path_by_id(
     &app,
     &instance_id,
@@ -821,7 +821,7 @@ pub async fn retrieve_server_resource_pack_list(
 pub fn retrieve_schematic_list(
   app: AppHandle,
   instance_id: String,
-) -> ArcMCResult<Vec<SchematicInfo>> {
+) -> AMLResult<Vec<SchematicInfo>> {
   let schematics_dir =
     match get_instance_subdir_path_by_id(&app, &instance_id, &InstanceSubdirType::Schematics) {
       Some(path) => path,
@@ -864,7 +864,7 @@ pub fn retrieve_schematic_list(
 pub fn retrieve_shader_pack_list(
   app: AppHandle,
   instance_id: String,
-) -> ArcMCResult<Vec<ShaderPackInfo>> {
+) -> AMLResult<Vec<ShaderPackInfo>> {
   // Get the shaderpacks directory based on the instance
   let shaderpacks_dir =
     match get_instance_subdir_path_by_id(&app, &instance_id, &InstanceSubdirType::ShaderPacks) {
@@ -895,7 +895,7 @@ pub fn retrieve_shader_pack_list(
 pub fn retrieve_screenshot_list(
   app: AppHandle,
   instance_id: String,
-) -> ArcMCResult<Vec<ScreenshotInfo>> {
+) -> AMLResult<Vec<ScreenshotInfo>> {
   let screenshots_dir =
     match get_instance_subdir_path_by_id(&app, &instance_id, &InstanceSubdirType::Screenshots) {
       Some(path) => path,
@@ -938,7 +938,7 @@ lazy_static! {
 }
 
 #[tauri::command]
-pub fn toggle_mod_by_extension(file_path: PathBuf, enable: bool) -> ArcMCResult<()> {
+pub fn toggle_mod_by_extension(file_path: PathBuf, enable: bool) -> AMLResult<()> {
   let _lock = RENAME_LOCK.lock().expect("Failed to acquire lock");
   if !file_path.is_file() {
     return Err(InstanceError::FileNotFoundError.into());
@@ -979,7 +979,7 @@ pub async fn retrieve_world_details(
   app: AppHandle,
   instance_id: String,
   world_name: String,
-) -> ArcMCResult<LevelData> {
+) -> AMLResult<LevelData> {
   let worlds_dir =
     match get_instance_subdir_path_by_id(&app, &instance_id, &InstanceSubdirType::Saves) {
       Some(path) => path,
@@ -1001,7 +1001,7 @@ pub fn create_launch_desktop_shortcut(
   app: AppHandle,
   instance_id: String,
   icon_src: String,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   let binding = app.state::<Mutex<HashMap<String, Instance>>>();
   let state = binding
     .lock()
@@ -1048,7 +1048,7 @@ pub async fn create_instance(
   mut is_install_fabric_api: Option<bool>,
   mut is_install_qf_api: Option<bool>,
   modpack_version: Option<String>,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   let client = app.state::<reqwest::Client>();
   let launcher_config_state = app.state::<Mutex<LauncherConfig>>();
   // Get priority list
@@ -1275,7 +1275,7 @@ pub async fn create_instance(
 }
 
 #[tauri::command]
-pub async fn finish_mod_loader_install(app: AppHandle, instance_id: String) -> ArcMCResult<()> {
+pub async fn finish_mod_loader_install(app: AppHandle, instance_id: String) -> AMLResult<()> {
   let instance = {
     let binding = app.state::<Mutex<HashMap<String, Instance>>>();
     let state = binding.lock()?;
@@ -1334,7 +1334,7 @@ pub async fn finish_mod_loader_install(app: AppHandle, instance_id: String) -> A
 pub async fn finish_optifine_loader_install(
   app: AppHandle,
   instance_id: String,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   let instance = {
     let binding = app.state::<Mutex<HashMap<String, Instance>>>();
     let state = binding.lock()?;
@@ -1391,7 +1391,7 @@ pub async fn finish_optifine_loader_install(
 pub async fn check_change_mod_loader_availablity(
   app: AppHandle,
   instance_id: String,
-) -> ArcMCResult<bool> {
+) -> AMLResult<bool> {
   let instance = {
     let binding = app.state::<Mutex<HashMap<String, Instance>>>();
     let launcher_config_state = binding.lock()?;
@@ -1426,7 +1426,7 @@ pub async fn change_mod_loader(
   new_mod_loader: ModLoaderResourceInfo,
   is_install_fabric_api: Option<bool>,
   is_install_qf_api: Option<bool>,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   let mut instance = {
     let binding = app.state::<Mutex<HashMap<String, Instance>>>();
     let state = binding.lock()?;
@@ -1527,7 +1527,7 @@ pub async fn change_mod_loader(
 }
 
 #[tauri::command]
-pub async fn remove_mod_loader(app: AppHandle, instance_id: String) -> ArcMCResult<()> {
+pub async fn remove_mod_loader(app: AppHandle, instance_id: String) -> AMLResult<()> {
   let mut instance = {
     let binding = app.state::<Mutex<HashMap<String, Instance>>>();
     let state = binding.lock()?;
@@ -1578,7 +1578,7 @@ pub async fn change_optifine(
   app: AppHandle,
   instance_id: String,
   new_optifine: OptiFineResourceInfo,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   let mut instance = {
     let binding = app.state::<Mutex<HashMap<String, Instance>>>();
     let state = binding.lock()?;
@@ -1629,7 +1629,7 @@ pub async fn change_optifine(
 }
 
 #[tauri::command]
-pub async fn remove_optifine(app: AppHandle, instance_id: String) -> ArcMCResult<()> {
+pub async fn remove_optifine(app: AppHandle, instance_id: String) -> AMLResult<()> {
   let mut instance = {
     let binding = app.state::<Mutex<HashMap<String, Instance>>>();
     let state = binding.lock()?;
@@ -1659,7 +1659,7 @@ pub async fn remove_optifine(app: AppHandle, instance_id: String) -> ArcMCResult
 pub async fn retrieve_modpack_meta_info(
   app: AppHandle,
   path: String,
-) -> ArcMCResult<ModpackMetaInfo> {
+) -> AMLResult<ModpackMetaInfo> {
   let path = PathBuf::from(path);
   let file = fs::File::open(&path).map_err(|_| InstanceError::FileNotFoundError)?;
   ModpackMetaInfo::from_archive(&app, &file).await
@@ -1670,7 +1670,7 @@ pub fn add_custom_instance_icon(
   app: AppHandle,
   instance_id: String,
   source_src: String,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   let version_path = {
     let binding = app.state::<Mutex<HashMap<String, Instance>>>();
     let state = binding.lock()?;
@@ -1695,7 +1695,7 @@ pub fn add_custom_instance_icon(
 pub async fn retrieve_exportable_file_list(
   app: AppHandle,
   instance_id: String,
-) -> ArcMCResult<ModpackFileList> {
+) -> AMLResult<ModpackFileList> {
   let instance = {
     let binding = app.state::<Mutex<HashMap<String, Instance>>>();
     let state = binding.lock()?;
@@ -1714,7 +1714,7 @@ pub async fn export_modpack(
   save_path: String,
   options: ExportModpackOptions,
   files: Vec<String>,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   let instance = {
     let binding = app.state::<Mutex<HashMap<String, Instance>>>();
     let state = binding.lock()?;

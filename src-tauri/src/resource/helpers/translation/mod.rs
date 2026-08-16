@@ -4,8 +4,8 @@ use cache::{
   RESOURCE_TRANSLATION_CACHE_EXPIRY_HOURS, ResourceTranslationEntry, ResourceTranslationsCache,
 };
 use futures::StreamExt;
-use arcmc_types::error::{ArcMCError, ArcMCResult};
-use arcmc_types::storage::Storage;
+use aml_types::error::{AMLError, AMLResult};
+use aml_types::storage::Storage;
 use std::sync::Mutex;
 use tauri::{AppHandle, Manager};
 
@@ -30,7 +30,7 @@ pub use cache::{
 pub async fn add_local_mod_translations(
   app: &AppHandle,
   mod_info: &mut LocalModInfo,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   let file_path = mod_info.file_path.to_string_lossy().to_string();
   let file_name = mod_info.file_name.clone();
 
@@ -60,7 +60,7 @@ pub async fn add_local_mod_translations(
       let file_info = fetch_remote_resource_by_local_modrinth(&app_clone, &file_path_clone).await?;
       let resource_info =
         fetch_remote_resource_by_id_modrinth(&app_clone, &file_info.resource_id).await?;
-      Ok::<_, ArcMCError>(resource_info)
+      Ok::<_, AMLError>(resource_info)
     })
   };
 
@@ -72,7 +72,7 @@ pub async fn add_local_mod_translations(
         fetch_remote_resource_by_local_curseforge(&app_clone, &file_path_clone).await?;
       let resource_info =
         fetch_remote_resource_by_id_curseforge(&app_clone, &file_info.resource_id).await?;
-      Ok::<_, ArcMCError>(resource_info)
+      Ok::<_, AMLError>(resource_info)
     })
   };
 
@@ -96,7 +96,7 @@ pub async fn add_local_mod_translations(
 pub async fn apply_other_resource_enhancements(
   app: &AppHandle,
   resource_info: &mut OtherResourceInfo,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   // Extract data from cache in a limited scope to avoid holding lock across await
   let (translated_name, mcmod_id) = {
     if let Ok(cache) = app.state::<Mutex<ModDataBase>>().lock() {
@@ -206,7 +206,7 @@ fn should_translate_resource_description(app: &AppHandle) -> bool {
 async fn translate_resource_description(
   app: &AppHandle,
   resource_info: &OtherResourceInfo,
-) -> ArcMCResult<Option<String>> {
+) -> AMLResult<Option<String>> {
   match resource_info.source {
     OtherResourceSource::Modrinth => translate_description_modrinth(app, &resource_info.id).await,
     OtherResourceSource::CurseForge => {

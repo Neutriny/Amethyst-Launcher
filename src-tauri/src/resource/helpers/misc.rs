@@ -1,4 +1,4 @@
-use arcmc_types::error::ArcMCResult;
+use aml_types::error::AMLResult;
 use std::cmp::Ordering;
 use strum::IntoEnumIterator;
 use url::Url;
@@ -22,7 +22,7 @@ pub fn get_source_priority_list(launcher_config: &LauncherConfig) -> Vec<SourceT
 }
 
 // https://bmclapidoc.bangbang93.com/
-pub fn get_download_api(source: SourceType, resource_type: ResourceType) -> ArcMCResult<Url> {
+pub fn get_download_api(source: SourceType, resource_type: ResourceType) -> AMLResult<Url> {
   match source {
     SourceType::Official => match resource_type {
       ResourceType::VersionManifest => Ok(Url::parse(
@@ -112,7 +112,7 @@ pub fn convert_url_source_type(
   resource_type: &ResourceType,
   src_type: &SourceType,
   dst_type: &SourceType,
-) -> ArcMCResult<Url> {
+) -> AMLResult<Url> {
   let url_str = url.as_str();
   let src_api = get_download_api(*src_type, *resource_type)?;
   let dst_api = get_download_api(*dst_type, *resource_type)?;
@@ -131,7 +131,7 @@ pub fn convert_url_to_target_source(
   url: &Url,
   resource_types: &[ResourceType],
   dst_type: &SourceType,
-) -> ArcMCResult<Url> {
+) -> AMLResult<Url> {
   let url_str = url.as_str();
   let resource_candidates = if resource_types.is_empty() {
     ResourceType::iter().collect::<Vec<_>>()

@@ -2,7 +2,7 @@
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "Amethyst",
   "version": "1.2.0",
-  "identifier": "com.arcmc.launcher",
+  "identifier": "com.aml.launcher",
   "build": {
     "frontendDist": "../out",
     "devUrl": "http://localhost:3000",
@@ -68,7 +68,7 @@
     "deep-link": {
       "desktop": {
         "schemes": [
-          "arcmc"
+          "aml"
         ]
       }
     },

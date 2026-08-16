@@ -6,7 +6,7 @@ use misc::{
   map_modrinth_file_to_version_pack,
 };
 use sha1::{Digest, Sha1};
-use arcmc_types::error::ArcMCResult;
+use aml_types::error::AMLResult;
 use std::collections::HashMap;
 use std::path::PathBuf;
 use tauri::{AppHandle, Manager};
@@ -32,7 +32,7 @@ const ALL_FILTER: &str = "All";
 pub async fn fetch_resource_list_by_name_modrinth(
   app: &AppHandle,
   query: &OtherResourceSearchQuery,
-) -> ArcMCResult<OtherResourceSearchRes> {
+) -> AMLResult<OtherResourceSearchRes> {
   let url = get_modrinth_api(OtherResourceApiEndpoint::Search, None)?;
 
   let OtherResourceSearchQuery {
@@ -92,7 +92,7 @@ pub async fn fetch_resource_list_by_name_modrinth(
 pub async fn fetch_resource_version_packs_modrinth(
   app: &AppHandle,
   query: &OtherResourceVersionPackQuery,
-) -> ArcMCResult<Vec<OtherResourceVersionPack>> {
+) -> AMLResult<Vec<OtherResourceVersionPack>> {
   let OtherResourceVersionPackQuery {
     resource_id,
     mod_loader,
@@ -139,7 +139,7 @@ pub async fn fetch_resource_version_packs_modrinth(
 pub async fn fetch_remote_resource_by_local_modrinth(
   app: &AppHandle,
   file_path: &str,
-) -> ArcMCResult<OtherResourceFileInfo> {
+) -> AMLResult<OtherResourceFileInfo> {
   let file_content = tokio::fs::read(file_path)
     .await
     .map_err(|_| ResourceError::ParseError)?;
@@ -185,7 +185,7 @@ pub async fn fetch_remote_resource_by_local_modrinth(
 pub async fn fetch_remote_resource_by_id_modrinth(
   app: &AppHandle,
   resource_id: &str,
-) -> ArcMCResult<OtherResourceInfo> {
+) -> AMLResult<OtherResourceInfo> {
   let url = get_modrinth_api(OtherResourceApiEndpoint::ById, Some(resource_id))?;
   let client = app.state::<reqwest::Client>();
 
@@ -206,7 +206,7 @@ pub async fn fetch_latest_mod_download_param_modrinth(
   mod_loader: ModLoaderType,
   game_version: &str,
   mods_dir: PathBuf,
-) -> ArcMCResult<Option<DownloadParam>> {
+) -> AMLResult<Option<DownloadParam>> {
   log::info!(
     "fetch_latest_mod_download_param_modrinth called: mod_id={}, mod_loader={}, game_version={}, mods_dir={}",
     mod_id,

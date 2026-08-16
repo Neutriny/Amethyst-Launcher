@@ -1,6 +1,6 @@
 use async_trait::async_trait;
 use serde::{Deserialize, Serialize};
-use arcmc_types::error::ArcMCResult;
+use aml_types::error::AMLResult;
 use std::fs;
 use std::fs::File;
 use std::path::Path;
@@ -17,22 +17,22 @@ use crate::tasks::PTaskParam;
 
 #[async_trait]
 pub trait ModpackManifest {
-  fn from_archive(file: &File) -> ArcMCResult<Self>
+  fn from_archive(file: &File) -> AMLResult<Self>
   where
     Self: Sized;
-  fn get_client_version(&self) -> ArcMCResult<String>;
-  fn get_mod_loader_type_version(&self) -> ArcMCResult<(ModLoaderType, String)>;
-  async fn get_meta_info(&self, app: &AppHandle) -> ArcMCResult<ModpackMetaInfo>;
+  fn get_client_version(&self) -> AMLResult<String>;
+  fn get_mod_loader_type_version(&self) -> AMLResult<(ModLoaderType, String)>;
+  async fn get_meta_info(&self, app: &AppHandle) -> AMLResult<ModpackMetaInfo>;
   async fn get_download_params(
     &self,
     app: &AppHandle,
     instance_path: &Path,
-  ) -> ArcMCResult<Vec<PTaskParam>>;
+  ) -> AMLResult<Vec<PTaskParam>>;
   fn get_overrides_path(&self) -> String;
 }
 
 type ManifestBox = Box<dyn ModpackManifest + Send + Sync>;
-type Parser = Box<dyn Fn(&File) -> ArcMCResult<ManifestBox> + Send + Sync>;
+type Parser = Box<dyn Fn(&File) -> AMLResult<ManifestBox> + Send + Sync>;
 
 fn get_parsers() -> Vec<Parser> {
   vec![
@@ -58,7 +58,7 @@ fn get_parsers() -> Vec<Parser> {
 }
 
 impl ModLoader {
-  pub async fn with_branch(&self, app: &AppHandle, mc_version: String) -> ArcMCResult<Self> {
+  pub async fn with_branch(&self, app: &AppHandle, mc_version: String) -> AMLResult<Self> {
     let version_list =
       fetch_mod_loader_version_list(app.clone(), mc_version, self.loader_type).await?;
     if let Some(version) = version_list.iter().find(|v| v.version == self.version) {
@@ -84,7 +84,7 @@ pub struct ModpackMetaInfo {
 }
 
 impl ModpackMetaInfo {
-  pub async fn from_archive(app: &AppHandle, file: &File) -> ArcMCResult<Self> {
+  pub async fn from_archive(app: &AppHandle, file: &File) -> AMLResult<Self> {
     for parser in get_parsers() {
       if let Ok(manifest) = parser(file) {
         return manifest.get_meta_info(app).await;
@@ -99,7 +99,7 @@ pub async fn get_download_params(
   app: &AppHandle,
   file: &File,
   instance_path: &Path,
-) -> ArcMCResult<Vec<PTaskParam>> {
+) -> AMLResult<Vec<PTaskParam>> {
   for parser in get_parsers() {
     if let Ok(manifest) = parser(file) {
       return manifest.get_download_params(app, instance_path).await;
@@ -109,7 +109,7 @@ pub async fn get_download_params(
   Err(InstanceError::ModpackManifestParseError.into())
 }
 
-pub fn extract_overrides(file: &File, instance_path: &Path) -> ArcMCResult<()> {
+pub fn extract_overrides(file: &File, instance_path: &Path) -> AMLResult<()> {
   let get_overrides_path = |file| {
     for parser in get_parsers() {
       if let Ok(manifest) = parser(file) {

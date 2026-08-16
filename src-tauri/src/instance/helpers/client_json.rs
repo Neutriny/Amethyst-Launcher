@@ -3,8 +3,8 @@ use serde::{Deserialize, Deserializer, Serialize};
 use serde_json::Value;
 use serde_with::formats::PreferMany;
 use serde_with::{OneOrMany, serde_as};
-use arcmc_macros::serialize_skip_none;
-use arcmc_types::error::{ArcMCError, ArcMCResult};
+use aml_macros::serialize_skip_none;
+use aml_types::error::{AMLError, AMLResult};
 use std::cmp::Ordering;
 use std::collections::{HashMap, HashSet};
 use std::fs;
@@ -128,12 +128,12 @@ pub struct InstructionRule {
 }
 
 impl InstructionRule {
-  pub fn is_allowed(&self, target_feature: &FeaturesInfo) -> ArcMCResult<(bool, bool)> {
+  pub fn is_allowed(&self, target_feature: &FeaturesInfo) -> AMLResult<(bool, bool)> {
     let mut positive = match self.action.to_lowercase().as_str() {
       "allow" => true,
       "disallow" => false,
       _ => {
-        return Err(ArcMCError(format!(
+        return Err(AMLError(format!(
           "unknown action format: {}",
           self.action
         )));
@@ -566,7 +566,7 @@ pub async fn libraries_to_info(
   (game_version, loader_version, loader_type, None)
 }
 
-fn rules_is_allowed(rules: &Vec<InstructionRule>, feature: &FeaturesInfo) -> ArcMCResult<bool> {
+fn rules_is_allowed(rules: &Vec<InstructionRule>, feature: &FeaturesInfo) -> AMLResult<bool> {
   let mut weak_allowed = true;
   for rule in rules {
     let (allow, strong) = rule.is_allowed(feature)?;
@@ -579,23 +579,23 @@ fn rules_is_allowed(rules: &Vec<InstructionRule>, feature: &FeaturesInfo) -> Arc
 }
 
 pub trait IsAllowed {
-  fn is_allowed(&self, feature: &FeaturesInfo) -> ArcMCResult<bool>;
+  fn is_allowed(&self, feature: &FeaturesInfo) -> AMLResult<bool>;
 }
 
 impl IsAllowed for ArgumentsItem {
-  fn is_allowed(&self, feature: &FeaturesInfo) -> ArcMCResult<bool> {
+  fn is_allowed(&self, feature: &FeaturesInfo) -> AMLResult<bool> {
     rules_is_allowed(&self.rules, feature)
   }
 }
 
 impl IsAllowed for LibrariesValue {
-  fn is_allowed(&self, feature: &FeaturesInfo) -> ArcMCResult<bool> {
+  fn is_allowed(&self, feature: &FeaturesInfo) -> AMLResult<bool> {
     rules_is_allowed(&self.rules, feature)
   }
 }
 
 impl LaunchArgumentTemplate {
-  pub fn to_jvm_arguments(&self, feature: &FeaturesInfo) -> ArcMCResult<Vec<String>> {
+  pub fn to_jvm_arguments(&self, feature: &FeaturesInfo) -> AMLResult<Vec<String>> {
     let mut arguments = Vec::new();
     for argument in &self.jvm {
       if argument.is_allowed(feature).unwrap_or_default() {
@@ -604,7 +604,7 @@ impl LaunchArgumentTemplate {
     }
     Ok(arguments)
   }
-  pub fn to_game_arguments(&self, feature: &FeaturesInfo) -> ArcMCResult<Vec<String>> {
+  pub fn to_game_arguments(&self, feature: &FeaturesInfo) -> AMLResult<Vec<String>> {
     let mut arguments = Vec::new();
     for argument in &self.game {
       if argument.is_allowed(feature).unwrap_or_default() {
@@ -620,12 +620,12 @@ impl LaunchArgumentTemplate {
 // ref: https://github.com/HMCL-dev/HMCL/blob/main/HMCL/src/main/resources/assets/natives.json
 pub fn load_native_libraries_replace_map(
   app: &AppHandle,
-) -> ArcMCResult<HashMap<String, HashMap<String, Option<LibrariesValue>>>> {
+) -> AMLResult<HashMap<String, HashMap<String, Option<LibrariesValue>>>> {
   let path = get_app_resource_filepath(app, "assets/game/natives.json")?;
   let txt =
-    fs::read_to_string(&path).map_err(|e| ArcMCError(format!("read natives.json failed: {e}")))?;
+    fs::read_to_string(&path).map_err(|e| AMLError(format!("read natives.json failed: {e}")))?;
   let map: HashMap<String, HashMap<String, Option<LibrariesValue>>> = serde_json::from_str(&txt)
-    .map_err(|e| ArcMCError(format!("parse natives.json failed: {e}")))?;
+    .map_err(|e| AMLError(format!("parse natives.json failed: {e}")))?;
   Ok(map)
 }
 
@@ -633,7 +633,7 @@ pub async fn replace_native_libraries(
   app: &AppHandle,
   client_info: &mut McClientInfo,
   instance: &Instance,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   #[cfg(any(
     all(
       any(target_arch = "x86", target_arch = "x86_64"),

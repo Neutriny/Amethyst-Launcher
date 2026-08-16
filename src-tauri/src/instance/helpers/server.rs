@@ -1,7 +1,7 @@
 use mc_server_status::{McClient, McError, ServerData, ServerEdition, ServerInfo, ServerStatus};
 use quartz_nbt::io::Flavor;
 use serde::{self, Deserialize, Serialize};
-use arcmc_types::error::ArcMCResult;
+use aml_types::error::AMLResult;
 use std::path::{Path, PathBuf};
 use std::time::Duration;
 use tauri::AppHandle;
@@ -83,7 +83,7 @@ pub fn get_servers_nbt_path_by_instance_id(
   Some(game_root_dir.join(SERVERS_DAT_FILENAME))
 }
 
-pub async fn load_servers_info_from_nbt(path: &Path) -> ArcMCResult<Vec<GameServerInfo>> {
+pub async fn load_servers_info_from_nbt(path: &Path) -> AMLResult<Vec<GameServerInfo>> {
   if !path.exists() {
     return Ok(Vec::new());
   }
@@ -99,7 +99,7 @@ pub async fn load_servers_info_from_nbt(path: &Path) -> ArcMCResult<Vec<GameServ
   Ok(game_server_list)
 }
 
-pub async fn save_servers_to_nbt(path: &Path, servers: &[GameServerInfo]) -> ArcMCResult<()> {
+pub async fn save_servers_to_nbt(path: &Path, servers: &[GameServerInfo]) -> AMLResult<()> {
   let servers_info = NbtServersInfo {
     servers: servers.iter().map(NbtServerInfo::from).collect(),
   };
@@ -112,7 +112,7 @@ pub async fn save_servers_to_nbt(path: &Path, servers: &[GameServerInfo]) -> Arc
 /// Query multiple servers online status in parallel.
 pub async fn query_servers_online(
   mut servers: Vec<GameServerInfo>,
-) -> ArcMCResult<Vec<GameServerInfo>> {
+) -> AMLResult<Vec<GameServerInfo>> {
   if servers.is_empty() {
     return Ok(servers);
   }

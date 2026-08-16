@@ -1,5 +1,5 @@
 use serde_json::{Value, json};
-use arcmc_types::error::ArcMCResult;
+use aml_types::error::AMLResult;
 use std::ops::Add;
 use std::str::FromStr;
 use tauri::{AppHandle, Manager};
@@ -21,7 +21,7 @@ use crate::account::models::{
   PresetRole, SkinModel, Texture, TextureType,
 };
 
-pub async fn device_authorization(app: &AppHandle) -> ArcMCResult<DeviceAuthResponseInfo> {
+pub async fn device_authorization(app: &AppHandle) -> AMLResult<DeviceAuthResponseInfo> {
   let client = app.state::<reqwest::Client>();
   let response = client
     .post(DEVICE_AUTH_ENDPOINT)
@@ -52,7 +52,7 @@ pub async fn device_authorization(app: &AppHandle) -> ArcMCResult<DeviceAuthResp
   })
 }
 
-async fn fetch_xbl_token(app: &AppHandle, microsoft_token: String) -> ArcMCResult<String> {
+async fn fetch_xbl_token(app: &AppHandle, microsoft_token: String) -> AMLResult<String> {
   let client = app.state::<reqwest::Client>();
 
   let response = client
@@ -79,7 +79,7 @@ async fn fetch_xbl_token(app: &AppHandle, microsoft_token: String) -> ArcMCResul
   Ok(response["Token"].as_str().unwrap_or("").to_string())
 }
 
-async fn fetch_xsts_token(app: &AppHandle, xbl_token: String) -> ArcMCResult<(String, String)> {
+async fn fetch_xsts_token(app: &AppHandle, xbl_token: String) -> AMLResult<(String, String)> {
   let client = app.state::<reqwest::Client>();
 
   let response = client
@@ -140,7 +140,7 @@ async fn fetch_minecraft_token(
   app: &AppHandle,
   xsts_userhash: String,
   xsts_token: String,
-) -> ArcMCResult<(String, chrono::DateTime<chrono::Utc>)> {
+) -> AMLResult<(String, chrono::DateTime<chrono::Utc>)> {
   let client = app.state::<reqwest::Client>();
 
   let response: Value = client
@@ -165,7 +165,7 @@ async fn fetch_minecraft_token(
 pub async fn fetch_minecraft_profile(
   app: &AppHandle,
   minecraft_token: String,
-) -> ArcMCResult<MinecraftProfile> {
+) -> AMLResult<MinecraftProfile> {
   let client = app.state::<reqwest::Client>();
 
   let response = client
@@ -183,7 +183,7 @@ pub async fn fetch_minecraft_profile(
   )
 }
 
-async fn parse_profile(app: &AppHandle, tokens: &OAuthTokens) -> ArcMCResult<PlayerInfo> {
+async fn parse_profile(app: &AppHandle, tokens: &OAuthTokens) -> AMLResult<PlayerInfo> {
   let xbl_token = fetch_xbl_token(app, tokens.access_token.clone()).await?;
   let (xsts_userhash, xsts_token) = fetch_xsts_token(app, xbl_token).await?;
   let (minecraft_token, minecraft_token_expires_in) =
@@ -238,7 +238,7 @@ async fn parse_profile(app: &AppHandle, tokens: &OAuthTokens) -> ArcMCResult<Pla
   )
 }
 
-pub async fn login(app: &AppHandle, auth_info: DeviceAuthResponseInfo) -> ArcMCResult<PlayerInfo> {
+pub async fn login(app: &AppHandle, auth_info: DeviceAuthResponseInfo) -> AMLResult<PlayerInfo> {
   let client = app.state::<reqwest::Client>();
   let sender = client.post(OAUTH_TOKEN_ENDPOINT).form(&[
     ("client_id", CLIENT_ID),
@@ -249,7 +249,7 @@ pub async fn login(app: &AppHandle, auth_info: DeviceAuthResponseInfo) -> ArcMCR
   parse_profile(app, &tokens).await
 }
 
-pub async fn refresh(app: &AppHandle, player: &PlayerInfo) -> ArcMCResult<PlayerInfo> {
+pub async fn refresh(app: &AppHandle, player: &PlayerInfo) -> AMLResult<PlayerInfo> {
   let client = app.state::<reqwest::Client>();
 
   let token_response = client
@@ -281,7 +281,7 @@ pub async fn refresh(app: &AppHandle, player: &PlayerInfo) -> ArcMCResult<Player
   Ok(refreshed_player)
 }
 
-pub async fn validate(app: &AppHandle, player: &PlayerInfo) -> ArcMCResult<bool> {
+pub async fn validate(app: &AppHandle, player: &PlayerInfo) -> AMLResult<bool> {
   let access_token = match get_access_token(app, player).await {
     Ok(access_token) => access_token,
     Err(error) if error == AccountError::Expired.into() => return Ok(false),
@@ -315,7 +315,7 @@ pub async fn validate(app: &AppHandle, player: &PlayerInfo) -> ArcMCResult<bool>
 async fn validate_access_token(
   app: &AppHandle,
   access_token: &str,
-) -> ArcMCResult<reqwest::StatusCode> {
+) -> AMLResult<reqwest::StatusCode> {
   let client = app.state::<reqwest::Client>();
   let response = client
     .get(PROFILE_ENDPOINT)
@@ -328,7 +328,7 @@ async fn validate_access_token(
 }
 
 /// Returns the access token for the player, refreshing it if necessary.
-pub async fn get_access_token(app: &AppHandle, player: &PlayerInfo) -> ArcMCResult<String> {
+pub async fn get_access_token(app: &AppHandle, player: &PlayerInfo) -> AMLResult<String> {
   if player.player_type != PlayerType::Microsoft {
     return Err(AccountError::Invalid.into());
   }

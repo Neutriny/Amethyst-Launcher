@@ -20,7 +20,7 @@ use launcher_config::models::{JavaInfo, LauncherConfig};
 use resource::helpers::mod_db::{ModDataBase, initialize_mod_db};
 use resource::helpers::translation::LocalModTranslationsCache;
 use resource::helpers::translation::cache::ResourceTranslationsCache;
-use arcmc_types::storage::Storage;
+use aml_types::storage::Storage;
 use std::collections::HashMap;
 use std::path::PathBuf;
 use std::sync::{LazyLock, Mutex, OnceLock};

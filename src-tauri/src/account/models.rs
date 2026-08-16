@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
-use arcmc_types::storage::Storage;
+use aml_types::storage::Storage;
 use std::path::PathBuf;
 use strum_macros::{Display, EnumIter, EnumString};
 use uuid::Uuid;

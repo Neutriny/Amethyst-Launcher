@@ -1,4 +1,4 @@
-use arcmc_types::error::ArcMCResult;
+use aml_types::error::AMLResult;
 use std::cmp::Ordering;
 use std::sync::Mutex;
 use tauri::{AppHandle, Manager};
@@ -15,7 +15,7 @@ pub async fn select_java_runtime(
   client_json_req: i32,
   // TODO: pass client and mod loader info to calculate version with more rules, instead of passing require version
   // ref: https://github.com/Hex-Dragon/PCL2/blob/16e09c792ce8c13435fc6827e6da54170aaa3bc0/Plain%20Craft%20Launcher%202/Modules/Minecraft/ModLaunch.vb#L1130
-) -> ArcMCResult<JavaInfo> {
+) -> AMLResult<JavaInfo> {
   let java_list = app.state::<Mutex<Vec<JavaInfo>>>().lock()?.clone();
 
   if let Some(game_java) = game_java.filter(|game_java| !game_java.auto) {

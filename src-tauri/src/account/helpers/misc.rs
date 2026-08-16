@@ -1,5 +1,5 @@
-use arcmc_types::error::ArcMCResult;
-use arcmc_types::storage::Storage;
+use aml_types::error::AMLResult;
+use aml_types::storage::Storage;
 use std::sync::Mutex;
 use tauri::{AppHandle, Manager};
 use tauri_plugin_http::reqwest::{self, RequestBuilder};
@@ -13,7 +13,7 @@ use crate::launcher_config::models::LauncherConfig;
 use crate::utils::image::{ImageWrapper, decode_image};
 use crate::utils::web::is_china_mainland_ip;
 
-pub async fn fetch_image(app: &AppHandle, url: String) -> ArcMCResult<ImageWrapper> {
+pub async fn fetch_image(app: &AppHandle, url: String) -> AMLResult<ImageWrapper> {
   let client = app.state::<reqwest::Client>();
 
   let response = client
@@ -35,7 +35,7 @@ pub async fn fetch_image(app: &AppHandle, url: String) -> ArcMCResult<ImageWrapp
   )
 }
 
-pub fn get_selected_player_info(app: &AppHandle) -> ArcMCResult<PlayerInfo> {
+pub fn get_selected_player_info(app: &AppHandle) -> AMLResult<PlayerInfo> {
   let account_binding = app.state::<Mutex<AccountInfo>>();
   let account_state = account_binding.lock()?;
 
@@ -56,7 +56,7 @@ pub fn get_selected_player_info(app: &AppHandle) -> ArcMCResult<PlayerInfo> {
   Ok(player_info.clone())
 }
 
-pub fn add_player(app: &AppHandle, new_player: PlayerInfo) -> ArcMCResult<()> {
+pub fn add_player(app: &AppHandle, new_player: PlayerInfo) -> AMLResult<()> {
   let new_player_id = new_player.id.clone();
   {
     let account_binding = app.state::<Mutex<AccountInfo>>();
@@ -93,7 +93,7 @@ pub fn add_player(app: &AppHandle, new_player: PlayerInfo) -> ArcMCResult<()> {
   Ok(())
 }
 
-pub fn get_player_by_id(app: &AppHandle, player_id: &str) -> ArcMCResult<Option<PlayerInfo>> {
+pub fn get_player_by_id(app: &AppHandle, player_id: &str) -> AMLResult<Option<PlayerInfo>> {
   let account_binding = app.state::<Mutex<AccountInfo>>();
   let account_state = account_binding.lock()?;
 
@@ -106,7 +106,7 @@ pub fn get_player_by_id(app: &AppHandle, player_id: &str) -> ArcMCResult<Option<
   )
 }
 
-pub fn update_player_by_id(app: &AppHandle, player_id: &str, info: PlayerInfo) -> ArcMCResult<()> {
+pub fn update_player_by_id(app: &AppHandle, player_id: &str, info: PlayerInfo) -> AMLResult<()> {
   let account_binding = app.state::<Mutex<AccountInfo>>();
   let mut account_state = account_binding.lock()?;
 
@@ -121,7 +121,7 @@ pub fn update_player_by_id(app: &AppHandle, player_id: &str, info: PlayerInfo) -
   Ok(())
 }
 
-pub async fn check_full_login_availability(app: &AppHandle) -> ArcMCResult<()> {
+pub async fn check_full_login_availability(app: &AppHandle) -> AMLResult<()> {
   let loc_flag = is_china_mainland_ip(app).await;
 
   let account_binding = app.state::<Mutex<AccountInfo>>();
@@ -158,7 +158,7 @@ pub async fn oauth_polling(
   app: &AppHandle,
   sender: RequestBuilder,
   auth_info: DeviceAuthResponseInfo,
-) -> ArcMCResult<OAuthTokens> {
+) -> AMLResult<OAuthTokens> {
   let account_binding = app.state::<Mutex<AccountInfo>>();
   {
     let mut account_state = account_binding.lock()?;

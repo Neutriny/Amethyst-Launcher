@@ -1,6 +1,6 @@
 use semver::Version;
-use arcmc_types::error::ArcMCResult;
-use arcmc_types::storage::Storage;
+use aml_types::error::AMLResult;
+use aml_types::storage::Storage;
 use std::fs;
 use std::path::PathBuf;
 use std::sync::Mutex;
@@ -16,7 +16,7 @@ use crate::launcher_config::models::{BuildType, LauncherConfig};
 use crate::utils::fs::get_subdirectories;
 
 #[tauri::command]
-pub fn retrieve_extension_list(app: AppHandle) -> ArcMCResult<Vec<ExtensionInfo>> {
+pub fn retrieve_extension_list(app: AppHandle) -> AMLResult<Vec<ExtensionInfo>> {
   let extensions_dir = get_extensions_dir(&app)?;
   if !extensions_dir.exists() {
     return Ok(Vec::new());
@@ -55,7 +55,7 @@ pub fn add_extension(
   app: AppHandle,
   path: String,
   expected_identifier: Option<String>,
-) -> ArcMCResult<ExtensionInfo> {
+) -> AMLResult<ExtensionInfo> {
   let package_path = PathBuf::from(path);
   if !package_path.exists() || !package_path.is_file() {
     return Err(ExtensionError::ExtensionNotFound.into());
@@ -66,7 +66,7 @@ pub fn add_extension(
   let temp_dir = extensions_dir.join(format!(".installing-{}", Uuid::new_v4()));
   fs::create_dir_all(&temp_dir)?;
 
-  let register_result = (|| -> ArcMCResult<ExtensionInfo> {
+  let register_result = (|| -> AMLResult<ExtensionInfo> {
     // extract extension package (zip) and read metadata
     extract_extension_package(&package_path, &temp_dir)?;
     let install_dir = resolve_extension_root(&temp_dir)?;
@@ -161,7 +161,7 @@ pub fn add_extension(
 }
 
 #[tauri::command]
-pub fn delete_extension(app: AppHandle, identifier: String) -> ArcMCResult<()> {
+pub fn delete_extension(app: AppHandle, identifier: String) -> AMLResult<()> {
   ExtensionMetadata::validate_identifier(&identifier)?;
   let extension_dir = get_extensions_dir(&app)?.join(&identifier);
 

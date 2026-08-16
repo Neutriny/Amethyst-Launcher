@@ -12,7 +12,7 @@ use tauri::{AppHandle, Manager};
 use url::Url;
 use uuid::Uuid;
 
-use arcmc_types::error::ArcMCResult;
+use aml_types::error::AMLResult;
 
 use crate::account::helpers::authlib_injector::common::parse_profile;
 use crate::account::helpers::authlib_injector::models::{
@@ -106,7 +106,7 @@ pub enum HmclAccountEntry {
   ThirdParty(HmclThirdPartyAccount),
 }
 
-async fn offline_to_player(app: &AppHandle, acc: &HmclOfflineAccount) -> ArcMCResult<PlayerInfo> {
+async fn offline_to_player(app: &AppHandle, acc: &HmclOfflineAccount) -> AMLResult<PlayerInfo> {
   let uuid = Uuid::parse_str(&acc.profile_id).map_err(|_| AccountError::ParseError)?;
   let textures = load_preset_skin(app, PresetRole::Steve)?;
   Ok(
@@ -129,7 +129,7 @@ async fn offline_to_player(app: &AppHandle, acc: &HmclOfflineAccount) -> ArcMCRe
 async fn microsoft_to_player(
   app: &AppHandle,
   acc: &HmclMicrosoftAccount,
-) -> ArcMCResult<PlayerInfo> {
+) -> AMLResult<PlayerInfo> {
   let profile_result = fetch_minecraft_profile(app, acc.access_token.clone()).await;
   let profile = match profile_result {
     Ok(p) => p,
@@ -205,7 +205,7 @@ async fn microsoft_to_player(
 async fn thirdparty_to_player(
   app: &AppHandle,
   acc: &HmclThirdPartyAccount,
-) -> ArcMCResult<PlayerInfo> {
+) -> AMLResult<PlayerInfo> {
   let name = acc
     .profile_name
     .clone()
@@ -265,7 +265,7 @@ fn decrypt_hmcl_payload(
 
 pub async fn retrieve_hmcl_account_info(
   app: &AppHandle,
-) -> ArcMCResult<(Vec<PlayerInfo>, Vec<Url>)> {
+) -> AMLResult<(Vec<PlayerInfo>, Vec<Url>)> {
   let hmcl_base_dir = if cfg!(target_os = "linux") {
     app.path().resolve("", BaseDirectory::Home)?.join(".hmcl")
   } else {

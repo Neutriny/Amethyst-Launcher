@@ -1,5 +1,5 @@
 {
-  "identifier": "com.arcmc.launcher",
+  "identifier": "com.amethyst.launcher",
   "bundle": {
     "windows": {
       "nsis": {

@@ -3,7 +3,7 @@ use base64::engine::general_purpose;
 use serde::{self, Deserialize, Serialize};
 use serde_json::Value;
 use shlex::try_quote;
-use arcmc_types::error::{ArcMCError, ArcMCResult};
+use aml_types::error::{AMLError, AMLResult};
 use std::borrow::Cow;
 use std::collections::{HashMap, HashSet};
 use std::path::PathBuf;
@@ -73,12 +73,12 @@ pub struct LaunchArguments {
 }
 
 impl LaunchArguments {
-  pub fn into_hashmap(self) -> ArcMCResult<HashMap<String, String>> {
+  pub fn into_hashmap(self) -> AMLResult<HashMap<String, String>> {
     let value =
-      serde_json::to_value(self).map_err(|e| ArcMCError(format!("Serialization error: {}", e)))?;
+      serde_json::to_value(self).map_err(|e| AMLError(format!("Serialization error: {}", e)))?;
     let obj = value
       .as_object()
-      .ok_or_else(|| ArcMCError("Failed to convert LaunchParams to HashMap".to_string()))?;
+      .ok_or_else(|| AMLError("Failed to convert LaunchParams to HashMap".to_string()))?;
 
     let mut map = HashMap::new();
 
@@ -107,7 +107,7 @@ pub async fn generate_launch_command(
   app: &AppHandle,
   quick_play_singleplayer: Option<String>,
   quick_play_multiplayer: Option<String>,
-) -> ArcMCResult<LaunchCommand> {
+) -> AMLResult<LaunchCommand> {
   let launcher_config = { app.state::<Mutex<LauncherConfig>>().lock()?.clone() };
   let launching_queue = { app.state::<Mutex<Vec<LaunchingState>>>().lock()?.clone() };
 

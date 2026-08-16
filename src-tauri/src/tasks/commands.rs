@@ -1,4 +1,4 @@
-use arcmc_types::error::ArcMCResult;
+use aml_types::error::AMLResult;
 use std::pin::Pin;
 use std::time::Duration;
 use tauri::{AppHandle, Manager};
@@ -15,7 +15,7 @@ pub async fn schedule_progressive_task_group(
   task_group: String,
   params: Vec<PTaskParam>,
   with_timestamp: bool,
-) -> ArcMCResult<PTaskGroupDesc> {
+) -> AMLResult<PTaskGroupDesc> {
   let monitor = app.state::<Pin<Box<TaskMonitor>>>();
   let mut task_descs = Vec::new();
   let mut future_descs = Vec::new();
@@ -70,83 +70,83 @@ pub async fn schedule_progressive_task_group(
 }
 
 #[tauri::command]
-pub fn create_transient_task(app: AppHandle, desc: THandle) -> ArcMCResult<()> {
+pub fn create_transient_task(app: AppHandle, desc: THandle) -> AMLResult<()> {
   let monitor = app.state::<Pin<Box<TaskMonitor>>>();
   monitor.create_transient_task(app.clone(), desc);
   Ok(())
 }
 
 #[tauri::command]
-pub fn set_transient_task_state(app: AppHandle, task_id: u32, state: String) -> ArcMCResult<()> {
+pub fn set_transient_task_state(app: AppHandle, task_id: u32, state: String) -> AMLResult<()> {
   let monitor = app.state::<Pin<Box<TaskMonitor>>>();
   monitor.set_transient_task(app.clone(), task_id, state);
   Ok(())
 }
 
 #[tauri::command]
-pub fn cancel_transient_task(app: AppHandle, task_id: u32) -> ArcMCResult<()> {
+pub fn cancel_transient_task(app: AppHandle, task_id: u32) -> AMLResult<()> {
   let monitor = app.state::<Pin<Box<TaskMonitor>>>();
   monitor.cancel_transient_task(task_id);
   Ok(())
 }
 
 #[tauri::command]
-pub fn get_transient_task(app: AppHandle, task_id: u32) -> ArcMCResult<Option<THandle>> {
+pub fn get_transient_task(app: AppHandle, task_id: u32) -> AMLResult<Option<THandle>> {
   let monitor = app.state::<Pin<Box<TaskMonitor>>>();
   Ok(monitor.get_transient_task(task_id))
 }
 
 #[tauri::command]
-pub fn cancel_progressive_task(app: AppHandle, task_id: u32) -> ArcMCResult<()> {
+pub fn cancel_progressive_task(app: AppHandle, task_id: u32) -> AMLResult<()> {
   let monitor = app.state::<Pin<Box<TaskMonitor>>>();
   monitor.cancel_progress(task_id);
   Ok(())
 }
 
 #[tauri::command]
-pub fn resume_progressive_task(app: AppHandle, task_id: u32) -> ArcMCResult<()> {
+pub fn resume_progressive_task(app: AppHandle, task_id: u32) -> AMLResult<()> {
   let monitor = app.state::<Pin<Box<TaskMonitor>>>();
   monitor.resume_progress(task_id);
   Ok(())
 }
 
 #[tauri::command]
-pub async fn restart_progressive_task(app: AppHandle, task_id: u32) -> ArcMCResult<()> {
+pub async fn restart_progressive_task(app: AppHandle, task_id: u32) -> AMLResult<()> {
   let monitor = app.state::<Pin<Box<TaskMonitor>>>();
   monitor.restart_progress(task_id).await;
   Ok(())
 }
 
 #[tauri::command]
-pub fn stop_progressive_task(app: AppHandle, task_id: u32) -> ArcMCResult<()> {
+pub fn stop_progressive_task(app: AppHandle, task_id: u32) -> AMLResult<()> {
   let monitor = app.state::<Pin<Box<TaskMonitor>>>();
   monitor.stop_progress(task_id);
   Ok(())
 }
 
 #[tauri::command]
-pub fn cancel_progressive_task_group(app: AppHandle, task_group: String) -> ArcMCResult<()> {
+pub fn cancel_progressive_task_group(app: AppHandle, task_group: String) -> AMLResult<()> {
   let monitor = app.state::<Pin<Box<TaskMonitor>>>();
   monitor.cancel_progressive_task_group(task_group);
   Ok(())
 }
 
 #[tauri::command]
-pub fn stop_progressive_task_group(app: AppHandle, task_group: String) -> ArcMCResult<()> {
+pub fn stop_progressive_task_group(app: AppHandle, task_group: String) -> AMLResult<()> {
   let monitor = app.state::<Pin<Box<TaskMonitor>>>();
   monitor.stop_progressive_task_group(task_group);
   Ok(())
 }
 
 #[tauri::command]
-pub async fn resume_progressive_task_group(app: AppHandle, task_group: String) -> ArcMCResult<()> {
+pub async fn resume_progressive_task_group(app: AppHandle, task_group: String) -> AMLResult<()> {
   let monitor = app.state::<Pin<Box<TaskMonitor>>>();
   monitor.resume_progressive_task_group(task_group).await;
   Ok(())
 }
 
 #[tauri::command]
-pub fn delete_progressive_task_group(app: AppHandle, task_group: String) -> ArcMCResult<()> {
+pub fn delete_progressive_task_group(app: AppHandle, task_group: String) -> AMLResult<()> {
   let monitor = app.state::<Pin<Box<TaskMonitor>>>();
   monitor.delete_progressive_task_group(task_group);
   Ok(())

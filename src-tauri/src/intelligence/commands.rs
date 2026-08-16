@@ -1,10 +1,9 @@
-use arcmc_types::error::ArcMCResult;
+use aml_types::error::AMLResult;
 use serde::{Deserialize, Serialize};
 use std::sync::Mutex;
 use tauri::{AppHandle, Manager};
 use tauri_plugin_http::reqwest;
 use tauri_plugin_http::reqwest::header::{HeaderMap, HeaderValue, AUTHORIZATION, CONTENT_TYPE};
-
 use crate::launcher_config::models::LauncherConfig;
 use crate::utils::web::with_retry;
 
@@ -50,10 +49,10 @@ struct ChatResponseMessage {
 }
 
 #[tauri::command]
-pub async fn test_llm_connection(app: AppHandle) -> ArcMCResult<TestConnectionResponse> {
+pub async fn test_llm_connection(app: AppHandle) -> AMLResult<TestConnectionResponse> {
     let (base_url, api_key) = {
         let config_state = app.state::<Mutex<LauncherConfig>>();
-        let config = config_state.lock().map_err(|e| arcmc_types::error::ArcMCError(e.to_string()))?;
+        let config = config_state.lock().map_err(|e| aml_types::error::AMLError(e.to_string()))?;
         let log_analysis = &config.intelligence.log_analysis;
         (log_analysis.base_url.clone(), log_analysis.api_key.clone())
     };
@@ -73,7 +72,7 @@ pub async fn test_llm_connection(app: AppHandle) -> ArcMCResult<TestConnectionRe
         headers.insert(
             AUTHORIZATION,
             HeaderValue::from_str(&format!("Bearer {}", api_key))
-                .map_err(|e| arcmc_types::error::ArcMCError(e.to_string()))?,
+                .map_err(|e| aml_types::error::AMLError(e.to_string()))?,
         );
     }
 
@@ -102,10 +101,10 @@ pub async fn test_llm_connection(app: AppHandle) -> ArcMCResult<TestConnectionRe
 }
 
 #[tauri::command]
-pub async fn analyze_game_log(app: AppHandle, log_content: String) -> ArcMCResult<AnalyzeLogResponse> {
+pub async fn analyze_game_log(app: AppHandle, log_content: String) -> AMLResult<AnalyzeLogResponse> {
     let (base_url, api_key, model) = {
         let config_state = app.state::<Mutex<LauncherConfig>>();
-        let config = config_state.lock().map_err(|e| arcmc_types::error::ArcMCError(e.to_string()))?;
+        let config = config_state.lock().map_err(|e| aml_types::error::AMLError(e.to_string()))?;
         let log_analysis = &config.intelligence.log_analysis;
         (
             log_analysis.base_url.clone(),
@@ -138,7 +137,7 @@ pub async fn analyze_game_log(app: AppHandle, log_content: String) -> ArcMCResul
         headers.insert(
             AUTHORIZATION,
             HeaderValue::from_str(&format!("Bearer {}", api_key))
-                .map_err(|e| arcmc_types::error::ArcMCError(e.to_string()))?,
+                .map_err(|e| aml_types::error::AMLError(e.to_string()))?,
         );
     }
 

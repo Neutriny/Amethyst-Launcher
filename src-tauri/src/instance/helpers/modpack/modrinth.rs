@@ -1,8 +1,8 @@
 use async_trait::async_trait;
 use serde::{Deserialize, Serialize};
 use sha1::Digest;
-use arcmc_macros::serialize_skip_none;
-use arcmc_types::error::ArcMCResult;
+use aml_macros::serialize_skip_none;
+use aml_types::error::AMLResult;
 use smart_default::SmartDefault;
 use std::collections::HashMap;
 use std::fs::File;
@@ -62,7 +62,7 @@ pub struct ModrinthManifest {
 
 #[async_trait]
 impl ModpackManifest for ModrinthManifest {
-  fn from_archive(file: &File) -> ArcMCResult<Self> {
+  fn from_archive(file: &File) -> AMLResult<Self> {
     let mut archive = ZipArchive::new(file)?;
     let mut manifest_file = archive.by_name("modrinth.index.json")?;
     let mut manifest_content = String::new();
@@ -73,7 +73,7 @@ impl ModpackManifest for ModrinthManifest {
     Ok(manifest)
   }
 
-  async fn get_meta_info(&self, app: &AppHandle) -> ArcMCResult<ModpackMetaInfo> {
+  async fn get_meta_info(&self, app: &AppHandle) -> AMLResult<ModpackMetaInfo> {
     let client_version = self.get_client_version()?;
     let mod_loader = if let Ok((loader_type, version)) = self.get_mod_loader_type_version() {
       Some(
@@ -99,7 +99,7 @@ impl ModpackManifest for ModrinthManifest {
     })
   }
 
-  fn get_client_version(&self) -> ArcMCResult<String> {
+  fn get_client_version(&self) -> AMLResult<String> {
     Ok(
       self
         .dependencies
@@ -109,7 +109,7 @@ impl ModpackManifest for ModrinthManifest {
     )
   }
 
-  fn get_mod_loader_type_version(&self) -> ArcMCResult<(ModLoaderType, String)> {
+  fn get_mod_loader_type_version(&self) -> AMLResult<(ModLoaderType, String)> {
     for (key, val) in &self.dependencies {
       match key.as_str() {
         "minecraft" => continue,
@@ -126,7 +126,7 @@ impl ModpackManifest for ModrinthManifest {
     &self,
     _app: &AppHandle,
     instance_path: &Path,
-  ) -> ArcMCResult<Vec<PTaskParam>> {
+  ) -> AMLResult<Vec<PTaskParam>> {
     self
       .files
       .iter()
@@ -142,7 +142,7 @@ impl ModpackManifest for ModrinthManifest {
           filename: None,
         }))
       })
-      .collect::<ArcMCResult<Vec<_>>>()
+      .collect::<AMLResult<Vec<_>>>()
   }
 
   fn get_overrides_path(&self) -> String {
@@ -155,7 +155,7 @@ pub async fn build_modrinth_export_bundle(
   instance: &Instance,
   options: &ExportModpackOptions,
   selected_files: &[(String, PathBuf)],
-) -> ArcMCResult<ModpackExportBundle> {
+) -> AMLResult<ModpackExportBundle> {
   let mut manifest = generate_modrinth_manifest(instance, options);
   let no_create_remote_files = options.no_create_remote_files.unwrap_or(false);
   let skip_curseforge = options.skip_curseforge_remote_files.unwrap_or(false);
@@ -210,7 +210,7 @@ async fn build_modrinth_remote_file(
   rel: &str,
   full: &Path,
   skip_curseforge: bool,
-) -> ArcMCResult<Option<ModrinthFile>> {
+) -> AMLResult<Option<ModrinthFile>> {
   let is_disabled = rel.ends_with(".disabled");
   let manifest_path = if is_disabled {
     rel.trim_end_matches(".disabled").to_string()
@@ -268,7 +268,7 @@ async fn collect_modrinth_files(
   selected_files: &[(String, PathBuf)],
   no_create_remote_files: bool,
   skip_curseforge: bool,
-) -> ArcMCResult<(Vec<ModrinthFile>, Vec<(String, PathBuf)>)> {
+) -> AMLResult<(Vec<ModrinthFile>, Vec<(String, PathBuf)>)> {
   if no_create_remote_files {
     return Ok((Vec::new(), selected_files.to_vec()));
   }

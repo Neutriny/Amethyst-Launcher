@@ -2,7 +2,7 @@ use async_speed_limit::Limiter;
 use flume::{Receiver as FlumeReceiver, Sender as FlumeSender};
 use glob::glob;
 use log::info;
-use arcmc_types::error::ArcMCResult;
+use aml_types::error::AMLResult;
 use std::collections::HashMap;
 use std::future::Future;
 use std::sync::atomic::AtomicU32;
@@ -124,7 +124,7 @@ impl TaskMonitor {
     task: T,
     p_handle: Arc<RwLock<PTaskHandle>>,
   ) where
-    T: Future<Output = ArcMCResult<()>> + Send + 'static,
+    T: Future<Output = AMLResult<()>> + Send + 'static,
   {
     p_handle.write().unwrap().desc.status = PStatus::Waiting;
     self.phs.write().unwrap().insert(id, p_handle.clone());

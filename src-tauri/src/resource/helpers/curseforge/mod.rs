@@ -10,7 +10,7 @@ use misc::{
 use murmur2::murmur2;
 use serde_json::json;
 use sha1::{Digest, Sha1};
-use arcmc_types::error::ArcMCResult;
+use aml_types::error::AMLResult;
 use std::collections::HashMap;
 use tauri::{AppHandle, Manager};
 use tauri_plugin_http::reqwest;
@@ -38,7 +38,7 @@ fn tokenize_words(text: &str) -> impl Iterator<Item = &str> {
 pub async fn fetch_resource_list_by_name_curseforge(
   app: &AppHandle,
   query: &OtherResourceSearchQuery,
-) -> ArcMCResult<OtherResourceSearchRes> {
+) -> AMLResult<OtherResourceSearchRes> {
   let url = get_curseforge_api(OtherResourceApiEndpoint::Search, None)?;
 
   let OtherResourceSearchQuery {
@@ -153,7 +153,7 @@ pub async fn fetch_resource_list_by_name_curseforge(
 pub async fn fetch_resource_version_packs_curseforge(
   app: &AppHandle,
   query: &OtherResourceVersionPackQuery,
-) -> ArcMCResult<Vec<OtherResourceVersionPack>> {
+) -> AMLResult<Vec<OtherResourceVersionPack>> {
   let mut aggregated_files: Vec<CurseForgeFileInfo> = Vec::new();
   let mut page = 0;
   let page_size = 50;
@@ -208,7 +208,7 @@ pub async fn fetch_resource_version_packs_curseforge(
 pub async fn fetch_remote_resource_by_local_curseforge(
   app: &AppHandle,
   file_path: &str,
-) -> ArcMCResult<OtherResourceFileInfo> {
+) -> AMLResult<OtherResourceFileInfo> {
   let file_content = tokio::fs::read(file_path)
     .await
     .map_err(|_| ResourceError::ParseError)?;
@@ -259,7 +259,7 @@ pub async fn fetch_remote_resource_by_local_curseforge(
 pub async fn fetch_remote_resource_by_id_curseforge(
   app: &AppHandle,
   resource_id: &str,
-) -> ArcMCResult<OtherResourceInfo> {
+) -> AMLResult<OtherResourceInfo> {
   let url = get_curseforge_api(OtherResourceApiEndpoint::ById, Some(resource_id))?;
   let client = app.state::<reqwest::Client>();
 

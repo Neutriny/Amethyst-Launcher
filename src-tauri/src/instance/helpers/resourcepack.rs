@@ -1,5 +1,5 @@
 use image::RgbaImage;
-use arcmc_types::error::{ArcMCError, ArcMCResult};
+use aml_types::error::{AMLError, AMLResult};
 use std::fs;
 use std::io::Read;
 use std::path::{Path, PathBuf};
@@ -7,21 +7,21 @@ use zip::ZipArchive;
 
 use crate::utils::image::{load_image_from_dir_async, load_image_from_jar};
 
-pub fn load_resourcepack_from_zip(path: &PathBuf) -> ArcMCResult<(String, Option<RgbaImage>)> {
+pub fn load_resourcepack_from_zip(path: &PathBuf) -> AMLResult<(String, Option<RgbaImage>)> {
   let file = match fs::File::open(path) {
     Ok(val) => val,
-    Err(e) => return Err(ArcMCError::from(e)),
+    Err(e) => return Err(AMLError::from(e)),
   };
   let mut zip = match ZipArchive::new(file) {
     Ok(val) => val,
-    Err(e) => return Err(ArcMCError::from(e)),
+    Err(e) => return Err(AMLError::from(e)),
   };
   let mut description = String::new();
 
   if let Ok(mut file) = zip.by_name("pack.mcmeta") {
     let mut contents = String::new();
     if let Err(e) = file.read_to_string(&mut contents) {
-      return Err(ArcMCError::from(e));
+      return Err(AMLError::from(e));
     } else {
       // Check for and remove the UTF-8 BOM if present
       if contents.starts_with('\u{FEFF}') {
@@ -38,12 +38,12 @@ pub fn load_resourcepack_from_zip(path: &PathBuf) -> ArcMCResult<(String, Option
           }
         }
         Err(e) => {
-          return Err(ArcMCError::from(e));
+          return Err(AMLError::from(e));
         }
       }
     }
   } else {
-    return Err(ArcMCError(format!(
+    return Err(AMLError(format!(
       "pack.mcmeta not found in zip file '{}'",
       path.to_str().unwrap_or("")
     )));
@@ -53,7 +53,7 @@ pub fn load_resourcepack_from_zip(path: &PathBuf) -> ArcMCResult<(String, Option
   Ok((description, icon_src))
 }
 
-pub async fn load_resourcepack_from_dir(path: &Path) -> ArcMCResult<(String, Option<RgbaImage>)> {
+pub async fn load_resourcepack_from_dir(path: &Path) -> AMLResult<(String, Option<RgbaImage>)> {
   let mut description = String::new();
 
   if let Ok(mut contents) = tokio::fs::read_to_string(path.join("pack.mcmeta")).await {
@@ -72,11 +72,11 @@ pub async fn load_resourcepack_from_dir(path: &Path) -> ArcMCResult<(String, Opt
         }
       }
       Err(e) => {
-        return Err(ArcMCError::from(e));
+        return Err(AMLError::from(e));
       }
     }
   } else {
-    return Err(ArcMCError("pack.mcmeta not found in ''".to_string()));
+    return Err(AMLError("pack.mcmeta not found in ''".to_string()));
   }
 
   let icon_src = load_image_from_dir_async(&path.join("pack.png")).await;

@@ -1,6 +1,6 @@
 use lazy_static::lazy_static;
 use serde::{Deserialize, Serialize};
-use arcmc_types::error::{ArcMCError, ArcMCResult};
+use aml_types::error::{AMLError, AMLResult};
 use std::collections::HashMap;
 use std::env;
 use tauri::{AppHandle, Manager};
@@ -31,7 +31,7 @@ pub async fn make_curseforge_request<T, P>(
   client: &reqwest::Client,
   url: &str,
   request_type: OtherResourceRequestType<'_, P>,
-) -> ArcMCResult<T>
+) -> AMLResult<T>
 where
   T: serde::de::DeserializeOwned,
   P: serde::Serialize,
@@ -61,7 +61,7 @@ where
 pub fn get_curseforge_api(
   endpoint: OtherResourceApiEndpoint,
   id: Option<&str>,
-) -> ArcMCResult<String> {
+) -> AMLResult<String> {
   let base_url = "https://api.curseforge.com/v1";
 
   let url_str = match endpoint {
@@ -511,7 +511,7 @@ pub fn cvt_id_to_dependency_type(dependency_type: u32) -> String {
 pub async fn translate_description_curseforge(
   app: &AppHandle,
   resource_id: &str,
-) -> ArcMCResult<Option<String>> {
+) -> AMLResult<Option<String>> {
   let result = async {
     let url = get_curseforge_api(OtherResourceApiEndpoint::TranslateDesc, Some(resource_id))?;
     let client = app.state::<reqwest::Client>();
@@ -524,7 +524,7 @@ pub async fn translate_description_curseforge(
       .json::<CurseForgeTranslationRes>()
       .await?;
 
-    Ok::<_, ArcMCError>(translation_res.translated)
+    Ok::<_, AMLError>(translation_res.translated)
   }
   .await;
 

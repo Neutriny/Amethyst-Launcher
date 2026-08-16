@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
-use arcmc_types::error::ArcMCResult;
-use arcmc_types::storage::{load_json_async, save_json_async};
+use aml_types::error::AMLResult;
+use aml_types::storage::{load_json_async, save_json_async};
 use std::collections::HashMap;
 use std::path::Path;
 use tauri::{AppHandle, Manager};
@@ -25,7 +25,7 @@ pub async fn load_asset_index(
   app: &AppHandle,
   asset_index_path: &Path,
   asset_index_url: &str,
-) -> ArcMCResult<AssetIndex> {
+) -> AMLResult<AssetIndex> {
   if asset_index_path.exists() {
     let asset_index = load_json_async::<AssetIndex>(asset_index_path)
       .await

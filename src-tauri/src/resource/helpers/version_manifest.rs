@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use arcmc_types::error::ArcMCResult;
+use aml_types::error::AMLResult;
 use std::fs;
 use tauri::{AppHandle, Manager};
 use tauri_plugin_http::reqwest;
@@ -33,7 +33,7 @@ struct LatestVersion {
 pub async fn get_game_version_manifest(
   app: &AppHandle,
   priority_list: &[SourceType],
-) -> ArcMCResult<Vec<GameClientResourceInfo>> {
+) -> AMLResult<Vec<GameClientResourceInfo>> {
   let client = app.state::<reqwest::Client>();
 
   for source_type in priority_list.iter() {

@@ -9,14 +9,14 @@ use download::DownloadParam;
 use events::TauriEventSink;
 use futures::stream::Stream;
 use serde::{Deserialize, Serialize};
-use arcmc_types::error::ArcMCResult;
+use aml_types::error::AMLResult;
 use std::future::Future;
 use std::pin::Pin;
 use std::sync::{Arc, RwLock};
 use streams::{GDesc, PDesc, PHandle};
 use tokio::time::Duration;
 
-pub type SJMCLBoxedFuture = Pin<Box<dyn Future<Output = ArcMCResult<()>> + Send>>;
+pub type SJMCLBoxedFuture = Pin<Box<dyn Future<Output = AMLResult<()>> + Send>>;
 
 pub struct SJMCLFuture {
   pub task_id: u32,

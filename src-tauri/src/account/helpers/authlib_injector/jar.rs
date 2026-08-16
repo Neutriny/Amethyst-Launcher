@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use arcmc_types::error::ArcMCResult;
+use aml_types::error::AMLResult;
 use std::io::Read;
 use std::path::PathBuf;
 use std::sync::Mutex;
@@ -20,7 +20,7 @@ pub struct AuthlibInjectorMeta {
   pub download_url: String,
 }
 
-pub fn get_jar_path(app: &AppHandle) -> ArcMCResult<PathBuf> {
+pub fn get_jar_path(app: &AppHandle) -> AMLResult<PathBuf> {
   Ok(
     app
       .path()
@@ -31,7 +31,7 @@ pub fn get_jar_path(app: &AppHandle) -> ArcMCResult<PathBuf> {
 async fn get_latest_meta(
   app: &AppHandle,
   priority_list: &[SourceType],
-) -> ArcMCResult<AuthlibInjectorMeta> {
+) -> AMLResult<AuthlibInjectorMeta> {
   let client = app.state::<reqwest::Client>();
 
   for source in priority_list.iter() {
@@ -55,7 +55,7 @@ async fn get_latest_meta(
   Err(AccountError::NoDownloadApi.into())
 }
 
-fn get_local_version(app: &AppHandle) -> ArcMCResult<String> {
+fn get_local_version(app: &AppHandle) -> AMLResult<String> {
   let jar_path = get_jar_path(app)?;
   if !jar_path.exists() {
     return Err(AccountError::NotFound.into());
@@ -84,7 +84,7 @@ fn get_local_version(app: &AppHandle) -> ArcMCResult<String> {
   Ok(version)
 }
 
-async fn download(app: &AppHandle, url: Url) -> ArcMCResult<()> {
+async fn download(app: &AppHandle, url: Url) -> AMLResult<()> {
   let client = app.state::<reqwest::Client>();
   let jar_path = get_jar_path(app)?;
 
@@ -107,7 +107,7 @@ async fn download(app: &AppHandle, url: Url) -> ArcMCResult<()> {
   }
 }
 
-pub async fn check_authlib_jar(app: &AppHandle) -> ArcMCResult<()> {
+pub async fn check_authlib_jar(app: &AppHandle) -> AMLResult<()> {
   let latest_meta = {
     let config_state = app.state::<Mutex<LauncherConfig>>();
     let launcher_config = config_state.lock()?.clone();

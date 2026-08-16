@@ -1,7 +1,7 @@
 use crate::APP_DATA_DIR;
 use crate::resource::models::OtherResourceSource;
 use serde::{Deserialize, Serialize};
-use arcmc_types::storage::Storage;
+use aml_types::storage::Storage;
 use std::collections::HashMap;
 use std::path::PathBuf;
 use std::time::{SystemTime, UNIX_EPOCH};

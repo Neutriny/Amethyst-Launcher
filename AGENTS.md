@@ -13,7 +13,7 @@
 > 以下为精简后的核心结构示意，仅列出高频开发目录与关键入口，不展开所有文件。
 
 ```text
-ArcMCL/
+AML/
 ├── src/                      # 前端源码（React）
 │   ├── pages/                # 前端页面路由（Next JS Page Router）
 │   │   ├── ...               
@@ -54,8 +54,8 @@ ArcMCL/
 │   │   └── utils/            # 后端工具函数
 │   ├── assets/               # 后端静态资源
 │   ├── crates/               # 计划分拆后端功能到对应crate，此为装载目录
-│   │   ├── arcmc-types/      # 后端通用Types以及Traits
-│   │   └── arcmc-macros/     # 后端所使用的过程宏包
+│   │   ├── aml-types/      # 后端通用Types以及Traits
+│   │   └── aml-macros/     # 后端所使用的过程宏包
 │   └── infoplist/            # macOS InfoPlist 资源
 ├── public/                   # 前端静态资源
 ├── docs/                     # 文档

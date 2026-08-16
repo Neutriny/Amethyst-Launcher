@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
-use arcmc_macros::Partial;
-use arcmc_types::partial::PartialUpdate;
-use arcmc_types::storage::Storage;
+use aml_macros::Partial;
+use aml_types::partial::PartialUpdate;
+use aml_types::storage::Storage;
 use smart_default::SmartDefault;
 use std::path::PathBuf;
 use strum_macros::{Display, EnumString};

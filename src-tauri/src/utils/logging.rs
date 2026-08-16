@@ -1,5 +1,5 @@
 use regex::Regex;
-use arcmc_types::error::{ArcMCError, ArcMCResult};
+use aml_types::error::{AMLError, AMLResult};
 use std::fmt::Arguments;
 use std::fs::create_dir_all;
 use std::path::PathBuf;
@@ -43,7 +43,7 @@ pub fn get_launcher_log_path(app: AppHandle) -> PathBuf {
   ))
 }
 
-pub fn setup_with_app(app: AppHandle) -> ArcMCResult<()> {
+pub fn setup_with_app(app: AppHandle) -> AMLResult<()> {
   let is_dev = cfg!(debug_assertions);
   let folder = get_launcher_logs_folder(&app);
   let mut targetkinds = vec![TargetKind::Folder {
@@ -107,12 +107,12 @@ pub fn setup_with_app(app: AppHandle) -> ArcMCResult<()> {
 
   app
     .plugin(p.format(formatter).build())
-    .map_err(|e| ArcMCError(format!("Failed to setup log plugin: {}", e)))?;
+    .map_err(|e| AMLError(format!("Failed to setup log plugin: {}", e)))?;
 
   Ok(())
 }
 
-pub async fn purge_old_launcher_logs(app: AppHandle, days: u64) -> ArcMCResult<()> {
+pub async fn purge_old_launcher_logs(app: AppHandle, days: u64) -> AMLResult<()> {
   let folder = get_launcher_logs_folder(&app);
   if !folder.exists() {
     return Ok(());
@@ -125,7 +125,7 @@ pub async fn purge_old_launcher_logs(app: AppHandle, days: u64) -> ArcMCResult<(
     .saturating_sub(days.saturating_mul(24 * 60 * 60));
 
   let re = Regex::new(r"^launcher_log_(\d+)\.log$")
-    .map_err(|e| ArcMCError(format!("Invalid regex: {e}")))?;
+    .map_err(|e| AMLError(format!("Invalid regex: {e}")))?;
   let files = get_files_with_regex(&folder, &re)?;
 
   for path in files {

@@ -1,8 +1,8 @@
 use futures::future::join_all;
 use futures::stream::{self, StreamExt, TryStreamExt};
 use semver::Version;
-use arcmc_types::error::{ArcMCError, ArcMCResult};
-use arcmc_types::storage::load_json_async;
+use aml_types::error::{AMLError, AMLResult};
+use aml_types::storage::load_json_async;
 use std::collections::{HashMap, HashSet};
 use std::io::Cursor;
 use std::path::{Component, Path, PathBuf};
@@ -84,7 +84,7 @@ pub async fn get_invalid_library_files(
   library_path: &Path,
   client_info: &McClientInfo,
   check_hash: bool,
-) -> ArcMCResult<Vec<PTaskParam>> {
+) -> AMLResult<Vec<PTaskParam>> {
   let mut artifacts = Vec::new();
   artifacts.extend(get_native_library_artifacts(client_info));
   artifacts.extend(get_nonnative_library_artifacts(client_info));
@@ -117,7 +117,7 @@ pub async fn get_invalid_library_files(
     }
   });
 
-  let results: Vec<ArcMCResult<Option<PTaskParam>>> = join_all(futs).await;
+  let results: Vec<AMLResult<Option<PTaskParam>>> = join_all(futs).await;
 
   let mut params = Vec::new();
   for r in results {
@@ -130,7 +130,7 @@ pub async fn get_invalid_library_files(
 }
 
 #[cfg(target_os = "windows")]
-pub fn get_windows_mesa_loader_library(app: &AppHandle) -> ArcMCResult<Option<LibrariesValue>> {
+pub fn get_windows_mesa_loader_library(app: &AppHandle) -> AMLResult<Option<LibrariesValue>> {
   let all_replace_map = load_native_libraries_replace_map(app)?;
   let (os, arch) = {
     let launcher_config_state = app.state::<Mutex<LauncherConfig>>();
@@ -151,7 +151,7 @@ pub fn get_windows_mesa_loader_library(app: &AppHandle) -> ArcMCResult<Option<Li
 pub fn get_windows_mesa_loader_path(
   app: &AppHandle,
   library_path: &Path,
-) -> ArcMCResult<Option<PathBuf>> {
+) -> AMLResult<Option<PathBuf>> {
   Ok(get_windows_mesa_loader_library(app)?.and_then(|lib| {
     lib
       .downloads
@@ -167,7 +167,7 @@ pub async fn get_invalid_windows_mesa_loader_file(
   library_path: &Path,
   game_config: &GameConfig,
   check_hash: bool,
-) -> ArcMCResult<Vec<PTaskParam>> {
+) -> AMLResult<Vec<PTaskParam>> {
   if mesa_driver_name(
     &game_config.advanced.graphics.api,
     &game_config.advanced.graphics.renderer,
@@ -211,7 +211,7 @@ pub struct LibraryParts {
   pub extension: String,
 }
 
-pub fn parse_library_name(name: &str, native: Option<String>) -> ArcMCResult<LibraryParts> {
+pub fn parse_library_name(name: &str, native: Option<String>) -> AMLResult<LibraryParts> {
   let parts: Vec<&str> = name.split('@').collect();
   let file_ext = if parts.len() > 1 {
     parts[1].to_string()
@@ -296,7 +296,7 @@ fn parse_sem_version(version: &str) -> Version {
   })
 }
 
-pub fn convert_library_name_to_path(name: &str, native: Option<String>) -> ArcMCResult<String> {
+pub fn convert_library_name_to_path(name: &str, native: Option<String>) -> AMLResult<String> {
   let LibraryParts {
     path,
     pack_name,
@@ -323,7 +323,7 @@ pub fn convert_library_name_to_path(name: &str, native: Option<String>) -> ArcMC
 pub fn get_nonnative_library_paths(
   client_info: &McClientInfo,
   library_path: &Path,
-) -> ArcMCResult<Vec<PathBuf>> {
+) -> AMLResult<Vec<PathBuf>> {
   let mut libraries = Vec::new();
   let feature = FeaturesInfo::default();
   for library in &client_info.libraries {
@@ -348,7 +348,7 @@ pub fn get_native_library_paths(
   library_path: &Path,
   #[cfg_attr(not(target_os = "linux"), allow(unused_variables))] use_native_glfw: bool,
   #[cfg_attr(not(target_os = "linux"), allow(unused_variables))] use_native_openal: bool,
-) -> ArcMCResult<Vec<PathBuf>> {
+) -> AMLResult<Vec<PathBuf>> {
   let mut result = Vec::new();
   let feature = FeaturesInfo::default();
   for library in &client_info.libraries {
@@ -426,7 +426,7 @@ pub async fn extract_native_libraries(
   natives_dir: &PathBuf,
   use_native_glfw: bool,
   use_native_openal: bool,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   #[cfg(target_os = "linux")]
   if (use_native_glfw || use_native_openal) && natives_dir.exists() {
     fs::remove_dir_all(natives_dir).await?;
@@ -441,7 +441,7 @@ pub async fn extract_native_libraries(
     use_native_glfw,
     use_native_openal,
   )?;
-  let tasks: Vec<tokio::task::JoinHandle<ArcMCResult<()>>> = native_libraries
+  let tasks: Vec<tokio::task::JoinHandle<AMLResult<()>>> = native_libraries
     .into_iter()
     .map(|library_path| {
       let extract_dir = extract_dir.clone();
@@ -459,7 +459,7 @@ pub async fn extract_native_libraries(
   for result in results {
     if let Err(e) = result {
       println!("Error handling artifact: {:?}", e);
-      return Err(arcmc_types::error::ArcMCError::from(e));
+      return Err(aml_types::error::AMLError::from(e));
     }
   }
 
@@ -472,7 +472,7 @@ pub async fn get_invalid_assets(
   source: SourceType,
   asset_path: &Path,
   check_hash: bool,
-) -> ArcMCResult<Vec<PTaskParam>> {
+) -> AMLResult<Vec<PTaskParam>> {
   let assets_download_api = get_download_api(source, ResourceType::Assets)?;
 
   let asset_index_path = asset_path.join(format!("indexes/{}.json", client_info.asset_index.id));
@@ -488,11 +488,11 @@ pub async fn get_invalid_assets(
       let exists = fs::try_exists(&dest).await?;
 
       if exists && (!check_hash || validate_sha1(dest.clone(), item.hash.clone()).is_ok()) {
-        Ok::<Option<PTaskParam>, arcmc_types::error::ArcMCError>(None)
+        Ok::<Option<PTaskParam>, aml_types::error::AMLError>(None)
       } else {
         let src = assets_download_api
           .join(&path_in_repo)
-          .map_err(arcmc_types::error::ArcMCError::from)?;
+          .map_err(aml_types::error::AMLError::from)?;
         Ok(Some(PTaskParam::Download(DownloadParam {
           src,
           dest,
@@ -503,7 +503,7 @@ pub async fn get_invalid_assets(
     }
   });
 
-  let results: Vec<ArcMCResult<Option<PTaskParam>>> = join_all(futs).await;
+  let results: Vec<AMLResult<Option<PTaskParam>>> = join_all(futs).await;
 
   let mut params = Vec::new();
   for r in results {
@@ -518,7 +518,7 @@ pub async fn prepare_legacy_assets(
   root_dir: &Path,
   assets_dir: &Path,
   assets_index_name: &str,
-) -> ArcMCResult<()> {
+) -> AMLResult<()> {
   let target_roots = match assets_index_name {
     "legacy" => vec![assets_dir.join("virtual/legacy")],
     "pre-1.6" => vec![
@@ -534,7 +534,7 @@ pub async fn prepare_legacy_assets(
       .await?;
 
   stream::iter(asset_index.objects)
-    .map(Ok::<_, ArcMCError>)
+    .map(Ok::<_, AMLError>)
     .try_for_each_concurrent(None, move |(name, item)| {
       let origin = objects_dir.join(format!("{}/{}", &item.hash[..2], item.hash));
       let targets = target_roots
@@ -544,7 +544,7 @@ pub async fn prepare_legacy_assets(
 
       async move {
         if !fs::try_exists(&origin).await? {
-          return Ok::<(), ArcMCError>(());
+          return Ok::<(), AMLError>(());
         }
 
         for target in targets {

@@ -1,5 +1,5 @@
 use futures::future;
-use arcmc_types::error::ArcMCResult;
+use aml_types::error::AMLResult;
 use std::collections::HashMap;
 use std::sync::Mutex;
 use tauri::{AppHandle, Manager};
@@ -11,7 +11,7 @@ use crate::launcher_config::models::LauncherConfig;
 use crate::utils::web::with_retry;
 
 #[tauri::command]
-pub async fn fetch_news_sources_info(app: AppHandle) -> ArcMCResult<Vec<NewsSourceInfo>> {
+pub async fn fetch_news_sources_info(app: AppHandle) -> AMLResult<Vec<NewsSourceInfo>> {
   let post_sources = {
     let binding = app.state::<Mutex<LauncherConfig>>();
     let state = binding.lock().unwrap();
@@ -60,7 +60,7 @@ pub async fn fetch_news_sources_info(app: AppHandle) -> ArcMCResult<Vec<NewsSour
 pub async fn fetch_news_post_summaries(
   app: AppHandle,
   requests: Vec<NewsPostRequest>,
-) -> ArcMCResult<NewsPostResponse> {
+) -> AMLResult<NewsPostResponse> {
   let client = with_retry(app.state::<reqwest::Client>().inner().clone());
   let tasks: Vec<_> = requests
     .into_iter()

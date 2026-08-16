@@ -1,7 +1,7 @@
 use base64::Engine;
 use base64::engine::general_purpose;
 use serde_json::json;
-use arcmc_types::error::ArcMCResult;
+use aml_types::error::AMLResult;
 use std::str::FromStr;
 use strum::IntoEnumIterator;
 use tauri::{AppHandle, Manager};
@@ -20,7 +20,7 @@ pub async fn retrieve_profile(
   app: &AppHandle,
   auth_server_url: String,
   id: String,
-) -> ArcMCResult<MinecraftProfile> {
+) -> AMLResult<MinecraftProfile> {
   let client = app.state::<reqwest::Client>();
   Ok(
     client
@@ -44,7 +44,7 @@ pub async fn parse_profile(
   refresh_token: Option<String>,
   auth_server_url: Option<String>,
   auth_account: Option<String>,
-) -> ArcMCResult<PlayerInfo> {
+) -> AMLResult<PlayerInfo> {
   let uuid = Uuid::parse_str(&profile.id).map_err(|_| AccountError::ParseError)?;
   let name = profile.name.clone();
   let mut textures: Vec<Texture> = vec![];
@@ -105,7 +105,7 @@ pub async fn parse_profile(
   )
 }
 
-pub async fn validate(app: &AppHandle, player: &PlayerInfo) -> ArcMCResult<bool> {
+pub async fn validate(app: &AppHandle, player: &PlayerInfo) -> AMLResult<bool> {
   let client = app.state::<reqwest::Client>();
 
   let response = client
@@ -127,7 +127,7 @@ pub async fn refresh(
   app: &AppHandle,
   player: &PlayerInfo,
   auth_server: &AuthServer,
-) -> ArcMCResult<PlayerInfo> {
+) -> AMLResult<PlayerInfo> {
   if player.refresh_token.is_none() || Some("") == player.refresh_token.as_deref() {
     // to be compatible with legacy version of account config
     password::refresh(app, player, false).await

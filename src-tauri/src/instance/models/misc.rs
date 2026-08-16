@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use arcmc_types::storage::{load_json_async, save_json_async};
+use aml_types::storage::{load_json_async, save_json_async};
 use std::cmp::{Ord, Ordering, PartialOrd};
 use std::path::PathBuf;
 use std::str::FromStr;
