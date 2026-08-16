@@ -2,31 +2,38 @@
 
 **基於 [SJMCL](https://github.com/UNIkeEN/SJMCL) 啟動器原始碼修改的 Minecraft 啟動器**
 
-> 當前圖示為 SJMCL 原版圖示，正在重新設計中
-
 **繁體中文** | [简体中文](README.md)
 
 ## 關於本專案
 
-Amethyst Launcher 是基於上海交通大學 Minecraft 社（SJMC）開發的 [SJMCL 啟動器](https://github.com/UNIkeEN/SJMCL) 原始碼進行修改的分支版本。本專案遵循 GPLv3 協議，保留了原專案的核心功能，並進行了以下調整：
-
-- 移除了帳戶頁預設存在的 SJMC 使用者中心登入元件
-- 移除了發現頁的社群新聞功能
-- 保留了離線登入、微軟登入、MUA 認證伺服器、LittleSkin 及自訂伺服器登入
-- 僅保留簡體中文和繁體中文，不再維護其他語言
-- 目前僅支援 Windows 平台開發和測試
+Amethyst Launcher 是基於上海交通大學 Minecraft 社（SJMC）開發的 [SJMCL 啟動器](https://github.com/UNIkeEN/SJMCL) 原始碼進行修改的分支版本。本專案遵循 GPLv3 協議，保留了原專案的核心功能，並在此基礎上增加了多項實用特性。
 
 ## 功能特性
 
-* **高效的實例管理**：支援多個遊戲目錄與實例，集中管理所有實例資源（如存檔、模組、資源包、光影包、截圖等）與設定。
-* **便捷的資源下載**：支援從 CurseForge 與 Modrinth 等源下載遊戲客戶端、模組載入器、各類遊戲資源與整合包。
-* **多帳戶系統支援**：內建 Microsoft 登入與第三方認證伺服器支援，相容 Yggdrasil Connect 的 OAuth 登入流程規範提案。
-* **外部服務協同**：透過深度連結與 MCP 服務，與外部網頁、程式及 Agent 服務協同工作，提供一系列便捷功能與自動化能力。
-* **開放擴展系統**：支援開發擴展，為啟動器擴展更多有趣且實用的功能。
+### 實例與資源管理
 
-> 注意：部分功能可能受地區、運行平台或程式分發類型限制。
+- **多目錄多實例**：支援多個遊戲目錄與實例，集中管理所有實例資源（存檔、模組、資源包、光影包、截圖等）與設定。
+- **便捷資源下載**：支援從 CurseForge 與 Modrinth 等平台下載遊戲客戶端、模組載入器、各類遊戲資源與整合包。
+- **預設資源平台**：可在設定中配置預設資源下載平台（CurseForge / Modrinth），下載時自動優先使用選定平台。
+- **整合包匯入**：支援從本機檔案或透過深度連結匯入 CurseForge、Modrinth、MultiMC 格式的整合包。
 
-### 技術堆疊
+### 帳戶與登入
+
+- **多帳戶系統**：內建 Microsoft 登入與第三方認證伺服器支援，相容 Yggdrasil Connect 的 OAuth 登入流程規範提案。
+- **離線模式**：支援離線帳戶，可自訂角色外觀。
+
+### 智慧功能
+
+- **AI 日誌分析**：遊戲崩潰時可使用 AI 分析遊戲日誌，快速定位崩潰原因並給出修復建議。
+- **MCP 服務**：透過 MCP（Model Context Protocol）服務與外部 Agent 協同工作，提供自動化能力與智慧互動。
+
+### 外觀與體驗
+
+- **主題訂製**：支援自訂強調色、顏色模式（淺色/深色/跟隨系統）、背景圖片與字型。
+- **液態玻璃效果**：可選的液態玻璃 UI 效果，帶來現代感視覺體驗。
+- **語言支援**：支援簡體中文和繁體中文。
+
+## 技術堆疊
 
 [![Tauri](https://img.shields.io/badge/Tauri-v2-FFC131?style=for-the-badge&logo=tauri&logoColor=white&labelColor=24C8DB)](https://tauri.app/)
 [![Next JS](https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)

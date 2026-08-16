@@ -529,8 +529,7 @@
       "type": "類型"
     },
     "warning": {
-      "mojang": "由 Mojang 分發的 Java 執行時將由 Amethyst 安裝到特定目錄",
-      "oracle": "從 Oracle 源下載可能需要登入"
+      "mojang": "由 Mojang 分發的 Java 執行時將由 Amethyst 安裝到特定目錄"
     }
   },
   "DownloadModpackModal": {

@@ -498,7 +498,7 @@
   },
   "DiscoverLayout": {
     "discoverDomainList": {
-      "seh": "搜索",
+      "search": "搜索",
       "home": "主页",
       "community-news": "社区新闻",
       "minecraft-news": "Minecraft 新闻",
@@ -529,8 +529,7 @@
       "type": "类型"
     },
     "warning": {
-      "mojang": "由 Mojang 分发的 Java 运行时将由 Amethyst 安装到特定目录",
-      "oracle": "从 Oracle 源下载可能需要登录"
+      "mojang": "由 Mojang 分发的 Java 运行时将由 Amethyst 安装到特定目录"
     }
   },
   "DownloadModpackModal": {

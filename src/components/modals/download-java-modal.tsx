@@ -9,21 +9,17 @@ import {
   ModalHeader,
   ModalOverlay,
   ModalProps,
-  Text,
   VStack,
 } from "@chakra-ui/react";
 import { openUrl } from "@tauri-apps/plugin-opener";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { LuExternalLink } from "react-icons/lu";
 import { MenuSelector } from "@/components/common/menu-selector";
 import { useLauncherConfig } from "@/contexts/config";
-import { useToast } from "@/contexts/toast";
-import { ConfigService } from "@/services/config";
 
-type VendorKey = "mojang" | "zulu" | "bellsoft" | "oracle";
-const DEFAULT_VENDOR: VendorKey = "mojang";
+type VendorKey = "temurin" | "microsoft" | "zulu";
+const DEFAULT_VENDOR: VendorKey = "temurin";
 const DEFAULT_VERSION = "25" as const;
 const DEFAULT_TYPE = "jre" as const;
 
@@ -53,8 +49,6 @@ export const DownloadJavaModal: React.FC<Omit<ModalProps, "children">> = ({
 }) => {
   const { t } = useTranslation();
   const { config } = useLauncherConfig();
-  const toast = useToast();
-  const router = useRouter();
   const primaryColor = config.appearance.theme.primaryColor;
   const os = config.basicInfo.osType;
   const arch = config.basicInfo.arch;
@@ -66,12 +60,34 @@ export const DownloadJavaModal: React.FC<Omit<ModalProps, "children">> = ({
   const [type, setType] = useState<"" | "jdk" | "jre">(DEFAULT_TYPE);
 
   const VENDORS: Record<VendorKey, JavaVendor> = {
-    mojang: {
-      label: "Mojang",
+    temurin: {
+      label: "Temurin",
       hasJre: true,
-      archMap: { x86_64: "x64", aarch64: "arm64" },
-      versions: [...(os === "macos" ? [] : ["8"]), "17", "21", "25"],
-      getUrl: () => "",
+      archMap: { x86_64: "x64", aarch64: "aarch64" },
+      versions: ["8", "11", "17", "21", "25"],
+      getUrl: ({ version, os, archParam, type }) => {
+        const osMap: Record<string, string> = {
+          windows: "windows",
+          linux: "linux",
+          macos: "mac",
+        };
+        const pkg = type === "jre" ? "jre" : "jdk";
+        return `https://api.adoptium.net/v3/binary/latest/${version}/ga/${osMap[os]}/${archParam}/${pkg}/eclipse/hotspot/normal/eclipse?project=jdk`;
+      },
+    },
+    microsoft: {
+      label: "Microsoft",
+      hasJre: false,
+      archMap: { x86_64: "x64", aarch64: "aarch64" },
+      versions: ["11", "17", "21"],
+      getUrl: ({ version, os }) => {
+        const osMap: Record<string, string> = {
+          windows: "windows",
+          linux: "linux",
+          macos: "macOS",
+        };
+        return `https://learn.microsoft.com/zh-cn/java/openjdk/download#openjdk-${version}`;
+      },
     },
     zulu: {
       label: "Zulu",
@@ -92,31 +108,6 @@ export const DownloadJavaModal: React.FC<Omit<ModalProps, "children">> = ({
         );
       },
     },
-    bellsoft: {
-      label: "BellSoft",
-      hasJre: true,
-      archMap: {
-        x86_64: "x86",
-        aarch64: "arm",
-      },
-      getUrl: ({ version, os, archParam, type }) => {
-        return buildDownloadUrl("https://bell-sw.com/pages/downloads/", {
-          version: `java-${version}`,
-          os,
-          package: type,
-          architecture: archParam,
-        });
-      },
-    },
-    oracle: {
-      label: "Oracle",
-      hasJre: false,
-      archMap: {},
-      getUrl: ({ version, os }) => {
-        const javaOrJdk = ["8", "11", "17"].includes(version) ? "java" : "jdk";
-        return `https://www.oracle.com/java/technologies/downloads/#${javaOrJdk}${version}-${os.replace("macos", "mac")}`;
-      },
-    },
   };
 
   useEffect(() => {
@@ -129,29 +120,15 @@ export const DownloadJavaModal: React.FC<Omit<ModalProps, "children">> = ({
   const handleConfirm = async () => {
     if (!vendor || !version || !type) return;
 
-    if (vendor === "mojang") {
-      ConfigService.downloadMojangJava(version).then((res) => {
-        if (res.status === "success") {
-          router.push("/downloads");
-          props.onClose?.();
-        } else {
-          toast({
-            title: res.message,
-            status: "error",
-          });
-        }
-      });
-    } else {
-      const selectedVendor = VENDORS[vendor as VendorKey];
-      const archParam = selectedVendor.archMap[arch] || "";
-      const url = selectedVendor.getUrl({
-        version,
-        os,
-        archParam,
-        type: type as "jdk" | "jre",
-      });
-      openUrl(url);
-    }
+    const selectedVendor = VENDORS[vendor as VendorKey];
+    const archParam = selectedVendor.archMap[arch] || "";
+    const url = selectedVendor.getUrl({
+      version,
+      os,
+      archParam,
+      type: type as "jdk" | "jre",
+    });
+    await openUrl(url);
     props.onClose?.();
   };
 
@@ -176,10 +153,8 @@ export const DownloadJavaModal: React.FC<Omit<ModalProps, "children">> = ({
                 value={vendor}
                 onSelect={(val) => {
                   const selected = val as VendorKey;
-                  if (!VENDORS[selected].hasJre) {
+                  if (!VENDORS[selected].hasJre && type === "jre") {
                     setType("jdk");
-                  } else if (selected === "mojang") {
-                    setType("jre");
                   }
                   if (
                     VENDORS[selected]?.versions &&
@@ -218,7 +193,7 @@ export const DownloadJavaModal: React.FC<Omit<ModalProps, "children">> = ({
                     ? [{ value: "jre", label: "JRE" }]
                     : []),
                 ]}
-                disabled={vendor === "mojang"}
+                disabled={false}
                 value={type}
                 onSelect={(val) => setType(val as typeof type)}
                 placeholder={t("DownloadJavaModal.selector.type")}
@@ -226,12 +201,6 @@ export const DownloadJavaModal: React.FC<Omit<ModalProps, "children">> = ({
                 fontSize="sm"
               />
             </Grid>
-
-            {["mojang", "oracle"].includes(vendor) && (
-              <Text color="gray.500">
-                {t(`DownloadJavaModal.warning.${vendor}`)}
-              </Text>
-            )}
           </VStack>
         </ModalBody>
         <ModalFooter>
@@ -240,7 +209,7 @@ export const DownloadJavaModal: React.FC<Omit<ModalProps, "children">> = ({
           </Button>
           <Button
             colorScheme={primaryColor}
-            rightIcon={vendor !== "mojang" ? <LuExternalLink /> : undefined}
+            rightIcon={<LuExternalLink />}
             isDisabled={!(vendor && version && type)}
             onClick={handleConfirm}
           >

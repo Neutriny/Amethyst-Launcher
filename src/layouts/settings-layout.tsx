@@ -45,7 +45,7 @@ const SettingsLayout: React.FC<SettingsLayoutProps> = ({ children }) => {
       { key: "appearance", icon: LuPalette },
       { key: "download", icon: LuCloudDownload },
       { key: "intelligence", icon: LuSparkles },
-      { key: "extension", icon: LuGrid2X2Plus },
+      // { key: "extension", icon: LuGrid2X2Plus },
       { key: "help", icon: LuCircleHelp },
       { key: "about", icon: LuInfo },
     ],
