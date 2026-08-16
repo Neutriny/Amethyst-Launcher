@@ -1037,7 +1037,7 @@
       "help": "幫助"
     },
     "bottomAlert": "如需尋求他人幫助，請匯出併發送崩潰報告，而非這個視窗的截圖",
-    "helpUrl": "https://tannenwaddy.github.io/ArcMCL-docs/docs/user-group.html",
+    "helpUrl": "https://tannenwaddy.github.io/AMLL-docs/docs/user-group.html",
     "crashDetails": {
       "title": "崩潰資訊",
       "OPENJ9": "目前實例無法在 OpenJ9 JVM 上執行，請使用 HotSpot JVM。",
@@ -1286,7 +1286,7 @@
       },
       "deleteDialog": {
         "title": "刪除遊戲目錄",
-        "content": "確定要刪除遊戲目錄 {{dirName}} 嗎？（ArcMC 將不會掃描此目錄，但不會刪除硬碟上的檔案）"
+        "content": "確定要刪除遊戲目錄 {{dirName}} 嗎？（AML 將不會掃描此目錄，但不會刪除硬碟上的檔案）"
       },
       "directoryNotExist": "該目錄不存在，請刪除並重新新增"
     },
@@ -1448,12 +1448,12 @@
       "settings": {
         "LauncherDocs": {
           "title": "Amethyst Launcher 文件",
-          "url": "https://tannenwaddy.github.io/ArcMCL-docs/docs"
+          "url": "https://tannenwaddy.github.io/AMLL-docs/docs"
         },
         "UserGroup": {
           "title": "使用者社群",
           "description": "歡迎加入 QQ 群或 GitHub Discussions，回報問題、請求功能或取得協助",
-          "url": "https://tannenwaddy.github.io/ArcMCL-docs/docs/user-group"
+          "url": "https://tannenwaddy.github.io/AMLL-docs/docs/user-group"
         }
       }
     }
@@ -1691,7 +1691,7 @@
         "docs": {
           "title": "使用指南",
           "description": "了解如何將啟動器連線到外部 Agent 應用（例如 Claude、Cherry Studio 等）。",
-          "url": "https://tannenwaddy.github.io/ArcMCL-docs/docs/intelligence/launcher-mcp"
+          "url": "https://tannenwaddy.github.io/AMLL-docs/docs/intelligence/launcher-mcp"
         },
         "port": {
           "title": "連接埠",
@@ -1749,7 +1749,7 @@
     },
     "confirmDelete": {
       "title": "移除 Java",
-      "description": "確認要移除此版本 Java 嗎？（ArcMC 將無法使用此 Java 啟動遊戲，但不會刪除硬碟上的檔案）"
+      "description": "確認要移除此版本 Java 嗎？（AML 將無法使用此 Java 啟動遊戲，但不會刪除硬碟上的檔案）"
     }
   },
   "LanguageMenu": {

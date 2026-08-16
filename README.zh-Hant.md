@@ -47,7 +47,7 @@ Amethyst Launcher 是基於上海交通大學 Minecraft 社（SJMC）開發的 [
 首先複製本專案並安裝前端依賴：
 
 ```bash
-git clone https://github.com/TannenWaddy/Amethyst-Launcher.git
+git clone https://github.com/TannenWaddy/Amethyst-Launcher.git AML
 cd AML
 pnpm install
 ```

@@ -1,10 +1,10 @@
 [package]
 name = "aml"
 version.workspace = true
-description = "ArcMC Launcher - A Minecraft launcher"
-authors = ["ArcMC Team"]
+description = "Amethyst Launcher - A Minecraft launcher"
+authors = ["Amethyst Launcher Team"]
 license = "GNU General Public License v3.0 (with additional terms)"
-repository = "https://github.com/TannenWaddy/ArcMC-Launcher"
+repository = "https://github.com/TannenWaddy/Amethyst-Launcher"
 edition.workspace = true
 rust-version.workspace = true
 
