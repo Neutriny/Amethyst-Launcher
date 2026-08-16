@@ -93,13 +93,27 @@ const tagLists: Record<string, any> = {
   datapack: datapackTagList,
 };
 
-const downloadSourceLists: Record<string, OtherResourceSource[]> = {
-  mod: [OtherResourceSource.CurseForge, OtherResourceSource.Modrinth],
-  world: [OtherResourceSource.CurseForge],
-  resourcepack: [OtherResourceSource.CurseForge, OtherResourceSource.Modrinth],
-  shader: [OtherResourceSource.CurseForge, OtherResourceSource.Modrinth],
-  modpack: [OtherResourceSource.CurseForge, OtherResourceSource.Modrinth],
-  datapack: [OtherResourceSource.CurseForge, OtherResourceSource.Modrinth],
+const getDownloadSourceLists = (
+  preferredPlatform: string
+): Record<string, OtherResourceSource[]> => {
+  const cfFirst = [
+    OtherResourceSource.CurseForge,
+    OtherResourceSource.Modrinth,
+  ];
+  const mrFirst = [
+    OtherResourceSource.Modrinth,
+    OtherResourceSource.CurseForge,
+  ];
+  const order = preferredPlatform === "modrinth" ? mrFirst : cfFirst;
+
+  return {
+    mod: order,
+    world: [OtherResourceSource.CurseForge],
+    resourcepack: order,
+    shader: order,
+    modpack: order,
+    datapack: order,
+  };
 };
 
 const ResourceDownloaderMenu: React.FC<ResourceDownloaderMenuProps> = ({
@@ -295,13 +309,19 @@ const ResourceDownloaderList: React.FC<ResourceDownloaderListProps> = ({
 const ResourceDownloader: React.FC<ResourceDownloaderProps> = ({
   resourceType,
   initialSearchQuery = "",
-  initialDownloadSource = OtherResourceSource.CurseForge,
+  initialDownloadSource,
   curInstance,
   displayInModal = true,
 }) => {
   const { t } = useTranslation();
   const { config } = useLauncherConfig();
   const primaryColor = config.appearance.theme.primaryColor;
+  const preferredPlatform = config.download.source.preferredPlatform;
+  const downloadSourceLists = getDownloadSourceLists(preferredPlatform);
+  const defaultSource =
+    preferredPlatform === "modrinth"
+      ? OtherResourceSource.Modrinth
+      : OtherResourceSource.CurseForge;
   const toast = useToast();
   const { getGameVersionList } = useGlobalData();
 
@@ -317,12 +337,12 @@ const ResourceDownloader: React.FC<ResourceDownloaderProps> = ({
   const [gameVersion, setGameVersion] = useState<string>("");
   const [selectedTag, setSelectedTag] = useState<string>("All");
   const [sortBy, setSortBy] = useState<string>(
-    initialDownloadSource === OtherResourceSource.CurseForge
+    (initialDownloadSource || defaultSource) === OtherResourceSource.CurseForge
       ? "Popularity"
       : "relevance"
   );
   const [downloadSource, setDownloadSource] = useState<OtherResourceSource>(
-    initialDownloadSource
+    initialDownloadSource || defaultSource
   );
 
   const searchQueryRef = useRef(searchQuery);
@@ -481,10 +501,10 @@ const ResourceDownloader: React.FC<ResourceDownloaderProps> = ({
       resourceType &&
       !(downloadSourceLists[resourceType] || []).includes(downloadSource)
     ) {
-      onDownloadSourceChange(OtherResourceSource.CurseForge);
+      onDownloadSourceChange(defaultSource);
     }
     setSelectedTag("All");
-  }, [resourceType, downloadSource]);
+  }, [resourceType, downloadSource, downloadSourceLists, defaultSource]);
 
   const renderTagMenuOptions = () => {
     if (typeof tagList === "object" && tagList !== null) {
@@ -579,7 +599,7 @@ const ResourceDownloader: React.FC<ResourceDownloaderProps> = ({
           displayText={downloadSource}
           onChange={onDownloadSourceChange}
           value={downloadSource}
-          defaultValue={OtherResourceSource.CurseForge}
+          defaultValue={defaultSource}
           options={downloadSourceLists[resourceType].map((item, index) => (
             <MenuItemOption key={index} value={item} fontSize="xs">
               {item}
