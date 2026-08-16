@@ -5,10 +5,6 @@
       "nsis": {
         "installerIcon": "assets/icons/icon.ico",
         "languages": [
-          "English",
-          "Spanish",
-          "French",
-          "Japanese",
           "SimpChinese",
           "TradChinese"
         ],
