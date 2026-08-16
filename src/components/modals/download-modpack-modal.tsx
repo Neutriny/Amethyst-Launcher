@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import ResourceDownloader from "@/components/resource-downloader";
+import { useLauncherConfig } from "@/contexts/config";
 import { OtherResourceSource, OtherResourceType } from "@/enums/resource";
 
 interface DownloadModpackModalProps extends Omit<ModalProps, "children"> {
@@ -21,10 +22,18 @@ interface DownloadModpackModalProps extends Omit<ModalProps, "children"> {
 
 export const DownloadModpackModal: React.FC<DownloadModpackModalProps> = ({
   initialSearchQuery = "",
-  initialDownloadSource = OtherResourceSource.CurseForge,
+  initialDownloadSource,
   ...modalProps
 }) => {
   const { t } = useTranslation();
+  const { config } = useLauncherConfig();
+
+  const preferredPlatform = config.download.source.preferredPlatform;
+  const defaultSource =
+    preferredPlatform === "modrinth"
+      ? OtherResourceSource.Modrinth
+      : OtherResourceSource.CurseForge;
+  const resolvedDownloadSource = initialDownloadSource || defaultSource;
 
   return (
     <Modal
@@ -46,7 +55,7 @@ export const DownloadModpackModal: React.FC<DownloadModpackModalProps> = ({
             <ResourceDownloader
               resourceType={OtherResourceType.ModPack}
               initialSearchQuery={initialSearchQuery}
-              initialDownloadSource={initialDownloadSource}
+              initialDownloadSource={resolvedDownloadSource}
             />
           </ModalBody>
         </Flex>

@@ -39,13 +39,20 @@ interface DownloadResourceModalProps extends Omit<ModalProps, "children"> {
 const DownloadResourceModal: React.FC<DownloadResourceModalProps> = ({
   initialResourceType = OtherResourceType.Mod,
   initialSearchQuery = "",
-  initialDownloadSource = OtherResourceSource.CurseForge,
+  initialDownloadSource,
   ...modalProps
 }) => {
   const { t } = useTranslation();
-  const { isZh } = useLauncherConfig();
+  const { config, isZh } = useLauncherConfig();
   const router = useRouter();
   const { getInstanceList } = useGlobalData();
+
+  const preferredPlatform = config.download.source.preferredPlatform;
+  const defaultSource =
+    preferredPlatform === "modrinth"
+      ? OtherResourceSource.Modrinth
+      : OtherResourceSource.CurseForge;
+  const resolvedDownloadSource = initialDownloadSource || defaultSource;
 
   const [selectedResourceType, setSelectedResourceType] =
     useState<OtherResourceType>(initialResourceType);
@@ -125,7 +132,7 @@ const DownloadResourceModal: React.FC<DownloadResourceModalProps> = ({
               // key={selectedResourceType}
               resourceType={selectedResourceType}
               initialSearchQuery={initialSearchQuery}
-              initialDownloadSource={initialDownloadSource}
+              initialDownloadSource={resolvedDownloadSource}
               curInstance={curInstance}
             />
           </ModalBody>
