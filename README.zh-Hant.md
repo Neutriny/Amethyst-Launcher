@@ -1,4 +1,4 @@
-# ArcMC Launcher
+# Amethyst Launcher
 
 **基於 [SJMCL](https://github.com/UNIkeEN/SJMCL) 啟動器原始碼修改的 Minecraft 啟動器**
 
@@ -8,7 +8,7 @@
 
 ## 關於本專案
 
-ArcMC Launcher 是基於上海交通大學 Minecraft 社（SJMC）開發的 [SJMCL 啟動器](https://github.com/UNIkeEN/SJMCL) 原始碼進行修改的分支版本。本專案遵循 GPLv3 協議，保留了原專案的核心功能，並進行了以下調整：
+Amethyst Launcher 是基於上海交通大學 Minecraft 社（SJMC）開發的 [SJMCL 啟動器](https://github.com/UNIkeEN/SJMCL) 原始碼進行修改的分支版本。本專案遵循 GPLv3 協議，保留了原專案的核心功能，並進行了以下調整：
 
 - 移除了帳戶頁預設存在的 SJMC 使用者中心登入元件
 - 移除了發現頁的社群新聞功能
@@ -48,7 +48,7 @@ ArcMC Launcher 是基於上海交通大學 Minecraft 社（SJMC）開發的 [SJM
 
 ```bash
 git clone https://github.com/TannenWaddy/ArcMC-Launcher.git
-cd ArcMC
+cd ArcMCL
 pnpm install
 ```
 
@@ -60,7 +60,7 @@ pnpm tauri dev
 
 ## 版權聲明
 
-版權所有 © 2024-2026 SJMCL 團隊 | ArcMC 修改版本 © 2025-2026 TannenWaddy
+版權所有 © 2024-2026 SJMCL 團隊 | Amethyst 修改版本 © 2025-2026 TannenWaddy
 
 > 本軟體並非官方 Minecraft 服務。未獲得 Mojang 或 Microsoft 批准或關聯許可。
 

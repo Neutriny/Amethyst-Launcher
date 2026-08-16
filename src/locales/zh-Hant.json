@@ -62,7 +62,7 @@
       "settings": {
         "copyright": {
           "title": "版權",
-          "description": "版權所有 © 2024-2026 SJMCL 團隊 | ArcMC 修改版本 © 2025-2026 TannenWaddy"
+          "description": "版權所有 © 2024-2026 SJMCL 團隊 | Amethyst 修改版本 © 2025-2026 TannenWaddy"
         },
         "userAgreement": {
           "title": "使用者協議",
@@ -176,7 +176,7 @@
         "title": "高階選項",
         "uuid": {
           "label": "UUID",
-          "placeholder": "（由 ArcMC 自動生成）",
+          "placeholder": "（由 Amethyst 自動生成）",
           "errorMessage": "UUID 格式不正確"
         }
       }
@@ -205,7 +205,7 @@
       "description": {
         "start": {
           "3rdparty": "此認證源支援 Yggdrasil Connect 規範提案",
-          "microsoft": "ArcMC 支援微軟 OAuth 2.0 裝置許可權授予流"
+          "microsoft": "Amethyst 支援微軟 OAuth 2.0 裝置許可權授予流"
         },
         "next": "請點選繼續登入按鈕跳轉登入頁面，輸入以上程式碼（已自動複製）"
       },
@@ -529,7 +529,7 @@
       "type": "類型"
     },
     "warning": {
-      "mojang": "由 Mojang 分發的 Java 執行時將由 ArcMC 安裝到特定目錄",
+      "mojang": "由 Mojang 分發的 Java 執行時將由 Amethyst 安裝到特定目錄",
       "oracle": "從 Oracle 源下載可能需要登入"
     }
   },
@@ -845,10 +845,10 @@
     "title": "{{name}} 設定"
   },
   "ExtensionSettingsPage": {
-    "alert": "ArcMC 無法控制第三方擴充套件的行為，包括它們如何處理你的個人資料。請僅安裝並啟用來自可信來源的擴充套件。",
+    "alert": "Amethyst 無法控制第三方擴充套件的行為，包括它們如何處理你的個人資料。請僅安裝並啟用來自可信來源的擴充套件。",
     "fileDnD": {
-      "title": "安裝 ArcMC 擴充套件",
-      "desc": "將擴充套件檔案 {{fileName}} 安裝到 ArcMC"
+      "title": "安裝 Amethyst 擴充套件",
+      "desc": "將擴充套件檔案 {{fileName}} 安裝到 Amethyst"
     },
     "installed": "已安裝擴充套件",
     "menu": {
@@ -864,7 +864,7 @@
         "awesomeExtensions": {
           "title": "探索社群擴充套件",
           "description": "前往 GitHub 瀏覽社群開發的擴充套件列表",
-          "url": "https://github.com/SJMC-Dev/awesome-ArcMC-extensions"
+          "url": "https://github.com/SJMC-Dev/awesome-Amethyst-extensions"
         }
       }
     }
@@ -1111,7 +1111,10 @@
     "placeholder": "輸入關鍵字篩選",
     "revealRawLog": "顯示原始日誌檔案",
     "clearLogs": "清除所有日誌",
-    "scrollToBottom": "滾動到底部"
+    "scrollToBottom": "滾動到底部",
+    "aiAnalysis": "AI 分析日誌",
+    "aiAnalysisTitle": "AI 日誌分析",
+    "aiAnalyzing": "正在分析日誌..."
   },
   "GameVersionSelector": {
     "old_beta": "遠古版",
@@ -1276,7 +1279,7 @@
         "directories": {
           "special": {
             "CURRENT_DIR": "目前目錄",
-            "APP_DATA_SUBDIR": "ArcMC 資料目錄",
+            "APP_DATA_SUBDIR": "Amethyst 資料目錄",
             "OFFICIAL_DIR": "官方啟動器目錄"
           }
         }
@@ -1444,7 +1447,7 @@
     "top": {
       "settings": {
         "LauncherDocs": {
-          "title": "ArcMC Launcher 文件",
+          "title": "Amethyst Launcher 文件",
           "url": "https://tannenwaddy.github.io/ArcMCL-docs/docs"
         },
         "UserGroup": {
@@ -1675,7 +1678,7 @@
     }
   },
   "IntelligenceSettingsPage": {
-    "title": "ArcMC 智慧",
+    "title": "Amethyst 智慧",
     "description": "將 AI 模型整合到你的啟動器與 Minecraft 遊玩體驗中。",
     "mcpServer": {
       "title": "MCP 服務",
@@ -1763,7 +1766,7 @@
   "LastExitedAbnormallyDialog": {
     "dialog": {
       "title": "上次執行異常退出",
-      "content": "ArcMC 上次執行時異常退出。您可以將日誌發送到<community>使用者社群</community>，或在 <github>GitHub</github> 發起 Issue 以尋求協助",
+      "content": "Amethyst 上次執行時異常退出。您可以將日誌發送到<community>使用者社群</community>，或在 <github>GitHub</github> 發起 Issue 以尋求協助",
       "viewLog": "檢視日誌"
     }
   },
@@ -1810,7 +1813,7 @@
   "MainLayout": {
     "fileDnD": {
       "title": "匯入模組包",
-      "desc": "將模組包檔案 {{fileName}} 匯入到 ArcMC"
+      "desc": "將模組包檔案 {{fileName}} 匯入到 Amethyst"
     }
   },
   "ManageSkinModal": {
@@ -2265,8 +2268,8 @@
   },
   "RestartForUpdateConfirmDialog": {
     "title": "啟動器更新",
-    "body": "新版本已完成下載，重新開啟 ArcMC 以完成更新",
-    "bodyWinInstaller": "新版本已完成下載，點選安裝將關閉 ArcMC 並執行安裝程式",
+    "body": "新版本已完成下載，重新開啟 Amethyst 以完成更新",
+    "bodyWinInstaller": "新版本已完成下載，點選安裝將關閉 Amethyst 並執行安裝程式",
     "button": {
       "restart": "重新啟動",
       "install": "安裝",
@@ -3184,7 +3187,7 @@
     "header": {
       "title": "在 GitHub 為我們點亮星標"
     },
-    "body": "如果您喜愛 ArcMC，並希望支援我們，可以在 GitHub 為我們點一顆星嗎？這個小小的動作對我們來說意義重大，能激勵我們為您持續提供特性體驗。",
+    "body": "如果您喜愛 Amethyst，並希望支援我們，可以在 GitHub 為我們點一顆星嗎？這個小小的動作對我們來說意義重大，能激勵我們為您持續提供特性體驗。",
     "button": {
       "later": "稍後",
       "starUs": "點亮星標"
@@ -3218,7 +3221,7 @@
   "UnavailableExePathAlertDialog": {
     "dialog": {
       "title": "無效的執行路徑",
-      "content": "您正在暫存或非法目錄下執行 ArcMC，您的設定和遊戲資料可能遺失。請將 ArcMC 移動到其他位置後再次執行。",
+      "content": "您正在暫存或非法目錄下執行 Amethyst，您的設定和遊戲資料可能遺失。請將 Amethyst 移動到其他位置後再次執行。",
       "btnContinue": "仍要執行"
     }
   },
@@ -3261,11 +3264,11 @@
       "title": "歡迎！"
     },
     "body": {
-      "text": "歡迎使用 ArcMC！在開始使用之前，請務必閱讀並同意我們的<terms>使用者協議</terms>。"
+      "text": "歡迎使用 Amethyst！在開始使用之前，請務必閱讀並同意我們的<terms>使用者協議</terms>。"
     },
     "warning": {
-      "unstableVersion": "您正在使用{{versionLabel}}的 ArcMC，部分功能可能不穩定或未開發完成，歡迎報告使用問題與功能建議。",
-      "winArm64Notice": "ArcMC 現已支援 Windows on Arm 平臺。<br/>如您正在使用 <b>高通</b> 平臺，您可能需要安裝 <glpack>OpenGL 相容包</glpack> 後才能進行遊戲。"
+      "unstableVersion": "您正在使用{{versionLabel}}的 Amethyst，部分功能可能不穩定或未開發完成，歡迎報告使用問題與功能建議。",
+      "winArm64Notice": "Amethyst 現已支援 Windows on Arm 平臺。<br/>如您正在使用 <b>高通</b> 平臺，您可能需要安裝 <glpack>OpenGL 相容包</glpack> 後才能進行遊戲。"
     },
     "button": {
       "agree": "同意並繼續"

@@ -22,7 +22,7 @@ const MCP_SERVER_HOST: &str = "127.0.0.1";
 const MCP_SERVER_PATH: &str = "/mcp";
 const RUN_ARCMC_DEEPLINK: &str = "arcmc://run-silently";
 const ENABLE_MCP_HINT: &str =
-  "Please enable Launcher MCP Server in ArcMC - Intelligence to use the CLI.\nIf your MCP server uses a port other than the default 18970, run the CLI with `-p <port>`.";
+  "Please enable Launcher MCP Server in Amethyst - Intelligence to use the CLI.\nIf your MCP server uses a port other than the default 18970, run the CLI with `-p <port>`.";
 
 #[derive(Clone)]
 struct CliOptions {
@@ -201,7 +201,7 @@ async fn try_connect(port: u16) -> Result<LauncherClient, String> {
     let actual_name = server_info.server_info.name.clone();
     let _ = client.cancel().await;
     return Err(format!(
-      "endpoint {endpoint} is not the ArcMC MCP server (got `{actual_name}`)"
+      "endpoint {endpoint} is not the Amethyst MCP server (got `{actual_name}`)"
     ));
   }
 
@@ -209,7 +209,7 @@ async fn try_connect(port: u16) -> Result<LauncherClient, String> {
 }
 
 fn print_help(tools: Option<&[Tool]>, hint: Option<&str>) {
-  println!("ArcMC CLI {}", env!("CARGO_PKG_VERSION"));
+  println!("Amethyst CLI {}", env!("CARGO_PKG_VERSION"));
   println!();
   println!("Usage:");
   println!("  arcmc-cli -h | --help");

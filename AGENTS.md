@@ -1,4 +1,4 @@
-# ArcMC Launcher 项目开发指南
+# Amethyst Launcher 项目开发指南
 
 > 本文件为 AI 编程助手提供项目上下文和开发规范。
 
@@ -13,7 +13,7 @@
 > 以下为精简后的核心结构示意，仅列出高频开发目录与关键入口，不展开所有文件。
 
 ```text
-ArcMC/
+ArcMCL/
 ├── src/                      # 前端源码（React）
 │   ├── pages/                # 前端页面路由（Next JS Page Router）
 │   │   ├── ...               

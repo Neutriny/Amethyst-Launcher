@@ -9,6 +9,12 @@ export interface TestConnectionResponse {
   message: string;
 }
 
+export interface AnalyzeLogResponse {
+  success: boolean;
+  analysis: string;
+  error?: string;
+}
+
 /**
  * Service class for intelligence features.
  */
@@ -22,5 +28,17 @@ export class IntelligenceService {
     InvokeResponse<TestConnectionResponse>
   > {
     return await invoke("test_llm_connection");
+  }
+
+  /**
+   * ANALYZE game log using configured LLM.
+   * @param {string} logContent - The game log content to analyze.
+   * @returns {Promise<InvokeResponse<AnalyzeLogResponse>>} The analysis result.
+   */
+  @responseHandler("intelligence")
+  static async analyzeGameLog(
+    logContent: string
+  ): Promise<InvokeResponse<AnalyzeLogResponse>> {
+    return await invoke("analyze_game_log", { logContent });
   }
 }

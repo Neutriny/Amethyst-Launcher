@@ -13,7 +13,7 @@
 
 1. **不要**通过 GitHub Issue 报告安全漏洞
 2. 发送邮件至 [your-email@example.com]
-   - 邮件主题请以 `[ArcMC Security]` 开头
+   - 邮件主题请以 `[Amethyst Security]` 开头
    - 尽可能提供漏洞的详细信息
 
 ## 响应时间

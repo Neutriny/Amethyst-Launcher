@@ -1,6 +1,6 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "ArcMC",
+  "productName": "Amethyst",
   "version": "1.2.0",
   "identifier": "com.arcmc.launcher",
   "build": {
@@ -31,7 +31,7 @@
       "app"
     ],
     "category": "Game",
-    "copyright": "Copyright © 2024-2026 ArcMC Launcher",
+    "copyright": "Copyright © 2024-2026 Amethyst Launcher",
     "icon": [
       "assets/icons/32x32.png",
       "assets/icons/64x64.png",

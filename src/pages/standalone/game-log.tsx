@@ -2,19 +2,36 @@ import {
   Box,
   Button,
   Text as ChakraText,
+  Divider,
   Flex,
+  HStack,
   IconButton,
   Input,
   Spacer,
+  Spinner,
   Tooltip,
+  VStack,
   useColorModeValue,
 } from "@chakra-ui/react";
 import { appLogDir, join } from "@tauri-apps/api/path";
 import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { revealItemInDir } from "@tauri-apps/plugin-opener";
-import { MouseEvent, useEffect, useMemo, useRef, useState } from "react";
+import {
+  MouseEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
-import { LuChevronsDown, LuFileInput, LuTrash } from "react-icons/lu";
+import {
+  LuChevronsDown,
+  LuFileInput,
+  LuSparkles,
+  LuTrash,
+} from "react-icons/lu";
+import Markdown from "react-markdown";
 import {
   AutoSizer,
   CellMeasurer,
@@ -25,6 +42,7 @@ import {
 import "react-virtualized/styles.css";
 import Empty from "@/components/common/empty";
 import { useLauncherConfig } from "@/contexts/config";
+import { IntelligenceService } from "@/services/intelligence";
 import { LaunchService } from "@/services/launch";
 import styles from "@/styles/game-log.module.css";
 import { clamp } from "@/utils/math";
@@ -53,6 +71,12 @@ const GameLogPage: React.FC = () => {
     DEBUG: true,
   });
   const [isScrolledToBottom, setIsScrolledToBottom] = useState(true);
+
+  // AI Analysis states
+  const [showAnalysis, setShowAnalysis] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState<string>("");
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisError, setAnalysisError] = useState<string | null>(null);
 
   const launchingIdRef = useRef<number | null>(null);
   const listRef = useRef<List>(null);
@@ -295,6 +319,32 @@ const GameLogPage: React.FC = () => {
 
   // --------------------------------------------------
 
+  const handleAnalyzeLog = useCallback(async () => {
+    if (logs.length === 0) return;
+
+    setIsAnalyzing(true);
+    setAnalysisError(null);
+    setAnalysisResult("");
+    setShowAnalysis(true);
+
+    try {
+      const logContent = logs.join("\n");
+      const response = await IntelligenceService.analyzeGameLog(logContent);
+
+      if (response.status === "success" && response.data?.success) {
+        setAnalysisResult(response.data.analysis);
+      } else {
+        setAnalysisError(
+          response.data?.error || response.message || "Analysis failed"
+        );
+      }
+    } catch (error) {
+      setAnalysisError(String(error));
+    } finally {
+      setIsAnalyzing(false);
+    }
+  }, [logs]);
+
   const clearLogs = () => setLogs([]);
 
   const revealRawLogFile = async () => {
@@ -408,52 +458,109 @@ const GameLogPage: React.FC = () => {
             onClick={clearLogs}
           />
         </Tooltip>
+        <Tooltip label={t("GameLogPage.aiAnalysis")} placement="bottom">
+          <IconButton
+            icon={<LuSparkles />}
+            aria-label={t("GameLogPage.aiAnalysis")}
+            variant="ghost"
+            size="sm"
+            colorScheme="purple"
+            onClick={handleAnalyzeLog}
+            isDisabled={logs.length === 0}
+          />
+        </Tooltip>
       </Flex>
 
-      <Box flex="1" borderWidth="1px" borderRadius="md" position="relative">
-        {filteredLogs.length === 0 ? (
-          <Empty withIcon={false} />
-        ) : (
-          <AutoSizer>
-            {({ width, height }) => (
-              <List
-                ref={listRef}
-                width={width}
-                height={height}
-                rowCount={filteredLogs.length}
-                deferredMeasurementCache={cacheRef.current}
-                rowHeight={cacheRef.current.rowHeight}
-                rowRenderer={rowRenderer}
-                onScroll={({ clientHeight, scrollHeight, scrollTop }) => {
-                  const atBottom = scrollHeight - scrollTop - clientHeight < 2;
-                  setIsScrolledToBottom(atBottom);
-                  userScrolledRef.current = !atBottom;
-                }}
-              />
-            )}
-          </AutoSizer>
-        )}
+      <HStack flex="1" spacing={0} align="stretch">
+        <Box
+          flex={1}
+          borderWidth="1px"
+          borderRadius="md"
+          position="relative"
+          overflow="hidden"
+        >
+          {filteredLogs.length === 0 ? (
+            <Empty withIcon={false} />
+          ) : (
+            <AutoSizer>
+              {({ width, height }) => (
+                <List
+                  ref={listRef}
+                  width={width}
+                  height={height}
+                  rowCount={filteredLogs.length}
+                  deferredMeasurementCache={cacheRef.current}
+                  rowHeight={cacheRef.current.rowHeight}
+                  rowRenderer={rowRenderer}
+                  onScroll={({ clientHeight, scrollHeight, scrollTop }) => {
+                    const atBottom =
+                      scrollHeight - scrollTop - clientHeight < 2;
+                    setIsScrolledToBottom(atBottom);
+                    userScrolledRef.current = !atBottom;
+                  }}
+                />
+              )}
+            </AutoSizer>
+          )}
 
-        {!isScrolledToBottom && (
-          <Button
-            position="absolute"
-            bottom={7}
-            right={7}
-            size="sm"
-            variant="subtle"
-            boxShadow="md"
-            leftIcon={<LuChevronsDown />}
-            onClick={() => {
-              if (userScrolledRef.current) {
-                userScrolledRef.current = false;
-              }
-              listRef.current?.scrollToRow(filteredLogs.length - 1);
-            }}
-          >
-            {t("GameLogPage.scrollToBottom")}
-          </Button>
+          {!isScrolledToBottom && (
+            <Button
+              position="absolute"
+              bottom={7}
+              right={7}
+              size="sm"
+              variant="subtle"
+              boxShadow="md"
+              leftIcon={<LuChevronsDown />}
+              onClick={() => {
+                if (userScrolledRef.current) {
+                  userScrolledRef.current = false;
+                }
+                listRef.current?.scrollToRow(filteredLogs.length - 1);
+              }}
+            >
+              {t("GameLogPage.scrollToBottom")}
+            </Button>
+          )}
+        </Box>
+
+        {showAnalysis && (
+          <>
+            <Divider orientation="vertical" mx={2} />
+            <Box
+              flex={1}
+              borderWidth="1px"
+              borderRadius="md"
+              borderColor="purple.200"
+              overflow="auto"
+              p={4}
+            >
+              <HStack mb={3}>
+                <LuSparkles color="purple" />
+                <ChakraText fontWeight="bold" fontSize="sm">
+                  {t("GameLogPage.aiAnalysisTitle")}
+                </ChakraText>
+              </HStack>
+              {isAnalyzing ? (
+                <VStack spacing={4} py={8}>
+                  <Spinner color="purple.500" />
+                  <ChakraText fontSize="sm" color="gray.500">
+                    {t("GameLogPage.aiAnalyzing")}
+                  </ChakraText>
+                </VStack>
+              ) : analysisError ? (
+                <ChakraText color="red.500" fontSize="sm">
+                  {analysisError}
+                </ChakraText>
+              ) : (
+                <Box className="markdown-body" fontSize="sm">
+                  <Markdown>{analysisResult}</Markdown>
+                </Box>
+              )}
+            </Box>
+          </>
         )}
-      </Box>
+      </HStack>
     </Box>
   );
 };

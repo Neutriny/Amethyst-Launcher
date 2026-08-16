@@ -10,4 +10,4 @@
 - 移除 SJMC 用户中心登录组件
 - 移除发现页社区新闻功能
 - 仅保留简体中文和繁体中文
-- 软件更名为 ArcMC Launcher
+- 软件更名为 Amethyst Launcher

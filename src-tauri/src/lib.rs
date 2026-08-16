@@ -198,6 +198,7 @@ pub async fn run() {
         tasks::commands::resume_progressive_task_group,
         tasks::commands::delete_progressive_task_group,
         intelligence::commands::test_llm_connection,
+        intelligence::commands::analyze_game_log,
         utils::commands::retrieve_memory_info,
         utils::commands::retrieve_resolution_upbound,
         utils::commands::retrieve_truetype_font_list,

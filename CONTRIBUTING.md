@@ -8,7 +8,7 @@
 
 ## 报告问题
 
-使用 [GitHub Issues](https://github.com/TannenWaddy/ArcMC/issues) 提交问题。请使用相应的 Issue 模板，并提供以下信息：
+使用 [GitHub Issues](https://github.com/TannenWaddy/Amethyst/issues) 提交问题。请使用相应的 Issue 模板，并提供以下信息：
 
 - 问题的复现步骤
 - 期望的行为
