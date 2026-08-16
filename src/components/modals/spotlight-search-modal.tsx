@@ -196,6 +196,8 @@ const SpotlightSearchModal: React.FC<Omit<ModalProps, "children">> = ({
     (query: string): SearchResult[] => {
       if (!query.trim()) return [];
 
+      const preferredPlatform = config.download.source.preferredPlatform;
+
       // Resource types ordered by popularity for generating search option buttons
       const resourceTypes = [
         OtherResourceType.Mod,
@@ -227,18 +229,21 @@ const SpotlightSearchModal: React.FC<Omit<ModalProps, "children">> = ({
             ),
         });
 
-      const resourceSearchResults: SearchResult[] = [
-        ...resourceTypes.map(
-          createResult("curseforge", OtherResourceSource.CurseForge)
-        ),
-        ...resourceTypes
-          .filter((type) => type !== OtherResourceType.World) // Modrinth doesn't host worlds
-          .map(createResult("modrinth", OtherResourceSource.Modrinth)),
-      ];
+      const curseforgeResults = resourceTypes.map(
+        createResult("curseforge", OtherResourceSource.CurseForge)
+      );
+      const modrinthResults = resourceTypes
+        .filter((type) => type !== OtherResourceType.World) // Modrinth doesn't host worlds
+        .map(createResult("modrinth", OtherResourceSource.Modrinth));
+
+      const resourceSearchResults: SearchResult[] =
+        preferredPlatform === "modrinth"
+          ? [...modrinthResults, ...curseforgeResults]
+          : [...curseforgeResults, ...modrinthResults];
 
       return resourceSearchResults;
     },
-    [openSharedModal, t]
+    [openSharedModal, t, config.download.source.preferredPlatform]
   );
 
   const handleAllSearch = useCallback(

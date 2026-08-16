@@ -559,6 +559,11 @@
           "auto": "自动选择",
           "official": "官方源优先",
           "mirror": "镜像源优先"
+        },
+        "preferredPlatform": {
+          "title": "默认资源平台",
+          "curseforge": "CurseForge",
+          "modrinth": "Modrinth"
         }
       }
     },

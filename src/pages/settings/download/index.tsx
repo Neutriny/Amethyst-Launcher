@@ -67,6 +67,7 @@ const DownloadSettingsPage = () => {
     useState<boolean>(false);
 
   const sourceStrategyTypes = ["auto", "official", "mirror"];
+  const preferredPlatformTypes = ["curseforge", "modrinth"];
 
   const handleSelectDirectory = async () => {
     const selectedDirectory = await open({
@@ -143,6 +144,28 @@ const DownloadSettingsPage = () => {
               }
               placeholder={t(
                 `DownloadSettingPage.source.settings.strategy.${downloadConfigs.source.strategy}`
+              )}
+            />
+          ),
+        },
+        {
+          title: t(
+            "DownloadSettingPage.source.settings.preferredPlatform.title"
+          ),
+          children: (
+            <MenuSelector
+              options={preferredPlatformTypes.map((type) => ({
+                value: type,
+                label: t(
+                  `DownloadSettingPage.source.settings.preferredPlatform.${type}`
+                ),
+              }))}
+              value={downloadConfigs.source.preferredPlatform}
+              onSelect={(value) =>
+                update("download.source.preferredPlatform", value as string)
+              }
+              placeholder={t(
+                `DownloadSettingPage.source.settings.preferredPlatform.${downloadConfigs.source.preferredPlatform}`
               )}
             />
           ),

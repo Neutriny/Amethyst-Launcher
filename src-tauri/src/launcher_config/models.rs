@@ -295,6 +295,8 @@ structstruck::strike! {
       pub source: struct {
         #[default = "auto"]
         pub strategy: String,
+        #[default = "curseforge"]
+        pub preferred_platform: String,
       },
       pub transmission: struct {
         #[default = true]
