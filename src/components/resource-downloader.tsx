@@ -273,12 +273,17 @@ const ResourceDownloaderList: React.FC<ResourceDownloaderListProps> = ({
     fontWeight: 400,
   });
 
+  const items = useMemo(
+    () => list.map(buildOptionItems),
+    [list, showZhTrans, primaryColor]
+  );
+
   return (
     <>
       {list.length > 0 ? (
         <VirtualOptionItemGroup
           h="100%"
-          items={list.map(buildOptionItems)}
+          items={items}
           useInfiniteScroll
           hasMore={hasMore}
           loadMore={loadMore}
@@ -335,6 +340,7 @@ const ResourceDownloader: React.FC<ResourceDownloaderProps> = ({
   const [pageSize, setPageSize] = useState<number>(20);
 
   const [searchQuery, setSearchQuery] = useState<string>(initialSearchQuery);
+  const [localSearchQuery, setLocalSearchQuery] = useState(initialSearchQuery);
   const [gameVersion, setGameVersion] = useState<string>("");
   const [selectedTag, setSelectedTag] = useState<string>("All");
   const [sortBy, setSortBy] = useState<string>(
@@ -348,6 +354,8 @@ const ResourceDownloader: React.FC<ResourceDownloaderProps> = ({
 
   const searchQueryRef = useRef(searchQuery);
   const pageRef = useRef(0);
+  const requestIdRef = useRef(0);
+  const currentRequestIdRef = useRef("");
 
   const tagList = (tagLists[resourceType] || modpackTagList)[downloadSource];
   const sortByList = sortByLists[downloadSource];
@@ -386,6 +394,9 @@ const ResourceDownloader: React.FC<ResourceDownloaderProps> = ({
     ) => {
       if (page === 0) setIsLoadingResourceList(true);
 
+      const requestId = `search-${++requestIdRef.current}`;
+      currentRequestIdRef.current = requestId;
+
       ResourceService.fetchResourceListByName(
         resourceType,
         searchQuery,
@@ -394,7 +405,8 @@ const ResourceDownloader: React.FC<ResourceDownloaderProps> = ({
         sortBy,
         downloadSource,
         page,
-        pageSize
+        pageSize,
+        requestId
       )
         .then((response) => {
           if (response.status === "success") {
@@ -506,6 +518,24 @@ const ResourceDownloader: React.FC<ResourceDownloaderProps> = ({
     }
     setSelectedTag("All");
   }, [resourceType, downloadSource, downloadSourceLists, defaultSource]);
+
+  // Listen for background translation enhancement events
+  useEffect(() => {
+    const unlisten = ResourceService.onSearchResultEnhanced((payload) => {
+      if (payload.requestId !== currentRequestIdRef.current) return;
+
+      setResourceList((prevList) => {
+        const newList = [...prevList];
+        const start = payload.page * pageSize;
+        for (let i = 0; i < payload.list.length && start + i < newList.length; i++) {
+          newList[start + i] = payload.list[i];
+        }
+        return newList;
+      });
+    });
+
+    return unlisten;
+  }, [pageSize]);
 
   const renderTagMenuOptions = () => {
     if (typeof tagList === "object" && tagList !== null) {
@@ -634,19 +664,25 @@ const ResourceDownloader: React.FC<ResourceDownloaderProps> = ({
         <Text whiteSpace="nowrap">{t("ResourceDownloader.label.name")}</Text>
         <Input
           placeholder={t("ResourceDownloader.label.name")}
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          value={localSearchQuery}
+          onChange={(e) => setLocalSearchQuery(e.target.value)}
           focusBorderColor={`${primaryColor}.500`}
           size="xs"
           w={72}
           onKeyDown={(e) => {
-            if (e.key === "Enter") reFetchResourceList();
+            if (e.key === "Enter") {
+              setSearchQuery(localSearchQuery);
+              reFetchResourceList();
+            }
           }}
         />
         <Button
           colorScheme={primaryColor}
           size="xs"
-          onClick={reFetchResourceList}
+          onClick={() => {
+            setSearchQuery(localSearchQuery);
+            reFetchResourceList();
+          }}
           px={5}
         >
           {t("ResourceDownloader.button.search")}

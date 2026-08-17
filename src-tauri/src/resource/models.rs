@@ -116,6 +116,8 @@ pub struct OtherResourceSearchQuery {
   pub sort_by: String,
   pub page: u32,
   pub page_size: u32,
+  #[serde(default)]
+  pub request_id: String,
 }
 
 #[derive(Debug, PartialEq, Eq, Clone, Deserialize, Serialize, Default)]
@@ -205,3 +207,10 @@ pub enum ResourceError {
 }
 
 impl std::error::Error for ResourceError {}
+
+#[derive(Debug, Clone, Serialize)]
+pub struct SearchEnhancedPayload {
+  pub request_id: String,
+  pub page: u32,
+  pub list: Vec<OtherResourceInfo>,
+}

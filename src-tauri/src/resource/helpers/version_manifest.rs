@@ -1,11 +1,29 @@
 use serde::{Deserialize, Serialize};
 use aml_types::error::AMLResult;
 use std::fs;
+use std::sync::Mutex;
+use std::time::Instant;
 use tauri::{AppHandle, Manager};
 use tauri_plugin_http::reqwest;
 
 use crate::resource::helpers::misc::get_download_api;
 use crate::resource::models::{GameClientResourceInfo, ResourceError, ResourceType, SourceType};
+
+pub struct VersionManifestCache {
+  data: Vec<GameClientResourceInfo>,
+  fetched_at: Instant,
+}
+
+const CACHE_TTL_SECS: u64 = 600; // 10 minutes
+
+impl VersionManifestCache {
+  pub fn new() -> Self {
+    Self {
+      data: Vec::new(),
+      fetched_at: Instant::now() - std::time::Duration::from_secs(CACHE_TTL_SECS + 1),
+    }
+  }
+}
 
 #[derive(Serialize, Deserialize, Default)]
 struct VersionManifest {
@@ -34,6 +52,13 @@ pub async fn get_game_version_manifest(
   app: &AppHandle,
   priority_list: &[SourceType],
 ) -> AMLResult<Vec<GameClientResourceInfo>> {
+  // Check in-memory cache first
+  if let Ok(cache) = app.state::<Mutex<VersionManifestCache>>().lock() {
+    if cache.fetched_at.elapsed().as_secs() < CACHE_TTL_SECS && !cache.data.is_empty() {
+      return Ok(cache.data.clone());
+    }
+  }
+
   let client = app.state::<reqwest::Client>();
 
   for source_type in priority_list.iter() {
@@ -49,9 +74,8 @@ pub async fn get_game_version_manifest(
     };
 
     save_version_list_to_cache(app, &manifest.versions);
-    // update list saved in cache dir, may be used in version compare.
 
-    let game_info_list = manifest
+    let game_info_list: Vec<GameClientResourceInfo> = manifest
       .versions
       .into_iter()
       .map(|info| {
@@ -70,7 +94,20 @@ pub async fn get_game_version_manifest(
       })
       .collect();
 
+    // Update in-memory cache
+    if let Ok(mut cache) = app.state::<Mutex<VersionManifestCache>>().lock() {
+      cache.data = game_info_list.clone();
+      cache.fetched_at = Instant::now();
+    }
+
     return Ok(game_info_list);
+  }
+
+  // Fallback: return cached data even if expired, when network fails
+  if let Ok(cache) = app.state::<Mutex<VersionManifestCache>>().lock() {
+    if !cache.data.is_empty() {
+      return Ok(cache.data.clone());
+    }
   }
 
   Err(ResourceError::NetworkError.into())

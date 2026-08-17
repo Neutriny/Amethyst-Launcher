@@ -1,0 +1,55 @@
+name: ❓ 提问 / 使用支持
+about: 对启动器使用方法有疑问，或需要寻求帮助
+title: "[Question] "
+labels: ["question", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        欢迎提问！在提交之前，建议先查阅 [Wiki/文档](docs/) 或搜索现有 Issues。
+        如果是功能请求，请使用「🚀 功能请求」模板；如果是 Bug，请使用「🐛 Bug 报告」模板。
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: 提交前检查
+      options:
+        - label: 我已查阅文档和 Wiki，未找到答案
+          required: true
+        - label: 我已搜索现有 Issues，未找到相同问题
+          required: true
+
+  - type: textarea
+    id: question
+    attributes:
+      label: 你的问题
+      description: 清晰简洁地描述你的疑问
+      placeholder: |
+        例如：如何在启动器中同时为多个实例设置不同的 JVM 内存参数？
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: 上下文信息
+      description: 提供与问题相关的背景信息
+      placeholder: |
+        例如：我有两个实例，一个是轻量生存服（只需 2G 内存），另一个是大型整合包（需要 8G 内存），
+        想知道怎么分别配置。
+
+  - type: textarea
+    id: tried
+    attributes:
+      label: 已尝试的解决方式
+      description: 你已经尝试过哪些方法？结果如何？
+      placeholder: |
+        例如：我在设置里改了全局内存为 8G，但这样轻量实例也会占用很多内存。
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: 环境信息（如与问题相关）
+      value: |
+        - 操作系统：
+        - 启动器版本：

@@ -17,7 +17,7 @@ use crate::instance::models::misc::ModLoaderType;
 use crate::resource::helpers::misc::sort_localized_search_results;
 use crate::resource::helpers::mod_db::{HandledSearchQuery, handle_localized_search_query};
 use crate::resource::helpers::translation::{
-  apply_other_resource_enhancements, apply_other_resource_enhancements_concurrently,
+  apply_local_resource_enhancements_concurrently, apply_other_resource_enhancements,
 };
 use crate::resource::models::{
   OtherResourceApiEndpoint, OtherResourceFileInfo, OtherResourceInfo, OtherResourceRequestType,
@@ -43,6 +43,7 @@ pub async fn fetch_resource_list_by_name_modrinth(
     sort_by,
     page,
     page_size,
+    ..
   } = query;
 
   let handled_search_query = handle_localized_search_query(app, search_query)
@@ -80,7 +81,7 @@ pub async fn fetch_resource_list_by_name_modrinth(
   .await?;
 
   let mut search_result: OtherResourceSearchRes = results.into();
-  apply_other_resource_enhancements_concurrently(app, &mut search_result.list).await;
+  apply_local_resource_enhancements_concurrently(app, &mut search_result.list);
 
   if handled_search_query.is_chinese && is_default_sort {
     sort_localized_search_results(&mut search_result.list, search_query);

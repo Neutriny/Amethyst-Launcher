@@ -1,0 +1,89 @@
+name: 🐛 Bug 报告
+about: 报告启动器运行中的异常行为或错误
+title: "[Bug] "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢提交 Bug 报告！请尽量填写以下信息，帮助我们快速定位和修复问题。
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: 提交前检查
+      options:
+        - label: 我已搜索现有 Issues，确认该问题未被报告过
+          required: true
+        - label: 我正在使用最新版本的启动器
+          required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 问题描述
+      description: 清晰简洁地描述 Bug 是什么
+      placeholder: 例如：点击"启动游戏"按钮后没有任何反应
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 复现步骤
+      description: 提供能稳定复现该问题的具体操作步骤
+      placeholder: |
+        1. 打开启动器
+        2. 选择实例 'xxx'
+        3. 点击 '启动游戏'
+        4. 出现问题
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期望行为
+      description: 描述你期望发生的正确行为
+      placeholder: 例如：游戏应该正常启动并弹出窗口
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: 实际行为
+      description: 描述实际发生了什么
+      placeholder: 例如：按钮变为加载状态后没有任何窗口弹出，约5秒后恢复
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: 截图或录屏
+      description: 如有界面异常，请附上截图或录屏链接
+      placeholder: 拖拽图片到此处或粘贴链接
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: 环境信息
+      description: 填写你的运行环境
+      value: |
+        - 操作系统及版本：<!-- 如 Windows 11 23H2 -->
+        - 启动器版本：<!-- 如 v2.1.0 -->
+        - Java 版本：<!-- 如 OpenJDK 21 -->
+        - 游戏版本：<!-- 如 1.20.1 -->
+        - 是否使用第三方 Java：<!-- 是/否 -->
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 日志或错误信息
+      description: |
+        请粘贴相关的日志内容。
+        - 启动器日志：通常在 `%APPDATA%\AmethystLauncher\logs\` 或设置中导出
+        - 游戏崩溃报告：`.minecraft\crash-reports\` 或 `.minecraft\logs\latest.log`
+        - 如有错误弹窗，请复制完整错误信息
+      render: text

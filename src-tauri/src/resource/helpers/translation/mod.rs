@@ -27,6 +27,30 @@ pub use cache::{
   LOCAL_MOD_TRANSLATION_CACHE_EXPIRY_HOURS, LocalModTranslationEntry, LocalModTranslationsCache,
 };
 
+pub fn apply_local_resource_enhancements(app: &AppHandle, resource_info: &mut OtherResourceInfo) {
+  if let Ok(cache) = app.state::<Mutex<ModDataBase>>().lock() {
+    if resource_info._type == "mod" {
+      if let Some(name) = cache.get_translated_name(&resource_info.slug, &resource_info.source) {
+        if contains_chinese(&name) {
+          resource_info.translated_name = Some(name);
+        }
+      }
+    }
+    if let Some(id) = cache.get_mcmod_id(&resource_info.slug, &resource_info.source) {
+      resource_info.mcmod_id = id;
+    }
+  }
+}
+
+pub fn apply_local_resource_enhancements_concurrently(
+  app: &AppHandle,
+  list: &mut [OtherResourceInfo],
+) {
+  for resource_info in list.iter_mut() {
+    apply_local_resource_enhancements(app, resource_info);
+  }
+}
+
 pub async fn add_local_mod_translations(
   app: &AppHandle,
   mod_info: &mut LocalModInfo,
@@ -192,7 +216,7 @@ pub async fn apply_other_resource_enhancements_concurrently(
     .collect();
 }
 
-fn should_translate_resource_description(app: &AppHandle) -> bool {
+pub fn should_translate_resource_description(app: &AppHandle) -> bool {
   app
     .state::<Mutex<LauncherConfig>>()
     .lock()

@@ -87,7 +87,8 @@ export class ResourceService {
     sortBy: string,
     downloadSource: string,
     page: number,
-    pageSize: number
+    pageSize: number,
+    requestId?: string
   ): Promise<InvokeResponse<OtherResourceSearchRes>> {
     return await invoke("fetch_resource_list_by_name", {
       downloadSource,
@@ -99,6 +100,7 @@ export class ResourceService {
         sortBy,
         page,
         pageSize,
+        requestId: requestId || "",
       },
     });
   }
@@ -211,6 +213,35 @@ export class ResourceService {
             callback(event.payload);
           }
         )
+    );
+
+    return () => {
+      unlisten.then((f) => f());
+    };
+  }
+
+  /**
+   * Listen for search result enhancement events (translation backfill).
+   * @param callback - The callback to be invoked with enhanced search results.
+   */
+  static onSearchResultEnhanced(
+    callback: (payload: {
+      requestId: string;
+      page: number;
+      list: OtherResourceInfo[];
+    }) => void
+  ): () => void {
+    if (!isTauri) return () => {};
+
+    const unlisten = import("@tauri-apps/api/webview").then(
+      ({ getCurrentWebview }) =>
+        getCurrentWebview().listen<{
+          requestId: string;
+          page: number;
+          list: OtherResourceInfo[];
+        }>("resource:search-enhanced", (event) => {
+          callback(event.payload);
+        })
     );
 
     return () => {

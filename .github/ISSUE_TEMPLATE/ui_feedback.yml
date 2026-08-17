@@ -1,0 +1,73 @@
+name: 🎨 UI/UX 反馈
+about: 界面显示异常、交互体验问题、可访问性建议
+title: "[UI] "
+labels: ["ui", "ux", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        界面和交互反馈帮助我们持续优化启动器的使用体验。欢迎就视觉设计、交互流程、响应式布局等方面提出意见。
+
+  - type: dropdown
+    id: feedback_type
+    attributes:
+      label: 反馈类型
+      options:
+        - 界面显示异常（Bug）
+        - 交互体验改进建议
+        - 视觉/排版问题
+        - 可访问性（Accessibility）
+        - 暗色/亮色主题问题
+        - 其他
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 问题或建议描述
+      description: 清晰描述你遇到的 UI 问题或改进建议
+      placeholder: |
+        例如：在暗色主题下，"实例设置"页面的某些输入框边框对比度过低，几乎看不清边界。
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 复现步骤（如为 Bug）
+      description: 如果是界面异常，请提供复现步骤
+      placeholder: |
+        1. 打开启动器
+        2. 切换到暗色主题
+        3. 打开任意实例的设置页面
+        4. 观察输入框边框
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: 截图或录屏
+      description: |
+        **强烈建议附上截图。** 如有对比效果更佳（如官方启动器/其他启动器的同类界面）。
+        可拖拽图片到此处直接上传。
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期望效果
+      description: 描述你认为正确的显示或交互方式
+      placeholder: 例如：边框颜色应与暗色主题下的其他输入框保持一致（如 #4A5568）
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: 环境信息
+      value: |
+        - 操作系统：<!-- 如 Windows 11 -->
+        - 启动器版本：<!-- 如 v2.1.0 -->
+        - 屏幕分辨率/缩放比例：<!-- 如 2560×1440 / 150% -->
+        - 主题：<!-- 暗色/亮色/跟随系统 -->
+    validations:
+      required: true

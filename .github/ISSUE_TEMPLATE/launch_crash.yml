@@ -1,0 +1,78 @@
+name: 🎮 启动失败 / 游戏崩溃
+about: 游戏无法启动、启动过程中崩溃或闪退
+title: "[Launch] "
+labels: ["launch", "crash", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        游戏启动失败是最常见的 Issue 类型之一。为了帮助你快速解决问题，请务必提供完整的日志和环境信息。
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: 提交前检查
+      options:
+        - label: 我已尝试单独启动该版本，确认不是 Mod/整合包本身的问题
+          required: false
+        - label: 我已尝试使用官方启动器启动同一版本进行对比
+          required: false
+        - label: 我已确认 Java 版本与该 Minecraft 版本兼容
+          required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 问题描述
+      description: 描述启动失败的现象
+      placeholder: |
+        例如：点击启动后，启动器界面显示"正在启动"，约 10 秒后状态恢复，游戏窗口未弹出。
+    validations:
+      required: true
+
+  - type: textarea
+    id: instance_info
+    attributes:
+      label: 实例信息
+      description: 详细说明你尝试启动的实例配置
+      value: |
+        - 游戏版本：<!-- 如 1.20.1 -->
+        - 加载器及版本：<!-- 如 Fabric 0.15.7 / Forge 47.2.0 / Vanilla -->
+        - 模组数量：<!-- 如 127 个 / 无 -->
+        - 分配的内存：<!-- 如 4096 MB -->
+        - 使用的 Java：<!-- 如 启动器自动选择 / 手动指定 OpenJDK 17 -->
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 启动日志 / 崩溃报告
+      description: |
+        **这是定位启动失败最关键的素材，请务必提供。**
+        - 启动器日志：设置 → 日志 → 导出，或在 `%APPDATA%\AmethystLauncher\logs\` 查找
+        - 游戏崩溃报告：`.minecraft\crash-reports\crash-YYYY-MM-DD_HH.MM.SS-client.txt`
+        - 游戏日志：`.minecraft\logs\latest.log`
+        - 如果游戏窗口一闪而过，请优先找 `latest.log` 和 `debug.log`
+      render: text
+    validations:
+      required: true
+
+  - type: textarea
+    id: jvm_args
+    attributes:
+      label: JVM 参数（如有自定义）
+      description: 如果你在实例设置或全局设置中自定义了 JVM 参数，请贴出
+      render: text
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: 环境信息
+      value: |
+        - 操作系统：<!-- 如 Windows 11 23H2 -->
+        - 启动器版本：<!-- 如 v2.1.0 -->
+        - GPU 型号：<!-- 如 NVIDIA RTX 3060 -->
+        - GPU 驱动版本：<!-- 如有更新过驱动请说明 -->
+    validations:
+      required: true

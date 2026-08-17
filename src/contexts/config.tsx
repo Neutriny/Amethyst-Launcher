@@ -5,6 +5,7 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 import { useToast } from "@/contexts/toast";
@@ -67,7 +68,7 @@ export const LauncherConfigContextProvider: React.FC<{
   }, [setConfig, toast]);
 
   // from frontend to call backend update
-  const handleUpdateLauncherConfig = (path: string, value: any) => {
+  const handleUpdateLauncherConfig = useCallback((path: string, value: any) => {
     // save to the backend
     ConfigService.updateLauncherConfig(path, value).then((response) => {
       // if success, backend will emit signal, the logic below will be executed
@@ -79,7 +80,7 @@ export const LauncherConfigContextProvider: React.FC<{
         });
       }
     });
-  };
+  }, [toast]);
 
   // listen from backend to update frontend's config state
   const handleConfigPartialUpdate = useCallback((payload: any) => {
@@ -179,18 +180,21 @@ export const LauncherConfigContextProvider: React.FC<{
     handleCheckLauncherUpdate();
   }, [handleCheckLauncherUpdate]);
 
+  const contextValue = useMemo(
+    () => ({
+      config,
+      setConfig,
+      update: handleUpdateLauncherConfig,
+      isZh,
+      newerVersion,
+      getJavaInfos,
+      handleCheckLauncherUpdate,
+    }),
+    [config, setConfig, handleUpdateLauncherConfig, isZh, newerVersion, getJavaInfos, handleCheckLauncherUpdate]
+  );
+
   return (
-    <LauncherConfigContext.Provider
-      value={{
-        config,
-        setConfig,
-        update: handleUpdateLauncherConfig,
-        isZh,
-        newerVersion,
-        getJavaInfos,
-        handleCheckLauncherUpdate,
-      }}
-    >
+    <LauncherConfigContext.Provider value={contextValue}>
       <ColorModeScript initialColorMode={userSelectedColorMode} />
       {children}
     </LauncherConfigContext.Provider>

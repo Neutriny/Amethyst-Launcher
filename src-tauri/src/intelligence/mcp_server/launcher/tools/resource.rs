@@ -45,6 +45,7 @@ fn to_search_query(query: McpOtherResourceSearchQuery) -> OtherResourceSearchQue
     sort_by: query.sort_by,
     page: query.page,
     page_size: query.page_size,
+    ..Default::default()
   }
 }
 

@@ -261,6 +261,9 @@ pub async fn run() {
         let launching_queue = Vec::<LaunchingState>::new();
         app.manage(Mutex::new(launching_queue));
 
+        use resource::helpers::version_manifest::VersionManifestCache;
+        app.manage(Mutex::new(VersionManifestCache::new()));
+
         // start local yggdrasil server for offline accounts
         let local_ygg_server = YggdrasilServer::new();
         app.manage(Mutex::new(local_ygg_server.clone()));

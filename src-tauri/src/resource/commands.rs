@@ -1,6 +1,6 @@
 use aml_types::error::AMLResult;
 use std::sync::Mutex;
-use tauri::{AppHandle, Manager, State};
+use tauri::{AppHandle, Emitter, Manager, State};
 use tauri_plugin_http::reqwest;
 
 use crate::instance::helpers::client_json::McClientInfo;
@@ -102,13 +102,37 @@ pub async fn fetch_resource_list_by_name(
   download_source: OtherResourceSource,
   query: OtherResourceSearchQuery,
 ) -> AMLResult<OtherResourceSearchRes> {
-  match download_source {
+  let result = match download_source {
     OtherResourceSource::CurseForge => {
-      Ok(fetch_resource_list_by_name_curseforge(&app, &query).await?)
+      fetch_resource_list_by_name_curseforge(&app, &query).await?
     }
-    OtherResourceSource::Modrinth => Ok(fetch_resource_list_by_name_modrinth(&app, &query).await?),
-    _ => Err(ResourceError::NoDownloadApi.into()),
+    OtherResourceSource::Modrinth => fetch_resource_list_by_name_modrinth(&app, &query).await?,
+    _ => return Err(ResourceError::NoDownloadApi.into()),
+  };
+
+  // Spawn background enhancement for translation (network calls) if requestId provided
+  let request_id = query.request_id.clone();
+  if !request_id.is_empty()
+    && crate::resource::helpers::translation::should_translate_resource_description(&app)
+  {
+    let app_handle = app.clone();
+    let page = query.page;
+    let mut list_for_enhance = result.list.clone();
+
+    tauri::async_runtime::spawn(async move {
+      use crate::resource::helpers::translation::apply_other_resource_enhancements_concurrently;
+      apply_other_resource_enhancements_concurrently(&app_handle, &mut list_for_enhance).await;
+
+      let payload = crate::resource::models::SearchEnhancedPayload {
+        request_id,
+        page,
+        list: list_for_enhance,
+      };
+      let _ = app_handle.emit("resource:search-enhanced", payload);
+    });
   }
+
+  Ok(result)
 }
 
 #[tauri::command]

@@ -1,0 +1,87 @@
+name: 🔑 账户 / 认证问题
+about: 微软账户登录失败、正版验证异常、账户信息错误
+title: "[Auth] "
+labels: ["account", "auth", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        账户认证问题通常涉及微软服务、网络环境或设备变更。请按以下模板提供信息。
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: 提交前检查
+      options:
+        - label: 我已确认 Xbox Live / Microsoft 服务状态正常（可访问 https://status.xbox.com/ 或 https://status.live.com/）
+          required: true
+        - label: 我已尝试重新登录账户
+          required: true
+        - label: 我已确认系统时间和时区设置正确
+          required: true
+
+  - type: dropdown
+    id: account_type
+    attributes:
+      label: 账户类型
+      options:
+        - 微软账户（Microsoft Account）
+        - 外置登录（LittleSkin / Blessing Skin 等）
+        - 离线账户
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 问题描述
+      description: 描述认证失败的具体现象
+      placeholder: |
+        例如：点击"添加微软账户"后，浏览器弹窗授权成功，但回到启动器显示"登录失败：无法获取 Xbox Live 档案"。
+    validations:
+      required: true
+
+  - type: textarea
+    id: error_message
+    attributes:
+      label: 错误信息
+      description: 请复制完整的错误提示或错误代码
+      placeholder: |
+        例如：
+        Error: Failed to obtain XSTS token
+        Status: 401
+        Response: {"Identity":"0","XErr":2148916233,"Message":"..."}
+    validations:
+      required: true
+
+  - type: dropdown
+    id: network
+    attributes:
+      label: 网络环境
+      description: 你当前的网络环境（这往往和认证失败有关）
+      options:
+        - 中国大陆直连
+        - 使用 VPN / 代理
+        - 使用加速器（UU/雷神等）
+        - 校园网 / 企业网络
+        - 海外网络
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: 环境信息
+      value: |
+        - 操作系统：<!-- 如 Windows 11 23H2 -->
+        - 启动器版本：<!-- 如 v2.1.0 -->
+        - 浏览器：<!-- 如 Edge 120 / Chrome 120 -->
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 相关日志
+      description: 如有认证相关日志，请贴出（注意打码或删除敏感 token 信息）
+      render: text
