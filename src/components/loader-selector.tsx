@@ -35,7 +35,6 @@ export const modLoaderTypes: ModLoaderType[] = [
   ModLoaderType.Forge,
   ModLoaderType.Fabric,
   ModLoaderType.NeoForge,
-  ModLoaderType.Quilt,
 ];
 
 export const modLoaderTypesToIcon: Record<string, string> = {
@@ -43,7 +42,6 @@ export const modLoaderTypesToIcon: Record<string, string> = {
   Fabric: "Fabric.png",
   Forge: "Forge.png",
   NeoForge: "NeoForge.png",
-  Quilt: "Quilt.png",
 };
 
 interface LoaderSelectorProps {

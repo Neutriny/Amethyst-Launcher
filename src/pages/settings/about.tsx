@@ -38,6 +38,7 @@ const AboutSettingsPage = () => {
     skinview3d: "https://github.com/bs-community/skinview3d",
     mcim: "https://www.mcimirror.top",
     bmclapi: "https://bmclapidoc.bangbang93.com/",
+    bsmirror: "https://www.bilibili.com/video/BV1TQM26YEg4?vd_source=98afed1786f39a0cd3f65c72616a30ad",
     hmcl: "https://hmcl.huangyuhui.net/",
     littleskin: "https://github.com/LittleSkinChina",
     sinter: "https://www.ui.cn/detail/615564",
@@ -166,22 +167,6 @@ const AboutSettingsPage = () => {
               h={18}
               onClick={() => {
                 openUrl("https://github.com/TannenWaddy/Amethyst-Launcher");
-              }}
-            />
-          ),
-        },
-        {
-          title: t("AboutSettingsPage.about.settings.aboutSJMC.title"),
-          children: (
-            <CommonIconButton
-              label="https://mc.sjtu.cn/welcome/content/3/"
-              icon="external"
-              withTooltip
-              tooltipPlacement="bottom-end"
-              size="xs"
-              h={18}
-              onClick={() => {
-                openUrl("https://mc.sjtu.cn/welcome/content/3/");
               }}
             />
           ),

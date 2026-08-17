@@ -409,20 +409,6 @@ export const ChangeLoaderModal: React.FC<ChangeLoaderModalProps> = ({
               </Checkbox>
             )}
 
-          {mode === "modloader" &&
-            selectedModLoader.loaderType === ModLoaderType.Quilt && (
-              <Checkbox
-                colorScheme={primaryColor}
-                isChecked={selectedModLoader.version !== "" && isInstallQfApi}
-                disabled={!selectedModLoader.version}
-                onChange={(e) => setIsInstallQfApi(e.target.checked)}
-              >
-                <Text fontSize="sm">
-                  {t("ChangeLoaderModal.footer.installQFAPI")}
-                </Text>
-              </Checkbox>
-            )}
-
           <HStack spacing={3} ml="auto">
             <Button variant="ghost" onClick={modalProps.onClose}>
               {t("General.cancel")}

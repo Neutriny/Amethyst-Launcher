@@ -3,6 +3,7 @@ import {
   Button,
   HStack,
   Icon,
+  Input,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
@@ -68,6 +69,7 @@ const DownloadSettingsPage = () => {
 
   const sourceStrategyTypes = ["auto", "official", "mirror"];
   const preferredPlatformTypes = ["curseforge", "modrinth"];
+  const mirrorPresetTypes = ["bmclapi", "bsmirror", "custom"];
 
   const handleSelectDirectory = async () => {
     const selectedDirectory = await open({
@@ -170,6 +172,52 @@ const DownloadSettingsPage = () => {
             />
           ),
         },
+        {
+          title: t("DownloadSettingPage.source.settings.mirrorPreset.title"),
+          description:
+            downloadConfigs.source.mirrorPreset === "custom"
+              ? downloadConfigs.source.customMirrorUrl
+              : undefined,
+          children: (
+            <MenuSelector
+              options={mirrorPresetTypes.map((type) => ({
+                value: type,
+                label: t(
+                  `DownloadSettingPage.source.settings.mirrorPreset.${type}`
+                ),
+              }))}
+              value={downloadConfigs.source.mirrorPreset}
+              onSelect={(value) =>
+                update("download.source.mirrorPreset", value as string)
+              }
+              placeholder={t(
+                `DownloadSettingPage.source.settings.mirrorPreset.${downloadConfigs.source.mirrorPreset}`
+              )}
+            />
+          ),
+        },
+        ...(downloadConfigs.source.mirrorPreset === "custom"
+          ? [
+              {
+                title: t(
+                  "DownloadSettingPage.source.settings.customMirrorUrl.title"
+                ),
+                children: (
+                  <Input
+                    size="xs"
+                    maxW="300px"
+                    placeholder={t(
+                      "DownloadSettingPage.source.settings.customMirrorUrl.placeholder"
+                    )}
+                    value={downloadConfigs.source.customMirrorUrl}
+                    onChange={(e) =>
+                      update("download.source.customMirrorUrl", e.target.value)
+                    }
+                  />
+                ),
+              },
+            ]
+          : []),
       ],
     },
     {

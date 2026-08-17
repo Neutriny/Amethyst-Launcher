@@ -273,6 +273,8 @@ structstruck::strike! {
         pub font_family: String,
         #[default = "%built-in"]
         pub log_font_family: String,
+        #[default = "%built-in"]
+        pub log_font_fallback_family: String,
         #[default = 100]
         pub font_size: usize, // as percent
       },
@@ -297,6 +299,9 @@ structstruck::strike! {
         pub strategy: String,
         #[default = "curseforge"]
         pub preferred_platform: String,
+        #[default = "bmclapi"]
+        pub mirror_preset: String,
+        pub custom_mirror_url: String,
       },
       pub transmission: struct {
         #[default = true]
@@ -315,7 +320,7 @@ structstruck::strike! {
     },
     pub general: struct GeneralConfig {
       pub general: struct {
-        #[default(sys_info::get_mapped_locale())]
+        #[default = "zh-Hans"]
         pub language: String,
       },
       pub functionality: struct {

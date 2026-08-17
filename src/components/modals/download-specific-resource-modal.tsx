@@ -153,7 +153,6 @@ const DownloadSpecificResourceModal: React.FC<
     ModLoaderType.Fabric,
     ModLoaderType.Forge,
     ModLoaderType.NeoForge,
-    ModLoaderType.Quilt,
   ];
 
   const iconBackgroundColor: Record<string, string> = {

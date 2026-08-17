@@ -58,7 +58,14 @@ const AppearanceSettingsPage = () => {
     const handleRetrieveFontList = async () => {
       const res = await UtilsService.retrieveFontList();
       if (res.status === "success") {
-        setFonts(["%built-in", ...res.data]);
+        const isChineseFont = (font: string) => /[\u4e00-\u9fff]/.test(font);
+        const nonChineseFonts = res.data
+          .filter((f) => !isChineseFont(f))
+          .sort((a, b) => a.localeCompare(b));
+        const chineseFonts = res.data
+          .filter((f) => isChineseFont(f))
+          .sort((a, b) => a.localeCompare(b, "zh-Hans"));
+        setFonts(["%built-in", ...nonChineseFonts, ...chineseFonts]);
       }
     };
     handleRetrieveFontList();
@@ -192,16 +199,20 @@ const AppearanceSettingsPage = () => {
 
   const buildFontName = (font: string) => {
     return font === "%built-in"
-      ? t("AppearanceSettingsPage.font.settings.fontFamily.default")
+      ? `${t(
+          "AppearanceSettingsPage.font.settings.fontFamily.default"
+        )}（Sinter）`
       : font;
   };
 
   const FontFamilyMenu = ({
     value,
     onChange,
+    width,
   }: {
     value: string;
     onChange: (v: string) => void;
+    width?: string;
   }) => {
     return (
       <MenuSelector
@@ -221,6 +232,16 @@ const AppearanceSettingsPage = () => {
         placeholder={buildFontName(value)}
         isLazy
         menuListProps={{ maxH: "40vh", overflowY: "auto" }}
+        buttonProps={width ? { width } : undefined}
+      />
+    );
+  };
+
+  const LogFontSettings = () => {
+    return (
+      <FontFamilyMenu
+        value={appearanceConfigs.font.logFontFamily}
+        onChange={(v) => update("appearance.font.logFontFamily", v)}
       />
     );
   };
@@ -489,12 +510,7 @@ const AppearanceSettingsPage = () => {
               [11:45:14] [Render thread/INFO]: Preparing spawn area: 23%
             </Text>
           ),
-          children: (
-            <FontFamilyMenu
-              value={appearanceConfigs.font.logFontFamily}
-              onChange={(v) => update("appearance.font.logFontFamily", v)}
-            />
-          ),
+          children: <LogFontSettings />,
         },
         // font size settings cannot work in Windows now: https://github.com/UNIkeEN/SJMCL/issues/376
         ...(config.basicInfo.osType !== "windows"

@@ -47,7 +47,7 @@ fn build_resource_filename(ver: &str, os: &str, arch: &str, is_portable: bool) -
     "macos" => ".app.tar.gz",
     _ => "",
   };
-  format!("SJMCL_{}_{}_{}{}", ver, os, arch, suffix)
+  format!("AML_{}_{}_{}{}", ver, os, arch, suffix)
 }
 
 // Generate the new filename on the local disk.

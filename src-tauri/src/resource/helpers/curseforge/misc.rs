@@ -15,8 +15,10 @@ use crate::resource::models::{
 
 lazy_static! {
   pub static ref CURSEFORGE_API_KEY: String = {
-    env::var("SJMCL_CURSEFORGE_API_KEY")
-      .unwrap_or_else(|_| env!("SJMCL_CURSEFORGE_API_KEY").to_string())
+    let key = env::var("AML_CURSEFORGE_API_KEY")
+      .unwrap_or_else(|_| env!("AML_CURSEFORGE_API_KEY").to_string());
+    eprintln!("CurseForge API Key loaded: {}...", &key[..key.len().min(20)]);
+    key
   };
 }
 
@@ -42,13 +44,21 @@ where
     OtherResourceRequestType::Post(payload) => client.post(url).json(payload),
   };
 
+  log::info!("CurseForge request URL: {}", url);
+
   let response = request_builder
     .header("x-api-key", CURSEFORGE_API_KEY.as_str())
     .send()
     .await
-    .map_err(|_| ResourceError::NetworkError)?;
+    .map_err(|e| {
+      log::error!("CurseForge request failed: {}", e);
+      ResourceError::NetworkError
+    })?;
+
+  log::info!("CurseForge response status: {}", response.status());
 
   if !response.status().is_success() {
+    log::error!("CurseForge request returned non-success status: {}", response.status());
     return Err(ResourceError::NetworkError.into());
   }
 

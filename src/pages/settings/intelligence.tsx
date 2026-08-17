@@ -67,7 +67,7 @@ const IntelligenceSettingsPage = () => {
           title: t(
             "IntelligenceSettingsPage.logAnalysis.settings.testConnection.error"
           ),
-          description: response.data?.message || response.message,
+          description: response.message,
           status: "error",
         });
       }
@@ -253,7 +253,7 @@ const IntelligenceSettingsPage = () => {
                   <Input
                     size="xs"
                     maxW={200}
-                    placeholder="https://api.openai.com"
+                    placeholder="https://api.openai.com/v1"
                     value={logAnalysisBaseUrl}
                     onChange={(e) => setLogAnalysisBaseUrl(e.target.value)}
                     onBlur={() => {

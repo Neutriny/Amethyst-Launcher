@@ -17,10 +17,7 @@
           "title": "開發者名單"
         },
         "sourceCode": {
-          "title": "在 GitHub 檢視原始碼"
-        },
-        "aboutSJMC": {
-          "title": "關於上海交通大學 Minecraft 社（SJMC）"
+          "title": "在 GitHub 查看源代码"
         }
       }
     },
@@ -30,6 +27,10 @@
         "bmclapi": {
           "title": "BMCLAPI",
           "description": "感謝 @bangbang93 提供的高速下載源"
+        },
+        "bsmirror": {
+          "title": "BSMirror",
+          "description": "感謝 @牢废物- 提供的鏡像下載源"
         },
         "hmcl": {
           "title": "Hello Minecraft! Launcher",
@@ -303,6 +304,10 @@
         "logFontFamily": {
           "title": "日誌字型"
         },
+        "logFontFallbackFamily": {
+          "title": "日誌回退字型",
+          "label": "回退字型"
+        },
         "fontSize": {
           "title": "字型大小",
           "small": "小",
@@ -563,6 +568,16 @@
           "title": "預設資源平台",
           "curseforge": "CurseForge",
           "modrinth": "Modrinth"
+        },
+        "mirrorPreset": {
+          "title": "鏡像源節點",
+          "bmclapi": "BMCLAPI (推薦)",
+          "bsmirror": "BSMirror (HKMC)",
+          "custom": "自訂"
+        },
+        "customMirrorUrl": {
+          "title": "自訂鏡像源地址",
+          "placeholder": "請輸入鏡像源地址，例如: https://example.com/maven/"
         }
       }
     },
@@ -1753,10 +1768,6 @@
   },
   "LanguageMenu": {
     "localeName": {
-      "en": "英語",
-      "es": "西班牙語",
-      "fr": "法語",
-      "ja": "日語",
       "lzh": "",
       "zh-Hans": "",
       "zh-Hant": ""

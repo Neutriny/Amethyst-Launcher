@@ -29,55 +29,90 @@ pub async fn get_quilt_meta_by_game_version(
 ) -> AMLResult<Vec<ModLoaderResourceInfo>> {
   let client = app.state::<reqwest::Client>();
 
-  for source_type in priority_list.iter() {
+  // Quilt meta: always try official source first, then fallback to others
+  let mut sources = vec![SourceType::Official];
+  for source in priority_list {
+    if *source != SourceType::Official {
+      sources.push(*source);
+    }
+  }
+
+  let mut last_error = None;
+
+  for source_type in sources.iter() {
     let url = get_download_api(*source_type, ResourceType::QuiltMeta)?
       .join("v3/versions/loader/")?
       .join(game_version)?;
 
-    match client.get(url).send().await {
+    log::info!("Fetching Quilt meta from: {}", url);
+
+    match client.get(url).header("Accept-Encoding", "identity").send().await {
       Ok(response) => {
-        if response.status().is_success() {
-          // API response may not be in current order, sort by semver here.
-          if let Ok(mut manifest) = response.json::<Vec<QuiltMetaItem>>().await {
-            manifest.sort_by(|a, b| {
-              match (
-                Version::parse(&a.loader.version),
-                Version::parse(&b.loader.version),
-              ) {
-                (Ok(left), Ok(right)) => right.cmp(&left),
-                (Ok(_), Err(_)) => std::cmp::Ordering::Less,
-                (Err(_), Ok(_)) => std::cmp::Ordering::Greater,
-                (Err(_), Err(_)) => b.loader.version.cmp(&a.loader.version),
+        let status = response.status();
+        log::info!("Quilt meta response status: {}", status);
+
+        if status.is_success() {
+          match response.text().await {
+            Ok(text) => {
+              log::debug!("Quilt meta response body (first 1000 chars): {}", &text[..text.len().min(1000)]);
+              match serde_json::from_str::<Vec<QuiltMetaItem>>(&text) {
+                Ok(mut manifest) => {
+                  manifest.sort_by(|a, b| {
+                    match (
+                      Version::parse(&a.loader.version),
+                      Version::parse(&b.loader.version),
+                    ) {
+                      (Ok(left), Ok(right)) => right.cmp(&left),
+                      (Ok(_), Err(_)) => std::cmp::Ordering::Less,
+                      (Err(_), Ok(_)) => std::cmp::Ordering::Greater,
+                      (Err(_), Err(_)) => b.loader.version.cmp(&a.loader.version),
+                    }
+                  });
+                  return Ok(
+                    manifest
+                      .into_iter()
+                      .map(|info| {
+                        let version = info.loader.version;
+                        let stable = !version.contains("beta")
+                          && !version.contains("alpha")
+                          && !version.contains("rc");
+                        ModLoaderResourceInfo {
+                          loader_type: ModLoaderType::Quilt,
+                          version,
+                          description: String::new(),
+                          stable: Some(stable),
+                          branch: None,
+                        }
+                      })
+                      .collect(),
+                  );
+                }
+                Err(e) => {
+                  log::error!("Failed to parse Quilt meta JSON: {}", e);
+                  last_error = Some(ResourceError::ParseError);
+                  continue;
+                }
               }
-            });
-            return Ok(
-              manifest
-                .into_iter()
-                .map(|info| {
-                  let version = info.loader.version;
-                  let stable = !version.contains("beta")
-                    && !version.contains("alpha")
-                    && !version.contains("rc");
-                  ModLoaderResourceInfo {
-                    loader_type: ModLoaderType::Quilt,
-                    version,
-                    description: String::new(),
-                    stable: Some(stable),
-                    branch: None,
-                  }
-                })
-                .collect(),
-            );
-          } else {
-            return Err(ResourceError::ParseError.into());
+            }
+            Err(e) => {
+              log::error!("Failed to read Quilt meta response body: {}", e);
+              last_error = Some(ResourceError::NetworkError);
+              continue;
+            }
           }
         } else {
+          log::warn!("Quilt meta request failed with status: {}", status);
+          last_error = Some(ResourceError::NetworkError);
           continue;
         }
       }
-      Err(_) => continue,
+      Err(e) => {
+        log::error!("Failed to fetch Quilt meta: {}", e);
+        last_error = Some(ResourceError::NetworkError);
+        continue;
+      }
     }
   }
 
-  Err(ResourceError::NetworkError.into())
+  Err(last_error.unwrap_or(ResourceError::NetworkError).into())
 }

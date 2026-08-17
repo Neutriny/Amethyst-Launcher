@@ -18,9 +18,6 @@
         },
         "sourceCode": {
           "title": "在 GitHub 查看源代码"
-        },
-        "aboutSJMC": {
-          "title": "关于上海交通大学 Minecraft 社（SJMC）"
         }
       }
     },
@@ -30,6 +27,10 @@
         "bmclapi": {
           "title": "BMCLAPI",
           "description": "感谢 @bangbang93 提供的高速下载源"
+        },
+        "bsmirror": {
+          "title": "BSMirror",
+          "description": "感谢 @牢废物- 提供的镜像下载源"
         },
         "hmcl": {
           "title": "Hello Minecraft! Launcher",
@@ -303,6 +304,10 @@
         "logFontFamily": {
           "title": "日志字体"
         },
+        "logFontFallbackFamily": {
+          "title": "日志回退字体",
+          "label": "回退字体"
+        },
         "fontSize": {
           "title": "字体大小",
           "small": "小",
@@ -561,8 +566,18 @@
         },
         "preferredPlatform": {
           "title": "默认资源平台",
-          "curseforge": "CurseForge",
-          "modrinth": "Modrinth"
+          "modrinth": "Modrinth",
+          "curseforge": "CurseForge"
+        },
+        "mirrorPreset": {
+          "title": "镜像源节点",
+          "bmclapi": "BMCLAPI (推荐)",
+          "bsmirror": "BSMirror (HKMC)",
+          "custom": "自定义"
+        },
+        "customMirrorUrl": {
+          "title": "自定义镜像源地址",
+          "placeholder": "请输入镜像源地址，例如: https://example.com/maven/"
         }
       }
     },
@@ -1117,7 +1132,7 @@
     "release": "正式版",
     "snapshot": "测试版",
     "april_fools": "愚人节版",
-    "sehPlaceholder": "搜索版本"
+    "searchPlaceholder": "搜索版本"
   },
   "General": {
     "add": "添加",
@@ -1436,7 +1451,7 @@
           "description": "开源、现代的 Minecraft 资源平台"
         },
         "mcisee": {
-          "description": "MCiSee - Minecraft 资源网站"
+          "description": "所见皆是Minecraft，让获取MC资源更加轻便！| B站UP主籽岷推荐"
         }
       }
     },
@@ -1713,8 +1728,8 @@
         },
         "model": {
           "title": "模型",
-          "description": "手动输入模型 ID",
-          "placeholder": "输入模型 ID"
+          "description": "输入模型 ID",
+          "placeholder": "gpt-5-pro"
         },
         "testConnection": {
           "title": "测试连接",
@@ -1750,10 +1765,6 @@
   },
   "LanguageMenu": {
     "localeName": {
-      "en": "英语",
-      "es": "西班牙语",
-      "fr": "法语",
-      "ja": "日语",
       "lzh": "",
       "zh-Hans": "",
       "zh-Hant": ""

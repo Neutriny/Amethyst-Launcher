@@ -319,9 +319,10 @@ const ResourceDownloader: React.FC<ResourceDownloaderProps> = ({
   const preferredPlatform = config.download.source.preferredPlatform;
   const downloadSourceLists = getDownloadSourceLists(preferredPlatform);
   const defaultSource =
-    preferredPlatform === "modrinth"
+    (downloadSourceLists[resourceType] || [])[0] ??
+    (preferredPlatform === "modrinth"
       ? OtherResourceSource.Modrinth
-      : OtherResourceSource.CurseForge;
+      : OtherResourceSource.CurseForge);
   const toast = useToast();
   const { getGameVersionList } = useGlobalData();
 

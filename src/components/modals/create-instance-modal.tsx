@@ -57,7 +57,6 @@ export const loaderTypesToIcon: Record<string, string> = {
   Forge: "/images/icons/Forge.png",
   NeoForge: "/images/icons/NeoForge.png",
   OptiFine: "/images/icons/OptiFine.png",
-  Quilt: "/images/icons/Quilt.png",
 };
 
 export const CreateInstanceModal: React.FC<Omit<ModalProps, "children">> = ({
@@ -202,20 +201,6 @@ export const CreateInstanceModal: React.FC<Omit<ModalProps, "children">> = ({
                 </Text>
               </Checkbox>
             )}
-            {/* QF API download option - only show when Quilt is selected and has version */}
-            {selectedModLoader.loaderType === ModLoaderType.Quilt && (
-              <Checkbox
-                colorScheme={primaryColor}
-                isChecked={selectedModLoader.version !== "" && isInstallQfApi}
-                disabled={!selectedModLoader.version}
-                onChange={(e) => setIsInstallQfApi(e.target.checked)}
-              >
-                <Text fontSize="sm">
-                  {t("CreateInstanceModal.footer.installQFAPI")}
-                </Text>
-              </Checkbox>
-            )}
-
             <HStack spacing={3} ml="auto">
               <Button variant="ghost" onClick={modalProps.onClose}>
                 {t("General.cancel")}

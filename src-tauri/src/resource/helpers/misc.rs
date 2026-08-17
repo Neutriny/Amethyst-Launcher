@@ -21,6 +21,74 @@ pub fn get_source_priority_list(launcher_config: &LauncherConfig) -> Vec<SourceT
   }
 }
 
+pub fn get_mirror_base_url(launcher_config: &LauncherConfig) -> Option<String> {
+  match launcher_config.download.source.mirror_preset.as_str() {
+    "bmclapi" => Some("https://bmclapi2.bangbang93.com".to_string()),
+    "bsmirror" => Some("https://bsmirror.hkmc.online".to_string()),
+    "custom" => {
+      let url = launcher_config.download.source.custom_mirror_url.trim().to_string();
+      if url.is_empty() {
+        None
+      } else {
+        // 确保URL以/结尾
+        if url.ends_with('/') {
+          Some(url)
+        } else {
+          Some(format!("{}/", url))
+        }
+      }
+    }
+    _ => None,
+  }
+}
+
+pub fn get_download_api_with_mirror(
+  source: SourceType,
+  resource_type: ResourceType,
+  mirror_base_url: Option<&str>,
+) -> AMLResult<Url> {
+  // 如果有自定义镜像源且是镜像源类型，使用自定义镜像源
+  if let Some(base_url) = mirror_base_url {
+    if source == SourceType::BMCLAPIMirror {
+      let url_str = match resource_type {
+        ResourceType::VersionManifest => format!("{}mc/game/version_manifest.json", base_url),
+        ResourceType::VersionManifestV2 => format!("{}mc/game/version_manifest_v2.json", base_url),
+        ResourceType::LauncherMeta => base_url.to_string(),
+        ResourceType::Launcher => base_url.to_string(),
+        ResourceType::Assets => format!("{}assets/", base_url),
+        ResourceType::Libraries => format!("{}maven/", base_url),
+        ResourceType::MojangJava => format!(
+          "{}v1/products/java-runtime/2ec0cc96c44e5a76b9c8b7c39df7210883d12871/all.json",
+          base_url
+        ),
+        ResourceType::ForgeMaven | ResourceType::ForgeMavenNew | ResourceType::NeoforgeMaven => {
+          format!("{}maven/", base_url)
+        }
+        ResourceType::ForgeInstall => format!("{}forge/download/", base_url),
+        ResourceType::ForgeMeta => format!("{}forge/", base_url),
+        ResourceType::Liteloader => format!(
+          "{}maven/com/mumfrey/liteloader/versions.json",
+          base_url
+        ),
+        ResourceType::AuthlibInjector => format!("{}mirrors/authlib-injector/", base_url),
+        ResourceType::FabricMeta => format!("{}fabric-meta/", base_url),
+        ResourceType::FabricMaven => format!("{}maven/", base_url),
+        ResourceType::NeoforgeMetaForge | ResourceType::NeoforgeMetaNeoforge => {
+          format!("{}neoforge/", base_url)
+        }
+        ResourceType::NeoforgeInstall => format!("{}neoforge/version/", base_url),
+        ResourceType::OptiFine => format!("{}optifine/", base_url),
+        ResourceType::QuiltMaven => format!("{}maven/", base_url),
+        ResourceType::QuiltMeta => format!("{}quilt-meta/", base_url),
+      };
+      return Ok(Url::parse(&url_str)?);
+    }
+  }
+
+  // 否则使用默认的API
+  get_download_api(source, resource_type)
+}
+
 // https://bmclapidoc.bangbang93.com/
 pub fn get_download_api(source: SourceType, resource_type: ResourceType) -> AMLResult<Url> {
   match source {
@@ -101,7 +169,7 @@ pub fn get_download_api(source: SourceType, resource_type: ResourceType) -> AMLR
       )?),
       ResourceType::OptiFine => Ok(Url::parse("https://bmclapi2.bangbang93.com/optifine/")?),
       ResourceType::QuiltMaven => Ok(Url::parse("https://bmclapi2.bangbang93.com/maven/")?),
-      ResourceType::QuiltMeta => Ok(Url::parse("https://bmclapi2.bangbang93.com/quilt-meta/")?), // seems 'not found'
+      ResourceType::QuiltMeta => Ok(Url::parse("https://bmclapi2.bangbang93.com/quilt-meta/")?),
     },
   }
 }

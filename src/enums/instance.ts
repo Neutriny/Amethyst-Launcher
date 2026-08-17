@@ -18,7 +18,6 @@ export enum ModLoaderType {
   LegacyForge = "LegacyForge",
   NeoForge = "NeoForge",
   LiteLoader = "LiteLoader",
-  Quilt = "Quilt",
 }
 
 export type ExportModpackFormat = "Modrinth" | "MultiMC";
