@@ -1,5 +1,5 @@
 name: 🔑 账户 / 认证问题
-about: 微软账户登录失败、正版验证异常、账户信息错误
+description: 微软账户登录失败、正版验证异常、账户信息错误
 title: "[Auth] "
 labels: ["account", "auth", "triage"]
 body:

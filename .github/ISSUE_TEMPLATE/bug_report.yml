@@ -1,5 +1,5 @@
 name: 🐛 Bug 报告
-about: 报告启动器运行中的异常行为或错误
+description: 报告启动器运行中的异常行为或错误
 title: "[Bug] "
 labels: ["bug", "triage"]
 body:

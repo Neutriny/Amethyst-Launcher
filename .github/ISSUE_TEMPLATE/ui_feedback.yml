@@ -1,5 +1,5 @@
 name: 🎨 UI/UX 反馈
-about: 界面显示异常、交互体验问题、可访问性建议
+description: 界面显示异常、交互体验问题、可访问性建议
 title: "[UI] "
 labels: ["ui", "ux", "triage"]
 body:
