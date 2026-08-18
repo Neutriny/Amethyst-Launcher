@@ -65,7 +65,7 @@ pnpm tauri dev
 
 ## 版权声明
 
-版权所有 © 2024-2026 SJMCL 团队 | Amethyst 修改版本 © 2025-2026 TannenWaddy
+版权所有 © 2024-2026 SJMCL 团队 | Amethyst Launcher 修改版本 © 2025-2026 TannenWaddy
 
 > 本软件并非官方 Minecraft 服务。未获得 Mojang 或 Microsoft 批准或关联许可。
 
