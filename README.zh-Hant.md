@@ -1,12 +1,10 @@
 # Amethyst Launcher
 
-**基於 [SJMCL](https://github.com/UNIkeEN/SJMCL) 啟動器原始碼修改的 Minecraft 啟動器**
-
 **繁體中文** | [简体中文](README.md)
 
 ## 關於本專案
 
-Amethyst Launcher 是基於上海交通大學 Minecraft 社（SJMC）開發的 [SJMCL 啟動器](https://github.com/UNIkeEN/SJMCL) 原始碼進行修改的分支版本。本專案遵循 GPLv3 協議，保留了原專案的核心功能，並在此基礎上增加了多項實用特性。
+Amethyst Launcher 是基於 [SJMCL 啟動器](https://github.com/UNIkeEN/SJMCL) 二次開發的分支專案，在原作基礎上進行了修改與功能擴展，並遵循原專案的 GPL-3.0 許可證開源。
 
 ## 功能特性
 

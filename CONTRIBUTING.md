@@ -30,6 +30,8 @@
 - 代码风格符合项目规范
 - 通过 lint 检查（`pnpm lint-staged`）
 
+从未在Github上提交过PR？看一看这一篇 [提交PR指南](https://zhuanlan.zhihu.com/p/1936863607620085328)
+
 ## 开发环境
 
 ### 前置要求

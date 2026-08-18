@@ -4,7 +4,7 @@
 
 ## 关于本项目
 
-Amethyst Launcher 是基于上海交通大学 Minecraft 社（SJMC）开发的 [SJMCL 启动器](https://github.com/UNIkeEN/SJMCL) 二次开发的分支项目，在原作基础上进行了修改与功能扩展，并遵循原项目的 GPL-3.0 许可证开源。
+Amethyst Launcher 是基于 [SJMCL 启动器](https://github.com/UNIkeEN/SJMCL) 二次开发的分支项目，在原作基础上进行了修改与功能扩展，并遵循原项目的 GPL-3.0 许可证开源。
 
 ## 功能特性
 
