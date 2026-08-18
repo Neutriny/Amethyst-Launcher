@@ -13,8 +13,7 @@ body:
     attributes:
       label: 提交前检查
       options:
-        - label: 我已确认 Xbox Live / Microsoft 服务状态正常（可访问 https://status.xbox.com/ 或 https://status.live.com/）
-          required: true
+        - label: 我已确认 [Xbox Live](https://status.xbox.com) / [Microsoft](https://status.live.com) 服务状态正常
         - label: 我已尝试重新登录账户
           required: true
         - label: 我已确认系统时间和时区设置正确
@@ -26,7 +25,7 @@ body:
       label: 账户类型
       options:
         - 微软账户（Microsoft Account）
-        - 外置登录（LittleSkin / Blessing Skin 等）
+        - 外置登录（LittleSkin / MUA 等）
         - 离线账户
     validations:
       required: true
