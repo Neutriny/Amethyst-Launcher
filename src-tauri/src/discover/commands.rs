@@ -1,60 +1,11 @@
-use futures::future;
 use aml_types::error::AMLResult;
 use std::collections::HashMap;
-use std::sync::Mutex;
 use tauri::{AppHandle, Manager};
 use tauri_plugin_http::reqwest;
 
 use crate::discover::helpers::mc_news::{MC_NEWS_ENDPOINT, fetch_mc_news_page};
-use crate::discover::models::{NewsPostRequest, NewsPostResponse, NewsSourceInfo};
-use crate::launcher_config::models::LauncherConfig;
+use crate::discover::models::{NewsPostRequest, NewsPostResponse};
 use crate::utils::web::with_retry;
-
-#[tauri::command]
-pub async fn fetch_news_sources_info(app: AppHandle) -> AMLResult<Vec<NewsSourceInfo>> {
-  let post_sources = {
-    let binding = app.state::<Mutex<LauncherConfig>>();
-    let state = binding.lock().unwrap();
-    state.discover_source_endpoints.clone()
-  };
-
-  let client = with_retry(app.state::<reqwest::Client>().inner().clone());
-
-  let tasks: Vec<_> = post_sources
-    .into_iter()
-    .map(|(url, _)| {
-      let client = client.clone();
-      async move {
-        let mut news_source = NewsSourceInfo {
-          name: "".to_string(),
-          full_name: "".to_string(),
-          endpoint_url: url.clone(),
-          icon_src: "".to_string(),
-        };
-
-        let response = client
-          .get(&url)
-          .query(&[("pageSize", "0")]) // ?pageSize=0
-          .send()
-          .await;
-
-        if let Ok(response) = response {
-          let json_data: serde_json::Value = response.json().await.unwrap_or_default();
-
-          if let Some(source_info) = json_data.get("sourceInfo") {
-            news_source.name = source_info["name"].as_str().unwrap_or("").to_string();
-            news_source.full_name = source_info["fullName"].as_str().unwrap_or("").to_string();
-            news_source.icon_src = source_info["iconSrc"].as_str().unwrap_or("").to_string();
-          }
-        }
-
-        news_source
-      }
-    })
-    .collect();
-
-  Ok(future::join_all(tasks).await)
-}
 
 #[tauri::command]
 pub async fn fetch_news_post_summaries(

@@ -1,4 +1,3 @@
-use serde_json::{Value, json};
 use aml_types::error::AMLError;
 use aml_types::error::AMLResult;
 use aml_types::storage::Storage;
@@ -8,7 +7,6 @@ use std::pin::Pin;
 use std::sync::Mutex;
 use tauri::path::BaseDirectory;
 use tauri::{AppHandle, Manager};
-use tauri_plugin_http::reqwest;
 use tauri_plugin_opener::reveal_item_in_dir;
 
 use crate::instance::helpers::misc::refresh_instances;
@@ -57,91 +55,6 @@ pub fn reset_launcher_config(app: AppHandle) -> AMLResult<LauncherConfig> {
   state.replace_with_preserved(default_config, preserved_fields);
   state.save()?;
   Ok(state.clone())
-}
-
-#[tauri::command]
-pub async fn export_launcher_config(
-  app: AppHandle,
-  client: tauri::State<'_, reqwest::Client>,
-) -> AMLResult<String> {
-  let binding = app.state::<Mutex<LauncherConfig>>();
-  let state = { binding.lock()?.clone() };
-  match client
-    .post("https://mc.sjtu.cn/api-sjmcl/settings")
-    .json(&json!({
-      "version": app.package_info().version.to_string(),
-      "json_data": state,
-    }))
-    .send()
-    .await
-  {
-    Ok(response) => {
-      let status = response.status();
-      let json: Value = response
-        .json()
-        .await
-        .map_err(|_| LauncherConfigError::FetchError)?;
-      if status.is_success() {
-        let code = json["code"]
-          .as_str()
-          .ok_or(LauncherConfigError::FetchError)?
-          .to_string();
-
-        Ok(code)
-      } else {
-        Err(LauncherConfigError::FetchError.into())
-      }
-    }
-    Err(_) => Err(LauncherConfigError::FetchError.into()),
-  }
-}
-
-#[tauri::command]
-pub async fn import_launcher_config(
-  app: AppHandle,
-  client: tauri::State<'_, reqwest::Client>,
-  code: String,
-) -> AMLResult<LauncherConfig> {
-  match client
-    .post("https://mc.sjtu.cn/api-sjmcl/validate")
-    .json(&json!({
-      "version": app.package_info().version.to_string(),
-      "code": code,
-    }))
-    .send()
-    .await
-  {
-    Ok(response) => {
-      let status = response.status();
-      let json: serde_json::Value = response
-        .json()
-        .await
-        .map_err(|_| LauncherConfigError::FetchError)?;
-      if status.is_success() {
-        let new_config: LauncherConfig =
-          serde_json::from_value(json).map_err(|_| LauncherConfigError::FetchError)?;
-        let binding = app.state::<Mutex<LauncherConfig>>();
-        let mut state = binding.lock()?;
-
-        let preserved_fields = &["run_count", "local_game_directories", "extra_java_paths"];
-        state.replace_with_preserved(new_config, preserved_fields);
-        state.save()?;
-
-        Ok(state.clone())
-      } else {
-        let message = json["message"]
-          .as_str()
-          .ok_or(LauncherConfigError::FetchError)?;
-        match message {
-          "Invalid code" => Err(LauncherConfigError::InvalidCode.into()),
-          "Code expired" => Err(LauncherConfigError::CodeExpired.into()),
-          "Version mismatch" => Err(LauncherConfigError::VersionMismatch.into()),
-          _ => Err(LauncherConfigError::FetchError.into()),
-        }
-      }
-    }
-    Err(_err) => Err(LauncherConfigError::FetchError.into()),
-  }
 }
 
 #[tauri::command]

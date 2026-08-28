@@ -8,7 +8,7 @@ use strum_macros::{Display, EnumString};
 use tauri::{AppHandle, Emitter};
 
 use crate::launcher_config::constants::{CONFIG_PARTIAL_UPDATE_EVENT, LAUNCHER_CFG_FILE_NAME};
-use crate::launcher_config::migrations::{deserialize_background, deserialize_discover_sources};
+use crate::launcher_config::migrations::deserialize_background;
 use crate::utils::string::snake_to_camel_case;
 use crate::utils::sys_info;
 use crate::{APP_DATA_DIR, EXE_DIR, IS_PORTABLE};
@@ -354,13 +354,6 @@ structstruck::strike! {
     },
     pub global_game_config: GameConfig,
     pub local_game_directories: Vec<GameDirectory>,
-    #[serde(
-      default,
-      deserialize_with = "deserialize_discover_sources"
-    )]
-    #[default(_code="vec![(\"https://mc.sjtu.cn/api-sjmcl/article\".to_string(), true),
-    (\"https://mc.sjtu.cn/api-sjmcl/article/mua\".to_string(), true)]")]
-    pub discover_source_endpoints: Vec<(String, bool)>,
     pub extra_java_paths: Vec<String>,
     pub suppressed_dialogs: Vec<String>,
     pub states: struct States {
@@ -441,9 +434,6 @@ impl Storage for LauncherConfig {
 #[strum(serialize_all = "SCREAMING_SNAKE_CASE")]
 pub enum LauncherConfigError {
   FetchError,
-  InvalidCode,
-  CodeExpired,
-  VersionMismatch,
   GameDirAlreadyAdded,
   GameDirNotExist,
   JavaExecInvalid,

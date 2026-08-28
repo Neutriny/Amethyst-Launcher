@@ -152,22 +152,6 @@ const HelpSettingsPage = () => {
             />
           ),
         },
-        {
-          title: t("HelpSettingsPage.community.settings.SJMC.title"),
-          children: (
-            <CommonIconButton
-              label={t("HelpSettingsPage.community.settings.SJMC.url")}
-              icon="external"
-              withTooltip
-              tooltipPlacement="bottom-end"
-              size="xs"
-              h={18}
-              onClick={() =>
-                openUrl(t("HelpSettingsPage.community.settings.SJMC.url"))
-              }
-            />
-          ),
-        },
       ],
     },
   ];

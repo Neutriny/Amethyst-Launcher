@@ -135,17 +135,6 @@
       "serverUrl": "服务器地址"
     }
   },
-  "AddDiscoverSourceModal": {
-    "modal": {
-      "header": "添加数据源"
-    },
-    "label": {
-      "endpointUrl": "源地址"
-    },
-    "placeholder": {
-      "endpointUrl": "源地址"
-    }
-  },
   "AddGameServerModal": {
     "header": {
       "title": "添加游戏服务器"
@@ -490,22 +479,14 @@
   "DevToolbar": {
     "tooltip": "开发工具栏"
   },
-  "DiscoverCommunityNewsPage": {
-    "title": "发现",
-    "noMore": "无更多内容",
-    "sources": "管理数据源",
-    "NoSources": "未添加数据源"
-  },
   "DiscoverHomePage": {
     "minecraft-news": "Minecraft 新闻",
-    "community-news": "社区新闻",
     "hotModpacks": "{{source}} 的热门整合包"
   },
   "DiscoverLayout": {
     "discoverDomainList": {
       "search": "搜索",
       "home": "主页",
-      "community-news": "社区新闻",
       "minecraft-news": "Minecraft 新闻",
       "modpack": "整合包",
       "mod": "模组",
@@ -515,14 +496,8 @@
       "datapack": "数据包"
     }
   },
-  "DiscoverSourcesPage": {
-    "button": {
-      "addSource": "添加数据源",
-      "deleteSource": "删除数据源"
-    },
-    "tag": {
-      "online": "在线"
-    }
+  "DiscoverMinecraftNewsPage": {
+    "noMore": "无更多内容"
   },
   "DownloadJavaModal": {
     "header": {
@@ -1188,16 +1163,6 @@
         }
       }
     },
-    "sync": {
-      "title": "同步",
-      "settings": {
-        "internetSync": {
-          "title": "联网同步启动器设置",
-          "import": "导入",
-          "export": "导出"
-        }
-      }
-    },
     "advanced": {
       "title": "高级",
       "settings": {
@@ -1360,10 +1325,6 @@
           "title": "Minecraft 高校联盟（MUA）",
           "description": "和全国各高校的玩家一起游玩",
           "url": "https://www.mualliance.cn"
-        },
-        "SJMC": {
-          "title": "上海交通大学 Minecraft 社（SJMC）",
-          "url": "https://mc.sjtu.cn"
         }
       }
     },
@@ -1836,8 +1797,7 @@
       "fabric": "Fabric",
       "neoforge": "NeoForge",
       "authlibInjector": "Authlib Injector",
-      "github": "GitHub",
-      "sjmclapi": "SJMC Launcher API"
+      "github": "GitHub"
     }
   },
   "PlayerMenu": {
@@ -2230,27 +2190,6 @@
         "success": "设置已成功重置",
         "error": {
           "title": "重置设置失败，请重试"
-        }
-      },
-      "exportLauncherConfig": {
-        "success": "启动器设置导出成功",
-        "error": {
-          "title": "启动器设置导出失败",
-          "description": {
-            "FETCH_ERROR": "与服务器通信失败"
-          }
-        }
-      },
-      "importLauncherConfig": {
-        "success": "启动器设置导入成功",
-        "error": {
-          "title": "启动器设置导入失败",
-          "description": {
-            "FETCH_ERROR": "与服务器通信失败",
-            "INVALID_CODE": "无效的代码",
-            "CODE_EXPIRED": "代码已过期",
-            "VERSION_MISMATCH": "启动器版本不匹配"
-          }
         }
       },
       "retrieveCustomBackgroundList": {
@@ -3077,25 +3016,6 @@
       "later": "稍后",
       "starUs": "点亮星标"
     }
-  },
-  "SyncConfigExportModal": {
-    "header": {
-      "title": "同步设置 - 导出"
-    },
-    "label": {
-      "token": "令牌"
-    },
-    "helper": "将上述令牌输入至待同步的设备以完成同步",
-    "countdown": "{{seconds}} 秒后刷新"
-  },
-  "SyncConfigImportModal": {
-    "header": {
-      "title": "同步设置 - 导入"
-    },
-    "label": {
-      "token": "令牌"
-    },
-    "helper": "请输入需同步设备生成的令牌"
   },
   "Tauri": {
     "windowTitle": {

@@ -146,7 +146,7 @@ export const MinecraftNewsPage = () => {
               <BeatLoader size={16} color="gray" />
             ) : !hasMore ? (
               <Text fontSize="xs" className="secondary-text">
-                {t("DiscoverCommunityNewsPage.noMore")}
+                {t("DiscoverMinecraftNewsPage.noMore")}
               </Text>
             ) : null}
           </Center>

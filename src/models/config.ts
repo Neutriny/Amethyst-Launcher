@@ -163,7 +163,6 @@ export interface LauncherConfig {
   };
   localGameDirectories: GameDirectory[];
   globalGameConfig: GameConfig;
-  discoverSourceEndpoints: [string, boolean][];
   extraJavaPaths: string[];
   suppressedDialogs: string[];
   states: {
@@ -353,7 +352,6 @@ export const defaultConfig: LauncherConfig = {
   },
   localGameDirectories: [{ name: "Current", dir: ".minecraft/" }],
   globalGameConfig: defaultGameConfig,
-  discoverSourceEndpoints: [],
   extraJavaPaths: [],
   suppressedDialogs: [],
   states: {

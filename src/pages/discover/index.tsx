@@ -10,11 +10,6 @@ export default function DiscoverIndexPage() {
     let lastRecord =
       [...history].reverse().find((route) => route.startsWith("/discover/")) ||
       "/discover/home";
-    if (lastRecord.endsWith("discover/sources"))
-      lastRecord = lastRecord.replace(
-        "discover/sources",
-        "discover/community-news"
-      );
     router.replace(lastRecord);
   }, [history, router]);
 

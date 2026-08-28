@@ -88,8 +88,6 @@ pub async fn run() {
         launcher_config::commands::retrieve_launcher_config,
         launcher_config::commands::update_launcher_config,
         launcher_config::commands::reset_launcher_config,
-        launcher_config::commands::export_launcher_config,
-        launcher_config::commands::import_launcher_config,
         launcher_config::commands::reveal_launcher_config,
         launcher_config::commands::retrieve_custom_background_list,
         launcher_config::commands::add_custom_background,
@@ -178,7 +176,6 @@ pub async fn run() {
         resource::commands::fetch_remote_resource_by_local,
         resource::commands::update_mods,
         resource::commands::fetch_remote_resource_by_id,
-        discover::commands::fetch_news_sources_info,
         discover::commands::fetch_news_post_summaries,
         tasks::commands::schedule_progressive_task_group,
         tasks::commands::cancel_progressive_task,
@@ -220,9 +217,6 @@ pub async fn run() {
         let mut launcher_config: LauncherConfig = LauncherConfig::load().unwrap_or_default();
         launcher_config.setup_with_app(app.handle()).unwrap();
         launcher_config.save().unwrap();
-        let version = launcher_config.basic_info.launcher_version.clone();
-        let os = launcher_config.basic_info.platform.clone();
-        let exe_sha256 = launcher_config.basic_info.exe_sha256.clone();
         let auto_purge_launcher_logs = launcher_config.general.advanced.auto_purge_launcher_logs;
         app.manage(Mutex::new(launcher_config));
 
@@ -303,11 +297,6 @@ pub async fn run() {
         let app_handle = app.handle().clone();
         tauri::async_runtime::spawn(async move {
           tasks::background::monitor_background_process(app_handle).await;
-        });
-
-        // Send statistics
-        tokio::spawn(async move {
-          utils::sys_info::send_statistics(version, os, exe_sha256).await;
         });
 
         // Auto purge launcher logs older than 30 days if enabled

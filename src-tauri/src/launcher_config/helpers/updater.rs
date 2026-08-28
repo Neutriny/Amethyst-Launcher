@@ -1,5 +1,5 @@
-use serde_json::Value;
 use aml_types::error::{AMLError, AMLResult};
+use serde_json::Value;
 use std::fs;
 use std::path::PathBuf;
 use std::process::Command;
@@ -14,23 +14,16 @@ use crate::tasks::commands::schedule_progressive_task_group;
 use crate::tasks::download::DownloadParam;
 
 type SourceTuple = (&'static str, &'static str, fn(&str, &str) -> String);
-const SOURCES: [SourceTuple; 2] = [
-  (
-    "https://mc.sjtu.cn/api-sjmcl/releases/latest",
-    "version",
-    |_, fname| format!("https://mc.sjtu.cn/sjmcl/releases/{}", fname),
-  ),
-  (
-    "https://api.github.com/repos/UNIkeEN/SJMCL/releases/latest",
-    "tag_name",
-    |ver, fname| {
-      format!(
-        "https://github.com/UNIkeEN/SJMCL/releases/download/v{}/{}",
-        ver, fname
-      )
-    },
-  ),
-];
+const SOURCES: [SourceTuple; 1] = [(
+  "https://api.github.com/repos/Neutriny/Amethyst-Launcher/releases/latest",
+  "tag_name",
+  |ver, fname| {
+    format!(
+      "https://github.com/Neutriny/Amethyst-Launcher/releases/download/v{}/{}",
+      ver, fname
+    )
+  },
+)];
 
 // Generate the new version filename on remote origin according to the current os, arch and is_portable
 fn build_resource_filename(ver: &str, os: &str, arch: &str, is_portable: bool) -> String {

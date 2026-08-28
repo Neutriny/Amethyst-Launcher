@@ -56,9 +56,6 @@ export enum InstanceError {
 
 export enum ConfigServiceError {
   FetchError = "FETCH_ERROR",
-  InvalidCode = "INVALID_CODE",
-  CodeExpired = "CODE_EXPIRED",
-  VersionMismatch = "VERSION_MISMATCH",
   GameDirAlreadyAdded = "GAME_DIR_ALREADY_ADDED",
   GameDirNotExist = "GAME_DIR_NOT_EXIST",
   JavaExecInvalid = "JAVA_EXEC_INVALID",
