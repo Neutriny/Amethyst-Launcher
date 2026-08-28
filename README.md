@@ -71,7 +71,7 @@ pnpm format
 
 版权所有 © 2025-2026 [Neutriny](https://github.com/Neutriny)
 
-本软件基于 [MIT 许可证](/LICENSE) 开源。
+本软件基于 [MIT 许可证](/LICENSE) 开源（[中文翻译](/LICENSE.zh-CN.md)）。
 
 > 本软件并非官方 Minecraft 服务。未获得 Mojang 或 Microsoft 批准或关联许可。
 
