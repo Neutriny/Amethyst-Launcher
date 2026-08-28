@@ -12,7 +12,7 @@
 如发现安全漏洞，请通过以下方式报告：
 
 1. **不要**通过 GitHub Issue 报告安全漏洞
-2. 发送邮件至 [开发者邮箱](mailto://tannenwaddy@yeah.net)
+2. 发送邮件至 [开发者邮箱](mailto://Neutriny@yeah.net)
    - 邮件主题请以 `[Amethyst Security]` 开头
    - 尽可能提供漏洞的详细信息
 

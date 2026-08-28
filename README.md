@@ -39,7 +39,7 @@ Amethyst Launcher 是基于 [SJMCL 启动器](https://github.com/UNIkeEN/SJMCL) 
 
 ## 开始使用
 
-前往 [GitHub Releases](https://github.com/TannenWaddy/Amethyst-Launcher/releases) 下载最新版即可。
+前往 [GitHub Releases](https://github.com/Neutriny/Amethyst-Launcher/releases) 下载最新版即可。
 
 目前仅支持 Windows 10/11：
 
@@ -52,7 +52,7 @@ Amethyst Launcher 是基于 [SJMCL 启动器](https://github.com/UNIkeEN/SJMCL) 
 首先克隆本项目并安装前端依赖：
 
 ```bash
-git clone https://github.com/TannenWaddy/Amethyst-Launcher.git AML
+git clone https://github.com/Neutriny/Amethyst-Launcher.git AML
 cd AML
 pnpm install
 ```
@@ -65,7 +65,7 @@ pnpm tauri dev
 
 ## 版权声明
 
-版权所有 © 2024-2026 SJMCL 团队 | Amethyst Launcher 修改版本 © 2025-2026 TannenWaddy
+版权所有 © 2024-2026 SJMCL 团队 | Amethyst Launcher 修改版本 © 2025-2026 Neutriny
 
 > 本软件并非官方 Minecraft 服务。未获得 Mojang 或 Microsoft 批准或关联许可。
 
@@ -85,4 +85,4 @@ pnpm tauri dev
 
 ## 联系方式
 
-如有问题，请通过 [GitHub Issues](https://github.com/TannenWaddy/Amethyst-Launcher/issues) 联系。
+如有问题，请通过 [GitHub Issues](https://github.com/Neutriny/Amethyst-Launcher/issues) 联系。

@@ -78,7 +78,6 @@ pub async fn fetch_mod_loader_version_list(
     ModLoaderType::Quilt => {
       Ok(get_quilt_meta_by_game_version(&app, &priority_list, &game_version).await?)
     }
-    // TODO here
     _ => Err(ResourceError::NoDownloadApi.into()),
   }
 }
@@ -103,9 +102,7 @@ pub async fn fetch_resource_list_by_name(
   query: OtherResourceSearchQuery,
 ) -> AMLResult<OtherResourceSearchRes> {
   let result = match download_source {
-    OtherResourceSource::CurseForge => {
-      fetch_resource_list_by_name_curseforge(&app, &query).await?
-    }
+    OtherResourceSource::CurseForge => fetch_resource_list_by_name_curseforge(&app, &query).await?,
     OtherResourceSource::Modrinth => fetch_resource_list_by_name_modrinth(&app, &query).await?,
     _ => return Err(ResourceError::NoDownloadApi.into()),
   };

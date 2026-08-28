@@ -1,6 +1,5 @@
 mod account;
 mod discover;
-mod extension;
 mod instance;
 mod intelligence;
 mod launch;
@@ -12,6 +11,7 @@ mod utils;
 use account::helpers::authlib_injector::info::refresh_and_update_auth_servers;
 use account::helpers::offline::yggdrasil_server::YggdrasilServer;
 use account::models::AccountInfo;
+use aml_types::storage::Storage;
 use instance::helpers::misc::refresh_and_update_instances;
 use instance::models::misc::Instance;
 use launch::models::LaunchingState;
@@ -20,7 +20,6 @@ use launcher_config::models::{JavaInfo, LauncherConfig};
 use resource::helpers::mod_db::{ModDataBase, initialize_mod_db};
 use resource::helpers::translation::LocalModTranslationsCache;
 use resource::helpers::translation::cache::ResourceTranslationsCache;
-use aml_types::storage::Storage;
 use std::collections::HashMap;
 use std::path::PathBuf;
 use std::sync::{LazyLock, Mutex, OnceLock};
@@ -181,9 +180,6 @@ pub async fn run() {
         resource::commands::fetch_remote_resource_by_id,
         discover::commands::fetch_news_sources_info,
         discover::commands::fetch_news_post_summaries,
-        extension::commands::retrieve_extension_list,
-        extension::commands::add_extension,
-        extension::commands::delete_extension,
         tasks::commands::schedule_progressive_task_group,
         tasks::commands::cancel_progressive_task,
         tasks::commands::resume_progressive_task,
@@ -228,7 +224,6 @@ pub async fn run() {
         let os = launcher_config.basic_info.platform.clone();
         let exe_sha256 = launcher_config.basic_info.exe_sha256.clone();
         let auto_purge_launcher_logs = launcher_config.general.advanced.auto_purge_launcher_logs;
-        let launcher_mcp_config = launcher_config.intelligence.mcp_server.launcher.clone();
         app.manage(Mutex::new(launcher_config));
 
         let account_info = AccountInfo::load().unwrap_or_default();
@@ -350,11 +345,6 @@ pub async fn run() {
           if let Err(e) = app.deep_link().register_all() {
             log::warn!("Failed to register deep links: {e}");
           }
-        }
-
-        // Start the launcher MCP server if enabled
-        if launcher_mcp_config.enabled {
-          intelligence::mcp_server::launcher::run(app.handle().clone(), &launcher_mcp_config);
         }
 
         Ok(())

@@ -38,7 +38,7 @@ const NotifyNewVersionModal: React.FC<NotifyNewVersionModalProps> = ({
   const handleDownloadUpdate = () => {
     if (isLinux) {
       const lang = isZh ? "zh" : "en";
-      openUrl(`https://tannenwaddy.github.io/AMLL-docs/`);
+      openUrl(`https://Neutriny.github.io/AMLL-docs/`);
     } else {
       ConfigService.downloadLauncherUpdate(newVersion).then((response) => {
         if (response.status !== "success") {

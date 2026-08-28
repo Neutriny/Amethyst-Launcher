@@ -63,11 +63,11 @@
       "settings": {
         "copyright": {
           "title": "版权",
-          "description": "版权所有 © 2024-2026 SJMCL 团队 | Amethyst Launcher 修改版本 © 2025-2026 TannenWaddy"
+          "description": "版权所有 © 2024-2026 SJMCL 团队 | Amethyst Launcher 修改版本 © 2025-2026 Neutriny"
         },
         "userAgreement": {
           "title": "用户协议",
-          "url": "https://tannenwaddy.github.io/Amethyst-Launcher-docs/docs/tos"
+          "url": "https://Neutriny.github.io/Amethyst-Launcher-docs/docs/tos"
         },
         "openSourceLicense": {
           "title": "开源协议",
@@ -577,7 +577,7 @@
         },
         "customMirrorUrl": {
           "title": "自定义镜像源地址",
-          "placeholder": "请输入镜像源地址，例如: https://example.com/maven/"
+          "placeholder": "输入镜像源地址，例如: https://example.com/maven/"
         }
       }
     },
@@ -678,7 +678,6 @@
       "forge-libraries": "Forge 运行库",
       "optifine-libraries": "OptiFine 运行库",
       "launcher-update": "更新启动器",
-      "extension-update": "更新扩展 {{param1}} {{param2}}",
       "mojang-java": "Java {{param}} 运行时"
     }
   },
@@ -733,14 +732,6 @@
   },
   "Empty": {
     "noData": "无数据"
-  },
-  "EnableExtensionConfirmDialog": {
-    "title": "启用扩展",
-    "body": "是否确认启用来自 <hl>{{author}}</hl> 的 <hl>{{name}}</hl>（<hl>{{identifier}}</hl>）扩展？",
-    "button": {
-      "enable": "启用"
-    },
-    "unknownDeveloper": "未知开发者"
   },
   "Enums": {
     "chakraColors": {
@@ -832,60 +823,6 @@
         "MultiMC": "主流启动器广泛支持，打包完整实例"
       }
     }
-  },
-  "ExtensionContributionWrapper": {
-    "failedToRender": "扩展内容渲染失败。"
-  },
-  "ExtensionHostContextProvider": {
-    "extensionProvidedDialog": "当前对话框由扩展 {{name}} 提供",
-    "toast": {
-      "activateError": "激活扩展 {{name}} 失败"
-    }
-  },
-  "ExtensionInfoModal": {
-    "label": {
-      "author": "作者",
-      "description": "描述"
-    }
-  },
-  "ExtensionOpenExternalLinkConfirmDialog": {
-    "title": "打开外部链接",
-    "body": "扩展 {{extension}} 想要在外部浏览器中打开 {{link}}",
-    "button": {
-      "open": "打开"
-    }
-  },
-  "ExtensionSettingsDetailPage": {
-    "title": "{{name}} 设置"
-  },
-  "ExtensionSettingsPage": {
-    "alert": "Amethyst 无法控制第三方扩展的行为，包括它们如何管理你的个人数据。请仅安装并启用来自可信来源的扩展。",
-    "fileDnD": {
-      "title": "安装 Amethyst 扩展",
-      "desc": "将扩展文件 {{fileName}} 安装到 Amethyst"
-    },
-    "installed": "已安装扩展",
-    "menu": {
-      "info": "查看信息"
-    },
-    "top": {
-      "settings": {
-        "extensionDocs": {
-          "title": "扩展开发文档",
-          "description": "阅读扩展系统的介绍与 API 文档，使用脚手架快速上手",
-          "url": "https://tannenwaddy.github.io/Amethyst-docs/dev/extension/"
-        },
-        "awesomeExtensions": {
-          "title": "发现社区扩展",
-          "description": "前往 GitHub 浏览社区开发的扩展列表",
-          "url": "https://github.com/SJMC-Dev/awesome-Amethyst-extensions"
-        }
-      }
-    }
-  },
-  "ExtensionUpdateConfirmDialog": {
-    "title": "更新扩展",
-    "body": "扩展 {{identifier}} 已从 {{src}} 下载新版本 {{version}}，是否确认安装？"
   },
   "FileDnDProvider": {
     "fileName": "{{fileName}} 等（共 {{count}} 个）"
@@ -1051,7 +988,7 @@
       "help": "帮助"
     },
     "bottomAlert": "如需寻求他人帮助，请导出并发送崩溃报告，而非这个窗口的截图",
-    "helpUrl": "https://tannenwaddy.github.io/Amethyst-docs/docs/user-group.html",
+    "helpUrl": "https://Neutriny.github.io/Amethyst-docs/docs/user-group.html",
     "crashDetails": {
       "title": "崩溃信息",
       "OPENJ9": "当前实例无法在 OpenJ9 JVM 上运行，请使用 HotSpot JVM。",
@@ -1459,22 +1396,14 @@
       "settings": {
         "LauncherDocs": {
           "title": "Amethyst Launcher 文档",
-          "url": "https://tannenwaddy.github.io/Amethyst-docs/docs"
+          "url": "https://Neutriny.github.io/Amethyst-docs/docs"
         },
         "UserGroup": {
           "title": "用户社群",
           "description": "欢迎加入 QQ 群或 GitHub Discussions，报告问题、请求功能或获取帮助",
-          "url": "https://tannenwaddy.github.io/Amethyst-docs/docs/user-group"
+          "url": "https://Neutriny.github.io/Amethyst-docs/docs/user-group"
         }
       }
-    }
-  },
-  "HomeWidget": {
-    "extraOpMenu": {
-      "moveUp": "上移此卡片",
-      "moveDown": "下移此卡片",
-      "extensionInfo": "查看扩展信息",
-      "settings": "设置此扩展"
     }
   },
   "ImportAccountInfoModal": {
@@ -1691,25 +1620,6 @@
   "IntelligenceSettingsPage": {
     "title": "Amethyst 智能",
     "description": "将人工智能模型整合进您的启动器使用与 Minecraft 游戏体验",
-    "mcpServer": {
-      "title": "MCP 服务",
-      "headExtra": "以下设置重启后生效",
-      "settings": {
-        "enabled": {
-          "title": "启动器 MCP 服务",
-          "description": "启用本地 MCP 服务，以连接外部 Agent 应用实现启动器的自动化控制"
-        },
-        "docs": {
-          "title": "使用指南",
-          "description": "了解如何将启动器连接到外部 Agent 应用（如 Claude, Cherry Studio 等）",
-          "url": "https://tannenwaddy.github.io/Amethyst-docs/docs/intelligence/launcher-mcp"
-        },
-        "port": {
-          "title": "端口",
-          "description": "启动器 MCP 服务使用的固定本地端口"
-        }
-      }
-    },
     "logAnalysis": {
       "title": "日志分析",
       "headExtra": "配置 LLM 以分析游戏日志",
@@ -3080,37 +2990,6 @@
         }
       }
     },
-    "extension": {
-      "retrieveExtensionList": {
-        "error": {
-          "title": "获取扩展插件列表失败"
-        }
-      },
-      "addExtension": {
-        "success": "扩展插件添加成功",
-        "error": {
-          "title": "扩展插件添加失败",
-          "description": {
-            "INVALID_PACKAGE_FORMAT": "扩展包内容格式无效",
-            "INVALID_IDENTIFIER": "扩展标识符无效",
-            "IDENTIFIER_MISMATCH": "扩展标识符与预期不匹配",
-            "INVALID_NAME": "扩展名称无效",
-            "LAUNCHER_VERSION_TOO_LOW": "启动器版本过低",
-            "EXTENSION_NOT_FOUND": "未找到待添加文件"
-          }
-        }
-      },
-      "deleteExtension": {
-        "success": "扩展插件删除成功",
-        "error": {
-          "title": "扩展插件删除失败",
-          "description": {
-            "INVALID_IDENTIFIER": "扩展标识符无效",
-            "EXTENSION_NOT_FOUND": "未找到对应扩展插件"
-          }
-        }
-      }
-    },
     "task": {
       "scheduleProgressiveTaskGroup": {
         "error": "任务创建失败"
@@ -3142,7 +3021,6 @@
       "appearance": "外观",
       "download": "下载资源",
       "intelligence": "智能",
-      "extension": "扩展插件",
       "help": "文档与帮助",
       "about": "关于"
     }
@@ -3280,9 +3158,6 @@
     "button": {
       "agree": "同意并继续"
     }
-  },
-  "WindowTitlebar": {
-    "extensionProvidedPage": "当前页面由扩展 {{name}} 提供"
   },
   "WorldLevelDataModal": {
     "header": {

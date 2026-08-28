@@ -180,7 +180,7 @@ const LaunchProcessModal: React.FC<LaunchProcessModalProps> = ({
         label: "validateGameFiles",
         function: () => LaunchService.validateGameFiles(),
         isOK: (data: any) => true,
-        onResCallback: (data: any) => {}, // TODO
+        onResCallback: (data: any) => {},
         onErrCallback: (error: ResponseError) => {
           toast({
             title: error.message,

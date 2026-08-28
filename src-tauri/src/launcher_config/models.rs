@@ -1,7 +1,7 @@
-use serde::{Deserialize, Serialize};
 use aml_macros::Partial;
 use aml_types::partial::PartialUpdate;
 use aml_types::storage::Storage;
+use serde::{Deserialize, Serialize};
 use smart_default::SmartDefault;
 use std::path::PathBuf;
 use strum_macros::{Display, EnumString};
@@ -345,25 +345,12 @@ structstruck::strike! {
       }
     },
     pub intelligence: struct IntelligenceConfig {
-      pub mcp_server: struct {
-        pub launcher: struct LauncherMcpServerConfig{
-          #[default = true]
-          pub enabled: bool,
-          #[default = 18970]
-          pub port: u16,
-        },
-      },
       pub log_analysis: struct LogAnalysisConfig {
         pub enabled: bool,
         pub base_url: String,
         pub api_key: String,
         pub selected_model: String,
       }
-    },
-    pub extension: struct ExtensionConfig {
-      pub enabled: Vec<String>,
-      #[serde(default)]
-      pub home_widget_state: Vec<(String, u32, bool)>,  // widget_key, width, collapsed
     },
     pub global_game_config: GameConfig,
     pub local_game_directories: Vec<GameDirectory>,

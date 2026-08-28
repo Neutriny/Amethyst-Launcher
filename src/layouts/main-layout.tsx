@@ -18,12 +18,7 @@ import { t } from "i18next";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Trans } from "react-i18next";
-import {
-  LuGrid2X2Plus,
-  LuLanguages,
-  LuPackagePlus,
-  LuScrollText,
-} from "react-icons/lu";
+import { LuLanguages, LuPackagePlus, LuScrollText } from "react-icons/lu";
 import { BeatLoader } from "react-spinners";
 import AdvancedCard from "@/components/common/advanced-card";
 import DevToolbar from "@/components/dev/dev-toolbar";
@@ -37,7 +32,6 @@ import {
 } from "@/components/special/file-dnd-overlay";
 import WindowTitlebar from "@/components/window-titlebar";
 import { useLauncherConfig } from "@/contexts/config";
-import { useExtensionHost } from "@/contexts/extension/host";
 import { useSharedModals } from "@/contexts/shared-modal";
 import { isDev } from "@/utils/env";
 
@@ -353,10 +347,9 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   );
 };
 
-// support modpack and extension import by DnD on the whole main-layout level
+// support modpack import by DnD on the whole main-layout level
 const MainLayoutFileDnD = () => {
   const { openSharedModal } = useSharedModals();
-  const { handleAddExtension } = useExtensionHost();
 
   useFileDnD({
     extensions: ["zip", "mrpack"],
@@ -366,17 +359,6 @@ const MainLayoutFileDnD = () => {
     onDrop: async ([path]) => {
       if (!path) return;
       openSharedModal("import-modpack", { path });
-    },
-  });
-
-  useFileDnD({
-    extensions: ["sjmclx"],
-    titleKey: "ExtensionSettingsPage.fileDnD.title",
-    descKey: "ExtensionSettingsPage.fileDnD.desc",
-    icon: LuGrid2X2Plus,
-    onDrop: async ([path]) => {
-      if (!path) return;
-      await handleAddExtension(path);
     },
   });
 

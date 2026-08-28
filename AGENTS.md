@@ -6,7 +6,7 @@
 
 - 基于 [SJMCL](https://github.com/UNIkeEN/SJMCL) 源码修改的 Minecraft 启动器
 - 使用 [Tauri](https://tauri.app/) 框架开发，前端 React + Next.js + [Chakra UI v2](https://v2.chakra-ui.com/)，后端 Rust
-- 支持多游戏目录与实例、多账户、MCP 集成、扩展系统、国际化
+- 支持多游戏目录与实例、多账户
 
 ### 项目结构
 
@@ -44,22 +44,19 @@ AML/
 │   │   │   ├── helpers       # 内部实现（处理复杂功能逻辑、私有数据模型）
 │   │   │   └── migrations.rs # 格式迁移（可选，兼容层，非迁移脚本）
 │   │   ├── discover/         # Minecraft 新闻与社区内容发现
-│   │   ├── extension/        # 扩展系统
 │   │   ├── instance/         # 游戏实例、实例资源管理
-│   │   ├── intelligence/     # 智能能力与 MCP 集成
+│   │   ├── intelligence/     # 智能能力（游戏日志分析）
 │   │   ├── launch/           # 启动流程
 │   │   ├── launcher_config/  # 启动器配置
 │   │   ├── resource/         # 游戏资源搜索与下载
 │   │   ├── tasks/            # 后台任务系统（现主要用于下载）
 │   │   └── utils/            # 后端工具函数
 │   ├── assets/               # 后端静态资源
-│   ├── crates/               # 计划分拆后端功能到对应crate，此为装载目录
-│   │   ├── aml-types/      # 后端通用Types以及Traits
-│   │   └── aml-macros/     # 后端所使用的过程宏包
-│   └── infoplist/            # macOS InfoPlist 资源
+│   └── crates/               # 计划分拆后端功能到对应crate，此为装载目录
+│       ├── aml-types/      # 后端通用Types以及Traits
+│       └── aml-macros/     # 后端所使用的过程宏包
 ├── public/                   # 前端静态资源
-├── docs/                     # 文档
-└── cli/                      # 配套 CLI（通过 MCP 集成操作应用本体）
+└── docs/                     # 文档
 ```
 
 - 前端代码整体按页面、组件、状态上下文与服务层分层。

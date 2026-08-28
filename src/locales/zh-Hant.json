@@ -63,11 +63,11 @@
       "settings": {
         "copyright": {
           "title": "版權",
-          "description": "版權所有 © 2024-2026 SJMCL 團隊 | Amethyst Launcher 修改版本 © 2025-2026 TannenWaddy"
+          "description": "版權所有 © 2024-2026 SJMCL 團隊 | Amethyst Launcher 修改版本 © 2025-2026 Neutriny"
         },
         "userAgreement": {
           "title": "使用者協議",
-          "url": "https://tannenwaddy.github.io/Amethyst-docs/docs/tos"
+          "url": "https://Neutriny.github.io/Amethyst-docs/docs/tos"
         },
         "openSourceLicense": {
           "title": "開源協議",
@@ -577,7 +577,7 @@
         },
         "customMirrorUrl": {
           "title": "自訂鏡像源地址",
-          "placeholder": "請輸入鏡像源地址，例如: https://example.com/maven/"
+          "placeholder": "輸入鏡像源地址，例如: https://example.com/maven/"
         }
       }
     },
@@ -678,7 +678,6 @@
       "forge-libraries": "Forge 執行庫",
       "optifine-libraries": "OptiFine 執行庫",
       "launcher-update": "更新啟動器",
-      "extension-update": "更新擴充套件 {{param1}} {{param2}}",
       "mojang-java": "Java {{param}} 執行時"
     }
   },
@@ -733,14 +732,6 @@
   },
   "Empty": {
     "noData": "無資料"
-  },
-  "EnableExtensionConfirmDialog": {
-    "title": "啟用擴充套件",
-    "body": "是否確認啟用來自 <hl>{{author}}</hl> 的 <hl>{{name}}</hl>（<hl>{{identifier}}</hl>）擴充套件？",
-    "button": {
-      "enable": "啟用"
-    },
-    "unknownDeveloper": "未知開發者"
   },
   "Enums": {
     "chakraColors": {
@@ -832,60 +823,6 @@
         "MultiMC": "主流啟動器廣泛支援，打包為完整實例"
       }
     }
-  },
-  "ExtensionContributionWrapper": {
-    "failedToRender": "擴充套件內容繪製失敗。"
-  },
-  "ExtensionHostContextProvider": {
-    "extensionProvidedDialog": "目前對話框由擴充套件 {{name}} 提供",
-    "toast": {
-      "activateError": "啟用擴充套件 {{name}} 失敗"
-    }
-  },
-  "ExtensionInfoModal": {
-    "label": {
-      "author": "作者",
-      "description": "描述"
-    }
-  },
-  "ExtensionOpenExternalLinkConfirmDialog": {
-    "title": "開啟外部連結",
-    "body": "擴充套件 {{extension}} 想要在外部瀏覽器中開啟 {{link}}",
-    "button": {
-      "open": "開啟"
-    }
-  },
-  "ExtensionSettingsDetailPage": {
-    "title": "{{name}} 設定"
-  },
-  "ExtensionSettingsPage": {
-    "alert": "Amethyst 無法控制第三方擴充套件的行為，包括它們如何處理你的個人資料。請僅安裝並啟用來自可信來源的擴充套件。",
-    "fileDnD": {
-      "title": "安裝 Amethyst 擴充套件",
-      "desc": "將擴充套件檔案 {{fileName}} 安裝到 Amethyst"
-    },
-    "installed": "已安裝擴充套件",
-    "menu": {
-      "info": "檢視資訊"
-    },
-    "top": {
-      "settings": {
-        "extensionDocs": {
-          "title": "擴充套件開發文件",
-          "description": "閱讀擴充套件系統介紹與 API 文件，使用腳手架快速上手",
-          "url": "https://tannenwaddy.github.io/Amethyst-docs/dev/extension/"
-        },
-        "awesomeExtensions": {
-          "title": "探索社群擴充套件",
-          "description": "前往 GitHub 瀏覽社群開發的擴充套件列表",
-          "url": "https://github.com/SJMC-Dev/awesome-Amethyst-extensions"
-        }
-      }
-    }
-  },
-  "ExtensionUpdateConfirmDialog": {
-    "title": "更新擴充套件",
-    "body": "擴充套件 {{identifier}} 已從 {{src}} 下載新版本 {{version}}，是否確認安裝？"
   },
   "FileDnDProvider": {
     "fileName": "{{fileName}} 等（共 {{count}} 個）"
@@ -1051,7 +988,7 @@
       "help": "幫助"
     },
     "bottomAlert": "如需尋求他人幫助，請匯出併發送崩潰報告，而非這個視窗的截圖",
-    "helpUrl": "https://tannenwaddy.github.io/AMLL-docs/docs/user-group.html",
+    "helpUrl": "https://Neutriny.github.io/AMLL-docs/docs/user-group.html",
     "crashDetails": {
       "title": "崩潰資訊",
       "OPENJ9": "目前實例無法在 OpenJ9 JVM 上執行，請使用 HotSpot JVM。",
@@ -1462,22 +1399,14 @@
       "settings": {
         "LauncherDocs": {
           "title": "Amethyst Launcher 文件",
-          "url": "https://tannenwaddy.github.io/AMLL-docs/docs"
+          "url": "https://Neutriny.github.io/AMLL-docs/docs"
         },
         "UserGroup": {
           "title": "使用者社群",
           "description": "歡迎加入 QQ 群或 GitHub Discussions，回報問題、請求功能或取得協助",
-          "url": "https://tannenwaddy.github.io/AMLL-docs/docs/user-group"
+          "url": "https://Neutriny.github.io/AMLL-docs/docs/user-group"
         }
       }
-    }
-  },
-  "HomeWidget": {
-    "extraOpMenu": {
-      "moveUp": "上移此卡片",
-      "moveDown": "下移此卡片",
-      "extensionInfo": "檢視擴充套件資訊",
-      "settings": "設定此擴充套件"
     }
   },
   "ImportAccountInfoModal": {
@@ -1694,25 +1623,6 @@
   "IntelligenceSettingsPage": {
     "title": "Amethyst 智慧",
     "description": "將 AI 模型整合到你的啟動器與 Minecraft 遊玩體驗中。",
-    "mcpServer": {
-      "title": "MCP 服務",
-      "headExtra": "需要重新啟動",
-      "settings": {
-        "enabled": {
-          "title": "啟動器 MCP 服務",
-          "description": "啟用本機 MCP 服務，以連線外部 Agent 應用並自動化控制啟動器。"
-        },
-        "docs": {
-          "title": "使用指南",
-          "description": "了解如何將啟動器連線到外部 Agent 應用（例如 Claude、Cherry Studio 等）。",
-          "url": "https://tannenwaddy.github.io/AMLL-docs/docs/intelligence/launcher-mcp"
-        },
-        "port": {
-          "title": "連接埠",
-          "description": "啟動器 MCP 服務使用的固定本機連接埠。"
-        }
-      }
-    },
     "logAnalysis": {
       "title": "日誌分析",
       "headExtra": "設定 LLM 以分析遊戲日誌",
@@ -3083,37 +2993,6 @@
         }
       }
     },
-    "extension": {
-      "retrieveExtensionList": {
-        "error": {
-          "title": "獲取擴充套件列表失敗"
-        }
-      },
-      "addExtension": {
-        "success": "擴充套件新增成功",
-        "error": {
-          "title": "擴充套件新增失敗",
-          "description": {
-            "INVALID_PACKAGE_FORMAT": "擴充套件封包內容格式無效",
-            "INVALID_IDENTIFIER": "擴充套件識別碼無效",
-            "IDENTIFIER_MISMATCH": "擴充套件識別碼與預期不符",
-            "INVALID_NAME": "擴充套件名稱無效",
-            "LAUNCHER_VERSION_TOO_LOW": "啟動器版本過低",
-            "EXTENSION_NOT_FOUND": "找不到要新增的檔案"
-          }
-        }
-      },
-      "deleteExtension": {
-        "success": "擴充套件刪除成功",
-        "error": {
-          "title": "擴充套件刪除失敗",
-          "description": {
-            "INVALID_IDENTIFIER": "擴充套件識別碼無效",
-            "EXTENSION_NOT_FOUND": "找不到對應的擴充套件"
-          }
-        }
-      }
-    },
     "task": {
       "scheduleProgressiveTaskGroup": {
         "error": "任務建立失敗"
@@ -3145,7 +3024,6 @@
       "appearance": "外觀",
       "download": "下載資源",
       "intelligence": "智慧",
-      "extension": "擴充套件",
       "help": "文件與幫助",
       "about": "關於"
     }
@@ -3283,9 +3161,6 @@
     "button": {
       "agree": "同意並繼續"
     }
-  },
-  "WindowTitlebar": {
-    "extensionProvidedPage": "此頁面由擴充套件 {{name}} 提供"
   },
   "WorldLevelDataModal": {
     "header": {

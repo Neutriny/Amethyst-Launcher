@@ -140,7 +140,7 @@ const AboutSettingsPage = () => {
                 ))}
               </AvatarGroup>
               <CommonIconButton
-                label="https://github.com/TannenWaddy/Amethyst-Launcher/graphs/contributors?all=1"
+                label="https://github.com/Neutriny/Amethyst-Launcher/graphs/contributors?all=1"
                 icon="external"
                 withTooltip
                 tooltipPlacement="bottom-end"
@@ -148,7 +148,7 @@ const AboutSettingsPage = () => {
                 h={18}
                 onClick={() => {
                   openUrl(
-                    "https://github.com/TannenWaddy/Amethyst-Launcher/graphs/contributors?all=1"
+                    "https://github.com/Neutriny/Amethyst-Launcher/graphs/contributors?all=1"
                   );
                 }}
               />
@@ -159,14 +159,14 @@ const AboutSettingsPage = () => {
           title: t("AboutSettingsPage.about.settings.sourceCode.title"),
           children: (
             <CommonIconButton
-              label="https://github.com/TannenWaddy/Amethyst-Launcher"
+              label="https://github.com/Neutriny/Amethyst-Launcher"
               icon="external"
               withTooltip
               tooltipPlacement="bottom-end"
               size="xs"
               h={18}
               onClick={() => {
-                openUrl("https://github.com/TannenWaddy/Amethyst-Launcher");
+                openUrl("https://github.com/Neutriny/Amethyst-Launcher");
               }}
             />
           ),
@@ -233,14 +233,14 @@ const AboutSettingsPage = () => {
           ),
           children: (
             <CommonIconButton
-              label="https://github.com/TannenWaddy/Amethyst-Launcher?tab=readme-ov-file#版权声明"
+              label="https://github.com/Neutriny/Amethyst-Launcher?tab=readme-ov-file#版权声明"
               icon="external"
               withTooltip
               tooltipPlacement="bottom-end"
               size="xs"
               onClick={() => {
                 openUrl(
-                  "https://github.com/TannenWaddy/Amethyst-Launcher?tab=readme-ov-file#版权声明"
+                  "https://github.com/Neutriny/Amethyst-Launcher?tab=readme-ov-file#版权声明"
                 );
               }}
             />

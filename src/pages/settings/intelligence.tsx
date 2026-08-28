@@ -2,14 +2,11 @@ import {
   Box,
   Icon,
   Input,
-  NumberInput,
-  NumberInputField,
   Switch,
   Text,
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
-import { openUrl } from "@tauri-apps/plugin-opener";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { LuSparkles, LuWifi } from "react-icons/lu";
@@ -27,10 +24,6 @@ const IntelligenceSettingsPage = () => {
   const primaryColor = config.appearance.theme.primaryColor;
   const toast = useToast();
 
-  const [port, setPort] = useState<number>(
-    config.intelligence.mcpServer.launcher.port
-  );
-
   const [logAnalysisBaseUrl, setLogAnalysisBaseUrl] = useState(
     config.intelligence.logAnalysis.baseUrl
   );
@@ -38,10 +31,6 @@ const IntelligenceSettingsPage = () => {
     config.intelligence.logAnalysis.apiKey
   );
   const [isTestingConnection, setIsTestingConnection] = useState(false);
-
-  useEffect(() => {
-    setPort(config.intelligence.mcpServer.launcher.port);
-  }, [config.intelligence.mcpServer.launcher.port]);
 
   useEffect(() => {
     setLogAnalysisBaseUrl(config.intelligence.logAnalysis.baseUrl);
@@ -120,97 +109,6 @@ const IntelligenceSettingsPage = () => {
           description: t("IntelligenceSettingsPage.description"),
           children: <></>,
         },
-      ],
-    },
-    {
-      title: t("IntelligenceSettingsPage.mcpServer.title"),
-      headExtra: (
-        <Box display="flex" alignItems="center">
-          <Text fontSize="xs" className="secondary-text">
-            {t("IntelligenceSettingsPage.mcpServer.headExtra")}
-          </Text>
-        </Box>
-      ),
-      items: [
-        {
-          title: t("IntelligenceSettingsPage.mcpServer.settings.enabled.title"),
-          description: t(
-            "IntelligenceSettingsPage.mcpServer.settings.enabled.description"
-          ),
-          children: (
-            <Switch
-              colorScheme={primaryColor}
-              isChecked={config.intelligence.mcpServer.launcher.enabled}
-              onChange={(e) => {
-                update(
-                  "intelligence.mcpServer.launcher.enabled",
-                  e.target.checked
-                );
-              }}
-            />
-          ),
-        },
-        ...(config.intelligence.mcpServer.launcher.enabled
-          ? [
-              {
-                title: t(
-                  "IntelligenceSettingsPage.mcpServer.settings.docs.title"
-                ),
-                description: t(
-                  "IntelligenceSettingsPage.mcpServer.settings.docs.description"
-                ),
-                children: (
-                  <CommonIconButton
-                    label={t(
-                      "IntelligenceSettingsPage.mcpServer.settings.docs.url"
-                    )}
-                    icon="external"
-                    withTooltip
-                    tooltipPlacement="bottom-end"
-                    size="xs"
-                    onClick={() => {
-                      openUrl(
-                        t(
-                          "IntelligenceSettingsPage.mcpServer.settings.docs.url"
-                        )
-                      );
-                    }}
-                  />
-                ),
-              },
-              {
-                title: t(
-                  "IntelligenceSettingsPage.mcpServer.settings.port.title"
-                ),
-                description: t(
-                  "IntelligenceSettingsPage.mcpServer.settings.port.description"
-                ),
-                children: (
-                  <NumberInput
-                    min={1}
-                    max={65535}
-                    size="xs"
-                    maxW={16}
-                    value={port}
-                    onChange={(value) => {
-                      if (!/^\d*$/.test(value)) return;
-                      setPort(Number(value));
-                    }}
-                    onBlur={() => {
-                      const nextPort = Math.max(
-                        1,
-                        Math.min(port || 18970, 65535)
-                      );
-                      setPort(nextPort);
-                      update("intelligence.mcpServer.launcher.port", nextPort);
-                    }}
-                  >
-                    <NumberInputField pr={0} />
-                  </NumberInput>
-                ),
-              },
-            ]
-          : []),
       ],
     },
     {

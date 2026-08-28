@@ -1,5 +1,4 @@
 import { BuildType } from "@/enums/misc";
-import type { HomeWidgetStateTuple } from "@/models/extension";
 
 export interface GameConfig {
   gameJava: {
@@ -155,22 +154,12 @@ export interface LauncherConfig {
     };
   };
   intelligence: {
-    mcpServer: {
-      launcher: {
-        enabled: boolean;
-        port: number;
-      };
-    };
     logAnalysis: {
       enabled: boolean;
       baseUrl: string;
       apiKey: string;
       selectedModel: string;
     };
-  };
-  extension: {
-    enabled: string[];
-    homeWidgetState: HomeWidgetStateTuple[];
   };
   localGameDirectories: GameDirectory[];
   globalGameConfig: GameConfig;
@@ -355,22 +344,12 @@ export const defaultConfig: LauncherConfig = {
     },
   },
   intelligence: {
-    mcpServer: {
-      launcher: {
-        enabled: true,
-        port: 18970,
-      },
-    },
     logAnalysis: {
       enabled: false,
       baseUrl: "",
       apiKey: "",
       selectedModel: "",
     },
-  },
-  extension: {
-    enabled: [],
-    homeWidgetState: [],
   },
   localGameDirectories: [{ name: "Current", dir: ".minecraft/" }],
   globalGameConfig: defaultGameConfig,
