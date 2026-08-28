@@ -1,136 +1,96 @@
-# Amethyst Launcher 项目开发指南
+# Amethyst Launcher
 
-> 本文件为 AI 编程助手提供项目上下文和开发规范。
+基于 Tauri v2 的 Minecraft 启动器（Rust 后端 + SolidJS 前端 + UnoCSS + Vite）。
 
-## 项目信息
+## 环境要求
 
-- 基于 [SJMCL](https://github.com/UNIkeEN/SJMCL) 源码修改的 Minecraft 启动器
-- 使用 [Tauri](https://tauri.app/) 框架开发，前端 React + Next.js + [Chakra UI v2](https://v2.chakra-ui.com/)，后端 Rust
-- 支持多游戏目录与实例、多账户
+- **系统**：仅 Windows (x86_64)，暂不支持 macOS / Linux
+- **Node.js**：>= 22
+- **Rust**：最新稳定版（通过 `rustup update` 保持）
+- **包管理器**：pnpm
+- **WebView2**：Windows 已预装，若窗口无法启动请检查 Edge WebView2 Runtime
 
-### 项目结构
+## 常用命令
 
-> 以下为精简后的核心结构示意，仅列出高频开发目录与关键入口，不展开所有文件。
-
-```text
-AML/
-├── src/                      # 前端源码（React）
-│   ├── pages/                # 前端页面路由（Next JS Page Router）
-│   │   ├── ...               
-│   │   ├── extension/        # 扩展页面入口
-│   │   └── standalone/       # 独立窗口页面（如游戏日志、错误页）
-│   ├── components/           # 通用与业务组件
-│   │   ├── common/           # 基础组件
-│   │   ├── modals/           # 各类弹窗
-│   │   ├── extension/        # 扩展系统相关组件
-│   │   └── special/          # 全局事件、共享 Provider 等特殊组件
-│   ├── layouts/              # 页面布局封装（一类特殊组件）
-│   ├── contexts/             # React Context 与对应 Provider
-│   │   └── extension/        # 扩展宿主上下文
-│   ├── hooks/                # 自定义 Hooks
-│   ├── services/             # 前端服务层，与后端各功能域交互
-│   ├── models/               # 数据模型
-│   ├── locales/              # i18n 国际化文本
-│   ├── styles/               # Chakra 主题、CSS 样式
-│   ├── enums/                # 枚举定义
-│   └── utils/                # 前端工具函数
-├── src-tauri/                # 后端源码（Rust）
-│   ├── src/                  
-│   │   ├── account/          # 账户管理
-│   │   │   ├── mod.rs        # 各功能模块下遵循类似结构，分为以下若干模块（文件或文件夹形式）
-│   │   │   ├── commands.rs   # Tauri 命令（包含少量功能逻辑）
-│   │   │   ├── constants.rs  # 常量
-│   │   │   ├── models        # 数据模型
-│   │   │   ├── helpers       # 内部实现（处理复杂功能逻辑、私有数据模型）
-│   │   │   └── migrations.rs # 格式迁移（可选，兼容层，非迁移脚本）
-│   │   ├── discover/         # Minecraft 新闻与社区内容发现
-│   │   ├── instance/         # 游戏实例、实例资源管理
-│   │   ├── intelligence/     # 智能能力（游戏日志分析）
-│   │   ├── launch/           # 启动流程
-│   │   ├── launcher_config/  # 启动器配置
-│   │   ├── resource/         # 游戏资源搜索与下载
-│   │   ├── tasks/            # 后台任务系统（现主要用于下载）
-│   │   └── utils/            # 后端工具函数
-│   ├── assets/               # 后端静态资源
-│   └── crates/               # 计划分拆后端功能到对应crate，此为装载目录
-│       ├── aml-types/      # 后端通用Types以及Traits
-│       └── aml-macros/     # 后端所使用的过程宏包
-├── public/                   # 前端静态资源
-└── docs/                     # 文档
+```bash
+pnpm install          # 安装前端依赖
+pnpm tauri dev        # 启动 Vite 开发服务器 + Tauri 窗口
+pnpm tauri build      # 生产构建（前端 build + Rust release 编译）
+pnpm lint             # ESLint 检查 (src/)
+pnpm lint:fix         # ESLint 自动修复
+pnpm format           # Prettier 格式化
+pnpm format:check     # Prettier 检查
+pnpm check            # ESLint + Prettier 同时检查
 ```
 
-- 前端代码整体按页面、组件、状态上下文与服务层分层。
-- 后端代码整体先按功能域划分模块；每个功能域内使用类似结构。
-- 前端 `services/` 封装对 Tauri 后端的 `invoke` 调用与 `emit` 监听，和后端各功能域的 `commands.rs` 一一对应。
+> 首次运行 `pnpm tauri dev` 时会下载并编译 Rust 依赖，耗时较长，属正常现象。
 
----
-
-## 通用编码规范
-
-- 所有源代码文件统一使用 UTF-8 编码
-- 前端导入优先使用已配置别名和绝对路径、不使用相对路径；后端导入使用绝对路径（`use crate::...`），不使用相对路径（`use super::...`）。
-- 新增或修改 `src/locales` 下的国际化文本时，同时更新所有语言文件。注意语言文件的一级 key 使用字母序排序。
-- 目前仅支持 Windows 平台开发和测试
-
----
-
-## 编码行为准则
-
-旨在减少 LLM 编码中常见错误的行为准则，可与项目特定指令合并使用。
-
-**权衡：** 本准则倾向于"谨慎优于速度"。对于简单任务，请自行判断。
-
-### 1. 先思考再编码
-
-**"不要默认假设。不要隐藏困惑。呈现权衡。"**
-
-实现之前：
-
-- 明确陈述假设；如果不确定或不明白，就提问。
-- 当存在多种理解时，逐一列出而非默默选择。
-- 如果存在更简单的方案，直接说明并在必要时提出异议。
-
-### 2. 简洁优先
-
-**"用最少的代码解决问题。不做臆测性编码。"**
-
-- 不实现超出需求的特性。
-- 不为仅使用一次的代码做抽象。
-- 不添加未经要求的"灵活性"或"可配置性"。
-- 不处理在当前系统边界内不会发生的错误场景。
-
-### 3. 精准改动
-
-**"只改必须改的。只清理自己制造的遗留。"**
-
-编辑现有代码时：
-
-- 不要"改善"相邻的代码、注释或格式。
-- 不要重构没有问题的代码。
-- 与现有风格保持一致。
-- 如果发现无关的废弃代码，提出来而不是直接删除。
-
-当你的改动产生了孤立的代码时：
-
-- 移除因你的改动而变得未使用的 import/变量/函数。
-- 不要移除之前就存在的废弃代码，除非被明确要求。
-
-检验标准："每一行改动都应该能追溯到用户的请求。"
-
-### 4. 目标驱动执行
-
-**"定义成功标准。循环验证直到通过。"**
-
-将任务转化为可验证的目标：
-
-- "添加校验" → 为无效输入编写测试，然后使其通过
-- "修复 Bug" → 编写复现测试，然后使其通过
-- "重构 X" → 确保重构前后测试都通过
-
-对于多步骤任务，简要列出计划：
+## 项目结构
 
 ```
-1. [步骤] → 验证：[检查方式]
-2. [步骤] → 验证：[检查方式]
-3. [步骤] → 验证：[检查方式]
+src/
+  index.tsx          # 前端入口（SolidJS render）
+  App.tsx            # 根组件
+  App.css            # 根组件样式
+  assets/            # 静态资源（logo.svg 等）
+  vite-env.d.ts      # Vite 类型声明
+
+src-tauri/
+  src/
+    main.rs          # 二进制入口，调用 lib::run()
+    lib.rs           # Tauri 应用构建与命令注册
+  Cargo.toml         # Rust 依赖（tauri v2、serde 等）
+  tauri.conf.json    # Tauri 配置（窗口、安全、构建、打包）
+  icons/             # 应用图标（多分辨率）
 ```
+
+### 前后端通信
+
+前端通过 `@tauri-apps/api/core` 的 `invoke("command_name", { args })` 调用 Rust 命令。
+Rust 命令使用 `#[tauri::command]` 宏标注，在 `lib.rs` 中通过 `tauri::generate_handler!` 注册。
+
+> 当前后端仅注册了示例命令 `greet`，后续业务命令（如启动游戏、版本管理）均在此扩展。
+
+## 关键配置
+
+| 文件                        | 说明                                                                     |
+|-----------------------------|--------------------------------------------------------------------------|
+| `eslint.config.js`          | ESLint v10 flat config（TS + SolidJS + Prettier）                        |
+| `.prettierrc`               | 双引号、分号、100 字宽、LF 换行                                          |
+| `uno.config.ts`             | presetWind4 + presetAttributify + presetIcons                            |
+| `tsconfig.json`             | 严格模式，JSX preserve 配合 `solid-js`                                   |
+| `src-tauri/tauri.conf.json` | Tauri 配置；开发服务器 `http://localhost:1420`；窗口默认 800x600         |
+| `src-tauri/Cargo.toml`      | Rust 依赖；lib 名称 `amethyst_launcher_lib`（避免 Windows DLL 命名冲突） |
+
+### UnoCSS 使用方式
+
+本项目使用 **presetWind4**（Tailwind 语义）编写工具类：
+
+```tsx
+<div class="flex items-center gap-4 p-4 bg-slate-900 text-white rounded-lg">
+```
+
+> `presetAttributify` 已启用，也可使用属性写法（如 `<div flex items-center>`），但项目中以 `class` 为主。
+
+## 开发约定
+
+- **换行符**：统一 LF（`.gitattributes` 已配置）
+- **编码**：UTF-8 无 BOM
+- **路径风格**：前端代码中避免硬编码 Windows 反斜杠；Rust 端使用 `std::path::PathBuf` 处理跨路径
+- **错误处理**：Rust 命令优先返回 `Result<T, String>` 而非 panic，前端通过 `try/catch` 捕获
+
+## 常见问题
+
+- **`src-tauri/target` 体积过大**：属正常 Rust 构建产物，已加入 `.gitignore`，无需提交
+- **窗口白屏 / 无法启动**：检查是否安装了 WebView2 Runtime；检查 `localhost:1420` 是否被占用
+- **构建失败提示缺少依赖**：确保 Rust 工具链完整（`rustup component add rust-src` 一般不需要，但 MSVC 编译工具链必须安装）
+
+## 扩展方向（Minecraft 启动器业务）
+
+后续开发可能涉及以下模块，新增命令和组件时请按职责划分：
+
+- **版本管理**：`.minecraft/versions/` 目录扫描、版本 JSON 解析、Forge/Fabric/NeoForge 安装
+- **Java 管理**：自动发现系统 Java、指定 Java 路径、版本兼容性检查
+- **账户系统**：Microsoft OAuth、离线账户、外置登录（Authlib-Injector）
+- **启动参数**：游戏内存、JVM 参数、自定义分辨率、服务器直连
+- **下载器**：版本资源、库文件、资源文件异步下载与校验

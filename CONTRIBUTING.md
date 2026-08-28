@@ -8,7 +8,7 @@
 
 ## 报告问题
 
-使用 [GitHub Issues](https://github.com/Neutriny/Amethyst/issues) 提交问题。请使用相应的 Issue 模板，并提供以下信息：
+使用 [GitHub Issues](https://github.com/Neutriny/Amethyst-Launcher/issues) 提交问题。请使用相应的 Issue 模板，并提供以下信息：
 
 - 问题的复现步骤
 - 期望的行为
@@ -50,12 +50,6 @@ pnpm install
 
 ```bash
 pnpm tauri dev
-```
-
-### 代码检查
-
-```bash
-pnpm lint-staged
 ```
 
 ### 构建

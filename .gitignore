@@ -1,36 +1,3 @@
-# Dependencies
 node_modules
-
-# Build output
-/out
-/build
-/target
-/dist
-
-# Next.js
-.next
-
-# Environment
-.env
-
-# IDE
+dist
 .idea
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Logs
-*.log
-logs
-
-# Lock files
-package-lock.json
-
-# Debug
-*.pem

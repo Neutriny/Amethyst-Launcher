@@ -4,7 +4,7 @@
 
 ## 關於本專案
 
-Amethyst Launcher 是基於 [SJMCL 啟動器](https://github.com/UNIkeEN/SJMCL) 二次開發的分支專案，在原作基礎上進行了修改與功能擴展，並遵循原專案的 GPL-3.0 許可證開源。
+Amethyst Launcher 是使用 Tauri v2 + SolidJS + UnoCSS 全新打造的 Minecraft 啟動器，非 SJMCL 的二次開發或分支專案。
 
 ## 功能特性
 
@@ -23,7 +23,6 @@ Amethyst Launcher 是基於 [SJMCL 啟動器](https://github.com/UNIkeEN/SJMCL) 
 ### 智慧功能
 
 - **AI 日誌分析**：遊戲崩潰時可使用 AI 分析遊戲日誌，快速定位崩潰原因並給出修復建議。
-- **MCP 服務**：透過 MCP（Model Context Protocol）服務與外部 Agent 協同工作，提供自動化能力與智慧互動。
 
 ### 外觀與體驗
 
@@ -33,9 +32,9 @@ Amethyst Launcher 是基於 [SJMCL 啟動器](https://github.com/UNIkeEN/SJMCL) 
 
 ## 技術堆疊
 
-[![Tauri](https://img.shields.io/badge/Tauri-v2-FFC131?style=for-the-badge&logo=tauri&logoColor=white&labelColor=24C8DB)](https://tauri.app/)
-[![Next JS](https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
-[![Chakra UI](https://img.shields.io/badge/chakra_ui-v2-38B2AC?style=for-the-badge&logo=chakraui&logoColor=white&labelColor=319795)](https://v2.chakra-ui.com/)
+[![Tauri](https://img.shields.io/badge/Tauri_v2-FFC131?style=for-the-badge&logo=tauri&logoColor=white&labelColor=24C8DB)](https://tauri.app/)
+[![SolidJS](https://img.shields.io/badge/SolidJS-2C4F7C?style=for-the-badge&logo=solidjs&logoColor=white)](https://www.solidjs.com/)
+[![UnoCSS](https://img.shields.io/badge/UnoCSS-333333?style=for-the-badge&logo=unocss&logoColor=white)](https://unocss.dev/)
 
 ## 開始使用
 
@@ -52,8 +51,7 @@ Amethyst Launcher 是基於 [SJMCL 啟動器](https://github.com/UNIkeEN/SJMCL) 
 首先複製本專案並安裝前端依賴：
 
 ```bash
-git clone https://github.com/Neutriny/Amethyst-Launcher.git AML
-cd AML
+git clone https://github.com/Neutriny/Amethyst-Launcher.git 
 pnpm install
 ```
 
@@ -63,25 +61,19 @@ pnpm install
 pnpm tauri dev
 ```
 
+程式碼格式化：
+
+```bash
+pnpm format
+```
+
 ## 版權聲明
 
-版權所有 © 2024-2026 SJMCL 團隊 | Amethyst Launcher 修改版本 © 2025-2026 Neutriny
+版權所有 © 2025-2026 [Neutriny](https://github.com/Neutriny)
+
+本軟體基於 [MIT 許可證](/LICENSE) 開源。
 
 > 本軟體並非官方 Minecraft 服務。未獲得 Mojang 或 Microsoft 批准或關聯許可。
-
-本專案基於 [GNU 通用公共授權條款 v3.0](/LICENSE) 發佈。
-
-原專案：[SJMCL](https://github.com/UNIkeEN/SJMCL) - 上海交通大學 Minecraft 社開發的跨平台 Minecraft 啟動器。
-
-依據 GPLv3 第 7 條款，當您分發本軟體的修改版本時，除遵守 GPLv3 外，還須遵守以下 [附加條款](/LICENSE.EXTRA)：
-
-1. 必須更換軟體名稱，禁止使用 SJMCL 或 SJMC Launcher；
-2. 在您的倉庫 README、分發網站或相關文件、軟體的關於頁面中，須明確標註您的程式基於 SJMCL，並註明原倉庫連結。
-
-## 致謝
-
-- 感謝 [SJMCL 團隊](https://github.com/UNIkeEN/SJMCL) 提供的優秀開源專案
-- 感謝 [MUA 高校聯盟](https://www.mualliance.cn) 提供的認證伺服器支援
 
 ## 聯繫方式
 
