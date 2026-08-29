@@ -76,8 +76,23 @@ Rust 命令使用 `#[tauri::command]` 宏标注，在 `lib.rs` 中通过 `tauri:
 
 - **换行符**：统一 LF（`.gitattributes` 已配置）
 - **编码**：UTF-8 无 BOM
-- **路径风格**：前端代码中避免硬编码 Windows 反斜杠；Rust 端使用 `std::path::PathBuf` 处理跨路径
-- **错误处理**：Rust 命令优先返回 `Result<T, String>` 而非 panic，前端通过 `try/catch` 捕获
+- **注释语言**：中文
+- **提交信息**：中文，简洁描述变更
+
+### Rust 端
+
+- **命名规范**：函数/变量 `snake_case`，类型 `PascalCase`，常量 `SCREAMING_SNAKE_CASE`
+- **错误处理**：优先返回 `Result<T, String>` 而非 panic；复杂场景可引入 `thiserror`
+- **模块组织**：按功能划分模块（如 `version.rs`、`java.rs`）
+- **路径处理**：使用 `std::path::PathBuf` 处理跨平台路径
+
+### 前端端
+
+- **组件命名**：`PascalCase`（如 `App.tsx`、`VersionList.tsx`）
+- **文件命名**：组件文件 `PascalCase.tsx`，工具文件 `camelCase.ts`
+- **状态管理**：使用 `createSignal`，避免解构 reactive 值（ESLint 已配置 `solid/no-destructure`）
+- **样式编写**：使用 UnoCSS class，避免内联样式
+- **未使用变量**：以 `_` 前缀命名（ESLint 已配置 `argsIgnorePattern: "^_"`）
 
 ## 常见问题
 
