@@ -4,7 +4,7 @@
 
 ## 关于本项目
 
-Amethyst Launcher 是使用 Tauri v2 + SolidJS + UnoCSS 全新打造的 Minecraft 启动器
+Amethyst Launcher （简称“AML”，中文名为紫水晶启动器）是使用 Tauri v2 + SolidJS + UnoCSS 全新打造的 Minecraft 启动器，
 
 ## 功能特性
 
@@ -27,7 +27,6 @@ Amethyst Launcher 是使用 Tauri v2 + SolidJS + UnoCSS 全新打造的 Minecraf
 ### 外观与体验
 
 - **主题定制**：支持自定义强调色、颜色模式（浅色/深色/跟随系统）、背景图片与字体。
-- **液态玻璃效果**：可选的液态玻璃 UI 效果，带来现代感视觉体验。
 - **语言支持**：支持简体中文和繁体中文。
 
 ## 技术栈

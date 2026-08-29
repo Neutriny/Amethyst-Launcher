@@ -1,7 +1,7 @@
-# Normalize all text files to LF in repository
+# 将所有文本文件在仓库中统一为 LF 换行符
 * text=auto eol=lf
 
-# Force LF for specific file types
+# 强制以下文件类型使用 LF 换行符
 *.ts text eol=lf
 *.tsx text eol=lf
 *.js text eol=lf
@@ -15,7 +15,7 @@
 *.toml text eol=lf
 *.rs text eol=lf
 
-# Binary files
+# 二进制文件
 *.png binary
 *.jpg binary
 *.jpeg binary

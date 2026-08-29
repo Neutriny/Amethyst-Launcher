@@ -12,11 +12,11 @@ MIT 许可证中文说明
   分发本软件（或修改版本）时，在以下位置保留版权声明：
     1. 二进制分发：在 LICENSE / NOTICE / ABOUT 等文档中包含版权声明
     2. 源码分发：在项目根目录或源文件中包含版权声明
-  推荐在源文件顶部添加：
-  ```
-  // Copyright (c) 2026 Neutriny
-  // SPDX-License-Identifier: MIT
-  ```
+      推荐在源文件顶部添加：
+      ```
+      // Copyright (c) 2026 Neutriny
+      // SPDX-License-Identifier: MIT
+      ```
 
 免责声明：
   软件按"原样"提供，不提供任何担保。使用者自行承担一切风险。
