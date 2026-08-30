@@ -1,7 +1,7 @@
 [package]
 name = "amethyst-launcher"
 version = "0.1.0"
-description = "A Tauri App"
+description = "A Minecraft Launher"
 authors = ["Neutriny"]
 edition = "2024"
 
