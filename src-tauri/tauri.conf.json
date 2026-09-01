@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "amethyst-launcher",
+        "title": "Amethyst Launcher",
         "width": 800,
         "height": 600
       }

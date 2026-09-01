@@ -1,7 +1,5 @@
 # Amethyst Launcher
 
-**简体中文** | [繁體中文](README.zh-Hant.md)
-
 ## 关于本项目
 
 Amethyst Launcher （简称“AML”，中文名为紫水晶启动器）是使用 Tauri v2 + SolidJS + UnoCSS 全新打造的 Minecraft 启动器，
@@ -27,7 +25,7 @@ Amethyst Launcher （简称“AML”，中文名为紫水晶启动器）是使�
 ### 外观与体验
 
 - **主题定制**：支持自定义强调色、颜色模式（浅色/深色/跟随系统）、背景图片与字体。
-- **语言支持**：支持简体中文和繁体中文。
+- **语言支持**：支持简体中文。
 
 ## 技术栈
 
@@ -71,12 +69,12 @@ pnpm format
 
 ## 版权声明
 
-版权所有 © 2025-2026 [Neutriny](https://github.com/Neutriny)
-
-本软件基于 [MIT 许可证](/LICENSE) 开源。
+本软件基于 [GNU 通用公共许可证 v3.0](/LICENSE) 开源。
 
 > 本软件并非官方 Minecraft 服务。未获得 Mojang 或 Microsoft 批准或关联许可。
 
 ## 联系方式
 
 如有问题，请通过 [GitHub Issues](https://github.com/Neutriny/Amethyst-Launcher/issues) 联系。
+
+想和作者私下交流？发邮件至 [neutriny@yeah.net](mailto://neutriny@yeah.net) ，说明你的来意

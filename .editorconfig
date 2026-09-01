@@ -18,10 +18,6 @@ indent_size = 2
 [*.{html,htm,css}]
 indent_size = 2
 
-[*.{sh,bash}]
-indent_size = 4
-indent_style = tab
-
 [*.md]
 indent_size = 2
 trim_trailing_whitespace = false

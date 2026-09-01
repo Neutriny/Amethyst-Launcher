@@ -12,7 +12,7 @@
 
 ## 常用命令
 
-```bash
+```shell
 pnpm install          # 安装前端依赖
 pnpm tauri dev        # 启动 Vite 开发服务器 + Tauri 窗口
 pnpm tauri build      # 生产构建（前端 build + Rust release 编译）
@@ -127,7 +127,7 @@ Rust 命令使用 `#[tauri::command]` 宏标注，在 `lib.rs` 中通过 `tauri:
 - **模块组织**：按功能划分模块（如 `version.rs`、`java.rs`）
 - **路径处理**：使用 `std::path::PathBuf` 处理跨平台路径
 
-### 前端端
+### 前端
 
 - **组件命名**：`PascalCase`（如 `App.tsx`、`VersionList.tsx`）
 - **文件命名**：组件文件 `PascalCase.tsx`，工具文件 `camelCase.ts`
