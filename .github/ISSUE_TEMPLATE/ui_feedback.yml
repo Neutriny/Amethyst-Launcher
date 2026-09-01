@@ -1,7 +1,7 @@
 name: 🎨 UI/UX 反馈
 description: 界面显示异常、交互体验问题、可访问性建议
 title: "[UI] "
-labels: ["ui", "ux", "triage"]
+labels: ["ui", "ux", "needs-triage"]
 body:
   - type: markdown
     attributes:

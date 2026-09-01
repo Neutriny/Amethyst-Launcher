@@ -4,7 +4,7 @@
 
 ## 关于本项目
 
-Amethyst Launcher 是使用 Tauri v2 + SolidJS + UnoCSS 全新打造的 Minecraft 启动器
+Amethyst Launcher （简称“AML”，中文名为紫水晶启动器）是使用 Tauri v2 + SolidJS + UnoCSS 全新打造的 Minecraft 启动器，
 
 ## 功能特性
 
@@ -27,14 +27,16 @@ Amethyst Launcher 是使用 Tauri v2 + SolidJS + UnoCSS 全新打造的 Minecraf
 ### 外观与体验
 
 - **主题定制**：支持自定义强调色、颜色模式（浅色/深色/跟随系统）、背景图片与字体。
-- **液态玻璃效果**：可选的液态玻璃 UI 效果，带来现代感视觉体验。
 - **语言支持**：支持简体中文和繁体中文。
 
 ## 技术栈
 
 [![Tauri](https://img.shields.io/badge/Tauri_v2-FFC131?style=for-the-badge&logo=tauri&logoColor=white&labelColor=24C8DB)](https://tauri.app/)
-[![SolidJS](https://img.shields.io/badge/SolidJS-2C4F7C?style=for-the-badge&logo=solidjs&logoColor=white)](https://www.solidjs.com/)
-[![UnoCSS](https://img.shields.io/badge/UnoCSS-333333?style=for-the-badge&logo=unocss&logoColor=white)](https://unocss.dev/)
+![pnpm](https://img.shields.io/badge/pnpm-v12.0-F69220?style=for-the-badge&logo=pnpm&logoColor=white)
+![SolidJS](https://img.shields.io/badge/SolidJS-v1.9-2C4F7C?style=for-the-badge&logo=solid&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-v5.6-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-v6.0-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![UnoCSS](https://img.shields.io/badge/UnoCSS-v66.8-333333?style=for-the-badge&logo=unocss&logoColor=white)
 
 ## 开始使用
 
@@ -71,7 +73,7 @@ pnpm format
 
 版权所有 © 2025-2026 [Neutriny](https://github.com/Neutriny)
 
-本软件基于 [MIT 许可证](/LICENSE) 开源（[中文翻译](/LICENSE.zh-CN.md)）。
+本软件基于 [MIT 许可证](/LICENSE) 开源。
 
 > 本软件并非官方 Minecraft 服务。未获得 Mojang 或 Microsoft 批准或关联许可。
 

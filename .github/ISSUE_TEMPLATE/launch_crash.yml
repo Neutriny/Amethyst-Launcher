@@ -1,7 +1,7 @@
 name: 🎮 启动失败 / 游戏崩溃
 description: 游戏无法启动、启动过程中崩溃或闪退
 title: "[Launch] "
-labels: ["launch", "crash", "triage"]
+labels: ["launch", "crash", "needs-triage"]
 body:
   - type: markdown
     attributes:

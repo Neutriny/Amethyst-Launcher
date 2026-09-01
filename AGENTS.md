@@ -72,6 +72,47 @@ Rust 命令使用 `#[tauri::command]` 宏标注，在 `lib.rs` 中通过 `tauri:
 
 > `presetAttributify` 已启用，也可使用属性写法（如 `<div flex items-center>`），但项目中以 `class` 为主。
 
+## 代码风格
+
+### 前端（TypeScript）
+
+- TypeScript 严格模式；在边界验证所有外部输入。
+- 使用 async/await，禁止裸 Promise 链。
+- 在中间件中集中处理错误。
+
+### Rust
+
+- 全代码库强制严格类型。
+- 运行 `cargo fmt`；`cargo clippy` 必须零警告通过。
+- 库代码优先使用 `Result` 而非 panic。
+- 非测试代码中禁止 `unwrap()`，除非附带合理性注释。
+
+## 开发守则
+
+以下事项是 AI 容易出错的地方，请严格遵守：
+
+### 通用
+
+- 完成任务前必须运行完整测试套件并修复所有失败。
+- 添加新依赖前必须先检查 lockfile 和现有规范。
+- 禁止提交密钥、API Key 或 `.env` 文件。
+- 匹配现有代码模式，不要引入代码库已解决的新依赖。
+
+### Rust
+
+- 禁止手动编辑 `Cargo.lock`。
+- 引入 `unsafe` 必须附注释证明其安全性。
+
+### 前端
+
+- 禁止记录可能包含密钥或令牌的请求体。
+- 路由处理器保持精简，业务逻辑不得放入其中。
+
+## 提交规范
+
+- 使用 Conventional Commits：`feat:`、`fix:`、`chore:`、`docs:`、`refactor:`
+- PR 保持单一关注点，描述变更内容及原因。
+
 ## 开发约定
 
 - **换行符**：统一 LF（`.gitattributes` 已配置）
